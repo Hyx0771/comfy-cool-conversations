@@ -3,17 +3,19 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
 interface PersonalDetailsFormProps {
-  onPersonalDetailsSubmit: (data: { name: string; phone: string; email: string }) => void;
+  onPersonalDetailsSubmit: (data: { name: string; phone: string; email: string; postcode: string; huisnummer: string }) => void;
 }
 
 const PersonalDetailsForm: React.FC<PersonalDetailsFormProps> = ({ onPersonalDetailsSubmit }) => {
   const [name, setName] = React.useState('');
   const [phone, setPhone] = React.useState('');
   const [email, setEmail] = React.useState('');
+  const [postcode, setPostcode] = React.useState('');
+  const [huisnummer, setHuisnummer] = React.useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onPersonalDetailsSubmit({ name, phone, email });
+    onPersonalDetailsSubmit({ name, phone, email, postcode, huisnummer });
   };
 
   return (
@@ -58,10 +60,36 @@ const PersonalDetailsForm: React.FC<PersonalDetailsFormProps> = ({ onPersonalDet
             required
           />
         </div>
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Postcode *
+            </label>
+            <Input
+              type="text"
+              value={postcode}
+              onChange={(e) => setPostcode(e.target.value)}
+              placeholder="1234 AB"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Huisnummer *
+            </label>
+            <Input
+              type="text"
+              value={huisnummer}
+              onChange={(e) => setHuisnummer(e.target.value)}
+              placeholder="123"
+              required
+            />
+          </div>
+        </div>
         <Button
           type="submit"
           className="w-full bg-blue-500 hover:bg-blue-600"
-          disabled={!name || !phone || !email}
+          disabled={!name || !phone || !email || !postcode || !huisnummer}
         >
           Verder
         </Button>

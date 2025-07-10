@@ -63,9 +63,9 @@ export const useQuoteFlow = (clearFiles?: () => void) => {
     clearFiles?.();
   };
 
-  const handlePersonalDetailsSubmit = (data: { name: string; phone: string; email: string }) => {
+  const handlePersonalDetailsSubmit = (data: { name: string; phone: string; email: string; postcode: string; huisnummer: string }) => {
     setIsProcessing(true);
-    addUserMessage(`Naam: ${data.name}, Telefoon: ${data.phone}, E-mail: ${data.email}`);
+    addUserMessage(`Naam: ${data.name}, Telefoon: ${data.phone}, E-mail: ${data.email}, Postcode: ${data.postcode}, Huisnummer: ${data.huisnummer}`);
     setTimeout(() => {
       handleStepData(data);
       setShowPersonalDetailsForm(false);
