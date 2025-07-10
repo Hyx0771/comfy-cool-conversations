@@ -98,6 +98,7 @@ export const useHVACQuoteAssistant = () => {
       
       // Upload images if any are selected and not already uploaded
       if (selectedFiles.length > 0 && !uploadedGalleryId) {
+        console.log('Uploading images:', selectedFiles.length);
         const customerData = collectCustomerData(conversationData, serviceType || '');
         const gallery = await uploadImages(
           selectedFiles,
@@ -108,24 +109,32 @@ export const useHVACQuoteAssistant = () => {
         if (gallery) {
           galleryId = gallery.id;
           setUploadedGalleryId(gallery.id);
+          console.log('Gallery created with ID:', gallery.id);
           addUserMessage(`${selectedFiles.length} foto${selectedFiles.length > 1 ? "'s" : ''} geüpload naar galerij`);
+        } else {
+          console.error('Failed to create gallery');
+          addUserMessage('Foto upload mislukt - doorgaan zonder foto\'s');
         }
       }
 
       setTimeout(() => {
         if (method === 'whatsapp') {
           // Generate personalized message using the template system
+          console.log('Generating WhatsApp message with gallery ID:', galleryId);
           const customerData = collectCustomerData(conversationData, serviceType || '');
           const whatsappUrl = messageGenerator.generateWhatsAppUrl(customerData, galleryId);
+          console.log('Opening WhatsApp URL:', whatsappUrl);
           window.open(whatsappUrl, '_blank');
           addUserMessage('WhatsApp contact gekozen');
         } else if (method === 'phone') {
           addUserMessage('Telefonisch contact gekozen');
         } else if (method === 'email') {
           // Generate personalized email data
+          console.log('Generating email with gallery ID:', galleryId);
           const customerData = collectCustomerData(conversationData, serviceType || '');
           const emailData = messageGenerator.generateEmailData(customerData, galleryId);
           const mailtoUrl = `mailto:${emailData.to}?subject=${encodeURIComponent(emailData.subject)}&body=${encodeURIComponent(emailData.body)}`;
+          console.log('Opening email URL:', mailtoUrl);
           window.open(mailtoUrl, '_blank');
           addUserMessage('E-mail contact gekozen');
         }
@@ -135,6 +144,7 @@ export const useHVACQuoteAssistant = () => {
       }, 200);
     } catch (error) {
       console.error('Error processing contact method:', error);
+      addUserMessage('Er is een fout opgetreden - probeer het opnieuw');
       setIsProcessing(false);
     }
   };

@@ -89,12 +89,12 @@ export const SERVICE_DETAIL_MAPPINGS: ServiceDetails = {
 
 // Service type display names
 export const SERVICE_DISPLAY_NAMES: { [key: string]: string } = {
-  'new-airco': '\uD83C\uDF2C\uFE0F Nieuwe airco (koelen / verwarmen)',
-  'heat-pump': '\uD83D\uDD25 Warmtepomp',
-  'maintenance': '\uD83D\uDEE0\uFE0F Onderhoud / service',
-  'repair': '\uD83D\uDE91 Reparatie / storing',
-  'commissioning': '\u2705 Inbedrijfstelling gekocht systeem',
-  'project-advice': '\uD83C\uDFE2 Advies groot project / VvE'
+  'new-airco': '🌬️ Nieuwe airco (koelen / verwarmen)',
+  'heat-pump': '🔥 Warmtepomp',
+  'maintenance': '🛠️ Onderhoud / service',
+  'repair': '🚑 Reparatie / storing',
+  'commissioning': '✅ Inbedrijfstelling gekocht systeem',
+  'project-advice': '🏢 Advies groot project / VvE'
 };
 
 export class MessageTemplateGenerator {
@@ -144,31 +144,47 @@ export class MessageTemplateGenerator {
     return 'Niet meegestuurd';
   }
 
+  private encodeForWhatsApp(message: string): string {
+    // WhatsApp-safe encoding: preserve emojis and handle special characters
+    // Use a more careful approach to URL encoding
+    return message
+      .replace(/%/g, '%25') // Encode % first to avoid double encoding
+      .replace(/&/g, '%26')
+      .replace(/=/g, '%3D')
+      .replace(/\+/g, '%2B')
+      .replace(/#/g, '%23');
+  }
+
   generateMessage(customerData: CustomerData, galleryId?: string): string {
+    console.log('Generating message with galleryId:', galleryId);
+    
     const serviceDisplayName = SERVICE_DISPLAY_NAMES[customerData.serviceType] || customerData.serviceType;
     const dynamicDetails = this.generateDynamicDetails(customerData.serviceType, customerData);
     const photosStatus = this.getPhotosStatus(customerData.photos);
     
     // Generate gallery section if galleryId is provided
     const gallerySection = galleryId ? `
-\uD83D\uDDBC\uFE0F Foto galerij: ${this.generateGalleryUrl(galleryId)}
+
+🖼️ Foto galerij: ${this.generateGalleryUrl(galleryId)}
    Bekijk alle foto's in een overzichtelijke galerij` : '';
 
-    const template = `\uD83D\uDC4B Hoi!
+    console.log('Gallery section:', gallerySection);
+
+    const template = `👋 Hoi!
 
 Ik heb net via ${this.config.name} een offerte aangevraagd. Hier zijn de details:
 
-\uD83D\uDC64 Naam: ${customerData.name || 'Niet opgegeven'}
-\uD83D\uDCDE Telefoonnummer: ${customerData.phone || 'Niet opgegeven'}
-\uD83D\uDCE7 E-mailadres: ${customerData.email || 'Niet opgegeven'}
-\uD83D\uDCCD Locatie: ${customerData.location || 'Niet meegestuurd'}
-\uD83D\uDDBC\uFE0F Foto's: ${photosStatus}${gallerySection}
-\uD83D\uDEE0\uFE0F Gevraagde dienst: ${serviceDisplayName}
+👤 Naam: ${customerData.name || 'Niet opgegeven'}
+📞 Telefoonnummer: ${customerData.phone || 'Niet opgegeven'}
+📧 E-mailadres: ${customerData.email || 'Niet opgegeven'}
+📍 Locatie: ${customerData.location || 'Niet meegestuurd'}
+🖼️ Foto's: ${photosStatus}${gallerySection}
+🛠️ Gevraagde dienst: ${serviceDisplayName}
 
-\uD83D\uDCCB Offertedetails:
+📋 Offertedetails:
 ${dynamicDetails}
 
-Laat ons weten of dit klopt of als je nog iets wilt aanvullen. Dan maken we direct een voorstel op maat voor je klaar! \uD83D\uDCA8
+Laat ons weten of dit klopt of als je nog iets wilt aanvullen. Dan maken we direct een voorstel op maat voor je klaar! 💨
 
 Groeten van het ${this.config.name} team ${this.config.emoji}`;
 
@@ -176,9 +192,17 @@ Groeten van het ${this.config.name} team ${this.config.emoji}`;
   }
 
   generateWhatsAppUrl(customerData: CustomerData, galleryId?: string): string {
+    console.log('Generating WhatsApp URL with galleryId:', galleryId);
+    
     const message = this.generateMessage(customerData, galleryId);
-    const encodedMessage = encodeURIComponent(message);
-    return `https://wa.me/${this.config.whatsappNumber.replace(/[^0-9]/g, '')}?text=${encodedMessage}`;
+    console.log('Generated message:', message);
+    
+    // Use custom encoding for WhatsApp
+    const encodedMessage = this.encodeForWhatsApp(encodeURIComponent(message));
+    const whatsappUrl = `https://wa.me/${this.config.whatsappNumber.replace(/[^0-9]/g, '')}?text=${encodedMessage}`;
+    
+    console.log('Final WhatsApp URL:', whatsappUrl);
+    return whatsappUrl;
   }
 
   generateEmailData(customerData: CustomerData, galleryId?: string): { subject: string; body: string; to: string } {
