@@ -58,7 +58,7 @@ const SupportAssistant: React.FC<SupportAssistantProps> = ({ initialMode }) => {
       };
       setMessages(prev => [...prev, botMessage]);
       setIsTyping(false);
-    }, 1500);
+    }, 300); // Much faster response - was 1500ms
   };
 
   const generateBotResponse = (userInput: string): string => {

@@ -100,7 +100,7 @@ const HVACQuoteAssistant = () => {
       
       handleStepData({ preferredContact: method });
       setIsProcessing(false);
-    }, 1000);
+    }, 200); // Much faster - was 1000ms
   };
 
   const handleContactFormSubmit = (data: { phone: string; email: string }) => {
@@ -110,7 +110,7 @@ const HVACQuoteAssistant = () => {
       handleStepData(data);
       setShowContactForm(false);
       setIsProcessing(false);
-    }, 1000);
+    }, 200); // Much faster - was 1000ms
   };
 
   const handlePersonalDetailsSubmit = (data: { name: string; phone: string; email: string }) => {
@@ -120,7 +120,7 @@ const HVACQuoteAssistant = () => {
       handleStepData(data);
       setShowPersonalDetailsForm(false);
       setIsProcessing(false);
-    }, 1000);
+    }, 200); // Much faster - was 1000ms
   };
 
   const getEncouragingMessage = () => {

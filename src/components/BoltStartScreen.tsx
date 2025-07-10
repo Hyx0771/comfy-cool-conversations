@@ -13,7 +13,7 @@ const BoltStartScreen: React.FC<BoltStartScreenProps> = ({ onModeSelect }) => {
   useEffect(() => {
     setTimeout(() => {
       setShowWelcomeMessage(true);
-    }, 500);
+    }, 100); // Much faster - was likely longer before
   }, []);
 
   const handleWelcomeComplete = () => {
