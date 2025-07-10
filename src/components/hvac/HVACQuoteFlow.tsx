@@ -31,11 +31,11 @@ interface HVACQuoteFlowProps {
 }
 
 const ServiceSelectionButtons = ({ onServiceSelect }: { onServiceSelect: (service: string) => void }) => (
-  <div className="p-4 h-full flex flex-col max-h-screen">
+  <div className="p-4 h-full flex flex-col max-h-[100vh] overflow-hidden">
     <h3 className="text-lg font-semibold text-gray-800 text-center mb-4 flex-shrink-0">
       Waarvoor wil je een offerte?
     </h3>
-    <div className="flex-1 overflow-y-auto min-h-0 max-h-[calc(100vh-12rem)]">
+    <div className="flex-1 overflow-y-auto overflow-x-hidden min-h-0 max-h-[calc(100vh-8rem)] scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
       <div className="grid gap-3 pb-4 pr-2">
       <Button
         onClick={() => onServiceSelect('new-airco')}
