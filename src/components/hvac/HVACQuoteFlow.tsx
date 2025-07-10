@@ -333,18 +333,20 @@ const StepInput = ({
     const isPhotoRequest = step.content?.toLowerCase().includes('foto') || step.content?.toLowerCase().includes('photo');
     
     return (
-      <div className="p-4 space-y-3">
+      <div className="p-4 space-y-3 max-h-[70vh] overflow-y-auto">
         {isPhotoRequest ? (
           <>
-            <ImageUpload
-              files={selectedFiles}
-              onChange={setSelectedFiles}
-              maxFiles={10}
-              maxSize={10}
-              accept="image/*"
-            />
+            <div className="max-h-[50vh] overflow-y-auto">
+              <ImageUpload
+                files={selectedFiles}
+                onChange={setSelectedFiles}
+                maxFiles={10}
+                maxSize={10}
+                accept="image/*"
+              />
+            </div>
 
-            <div className="flex gap-2">
+            <div className="flex gap-2 sticky bottom-0 bg-white p-2 border-t shadow-lg">
               <Button
                 onClick={() => onStepResponse(selectedFiles)}
                 disabled={selectedFiles.length === 0}
