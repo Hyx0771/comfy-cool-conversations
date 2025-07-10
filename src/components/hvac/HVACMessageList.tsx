@@ -11,11 +11,11 @@ interface HVACMessageListProps {
 }
 
 const TypingIndicator: React.FC<{ onComplete: () => void; message: string }> = ({ onComplete, message }) => {
-  // Super fast typing animation for initial load
+  // Ultra fast typing animation - 20ms delay
   useEffect(() => {
     const timer = setTimeout(() => {
       onComplete();
-    }, 50); // Very fast - 50ms delay
+    }, 20); // Ultra fast - 20ms delay
     
     return () => clearTimeout(timer);
   }, [onComplete]);
@@ -44,27 +44,32 @@ const HVACMessageList: React.FC<HVACMessageListProps> = ({
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
-    if (messagesEndRef.current) {
-      // Force immediate scroll to bottom
-      messagesEndRef.current.scrollIntoView({ 
-        behavior: 'auto',
-        block: 'end',
-        inline: 'nearest'
-      });
-      
-      // Also ensure parent container scrolls
-      const container = messagesEndRef.current.closest('.overflow-y-auto');
-      if (container) {
-        container.scrollTop = container.scrollHeight;
+    requestAnimationFrame(() => {
+      if (messagesEndRef.current) {
+        const container = messagesEndRef.current.closest('.overflow-y-auto');
+        if (container) {
+          container.scrollTop = container.scrollHeight;
+        }
+        // Also try direct scroll
+        messagesEndRef.current.scrollIntoView({ 
+          behavior: 'auto',
+          block: 'end'
+        });
       }
-    }
+    });
   };
 
   useEffect(() => {
-    // Immediate scroll, then delayed scroll to handle layout changes
+    // Multiple scroll attempts to ensure it works
     scrollToBottom();
-    const timer = setTimeout(scrollToBottom, 100);
-    return () => clearTimeout(timer);
+    
+    const timer1 = setTimeout(scrollToBottom, 50);
+    const timer2 = setTimeout(scrollToBottom, 200);
+    
+    return () => {
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+    };
   }, [messages, showTyping, pendingBotMessage]);
 
   return (
