@@ -10,6 +10,7 @@ const HVACQuoteAssistant = () => {
   const [serviceType, setServiceType] = useState<string | null>(null);
   const [showEnhancedContactSelection, setShowEnhancedContactSelection] = useState(false);
   const [showContactForm, setShowContactForm] = useState(false);
+  const [showPersonalDetailsForm, setShowPersonalDetailsForm] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -47,7 +48,9 @@ const HVACQuoteAssistant = () => {
   }, [currentStep, addBotMessage, showEnhancedContactSelection]);
 
   useEffect(() => {
-    if (currentStep?.id === 'contact-info') {
+    if (currentStep?.id === 'personal-details') {
+      setShowPersonalDetailsForm(true);
+    } else if (currentStep?.id === 'contact-info') {
       setShowEnhancedContactSelection(true);
     }
   }, [currentStep]);
@@ -110,6 +113,16 @@ const HVACQuoteAssistant = () => {
     }, 1000);
   };
 
+  const handlePersonalDetailsSubmit = (data: { name: string; phone: string; email: string }) => {
+    setIsProcessing(true);
+    addUserMessage(`Naam: ${data.name}, Telefoon: ${data.phone}, E-mail: ${data.email}`);
+    setTimeout(() => {
+      handleStepData(data);
+      setShowPersonalDetailsForm(false);
+      setIsProcessing(false);
+    }, 1000);
+  };
+
   const getEncouragingMessage = () => {
     if (progress <= 30) return "Net gestart! 🚀";
     if (progress <= 60) return "Goede voortgang! 💪";
@@ -143,6 +156,7 @@ const HVACQuoteAssistant = () => {
             currentStep={currentStep}
             showEnhancedContactSelection={showEnhancedContactSelection}
             showContactForm={showContactForm}
+            showPersonalDetailsForm={showPersonalDetailsForm}
             contactMethods={contactMethods}
             conversationData={conversationData}
             inputValue={inputValue}
@@ -153,6 +167,7 @@ const HVACQuoteAssistant = () => {
             onServiceSelect={handleServiceSelect}
             onContactMethodSelect={handleContactMethodSelect}
             onContactFormSubmit={handleContactFormSubmit}
+            onPersonalDetailsSubmit={handlePersonalDetailsSubmit}
             onStepResponse={handleStepResponse}
           />
         </div>

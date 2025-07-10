@@ -13,6 +13,7 @@ interface HVACQuoteFlowProps {
   currentStep: ConversationStep | null;
   showEnhancedContactSelection: boolean;
   showContactForm: boolean;
+  showPersonalDetailsForm: boolean;
   contactMethods: ContactMethod[];
   conversationData: Record<string, any>;
   inputValue: string;
@@ -23,11 +24,12 @@ interface HVACQuoteFlowProps {
   onServiceSelect: (service: string) => void;
   onContactMethodSelect: (method: string) => void;
   onContactFormSubmit: (data: { phone: string; email: string }) => void;
+  onPersonalDetailsSubmit: (data: { name: string; phone: string; email: string }) => void;
   onStepResponse: (value: any) => void;
 }
 
 const ServiceSelectionButtons = ({ onServiceSelect }: { onServiceSelect: (service: string) => void }) => (
-  <div className="p-4 space-y-3">
+  <div className="p-4 space-y-3 max-h-[400px] overflow-y-auto">
     <h3 className="text-lg font-semibold text-gray-800 text-center mb-4">
       Waarvoor wil je een offerte?
     </h3>
@@ -217,17 +219,104 @@ const ContactForm = ({
   );
 };
 
+const PersonalDetailsForm = ({ 
+  onPersonalDetailsSubmit 
+}: { 
+  onPersonalDetailsSubmit: (data: { name: string; phone: string; email: string }) => void;
+}) => {
+  const [name, setName] = React.useState('');
+  const [phone, setPhone] = React.useState('');
+  const [email, setEmail] = React.useState('');
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onPersonalDetailsSubmit({ name, phone, email });
+  };
+
+  return (
+    <div className="p-4">
+      <h3 className="text-lg font-semibold text-gray-800 text-center mb-4">
+        Persoonlijke gegevens 👤
+      </h3>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Naam *
+          </label>
+          <Input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Voor- en achternaam"
+            required
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Telefoonnummer *
+          </label>
+          <Input
+            type="tel"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            placeholder="06-12345678"
+            required
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            E-mailadres *
+          </label>
+          <Input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="jouw@email.nl"
+            required
+          />
+        </div>
+        <Button
+          type="submit"
+          className="w-full bg-blue-500 hover:bg-blue-600"
+          disabled={!name || !phone || !email}
+        >
+          Verder
+        </Button>
+      </form>
+    </div>
+  );
+};
+
 const StepInput = ({ 
   step, 
   inputValue, 
   setInputValue, 
+  selectedFiles,
+  setSelectedFiles,
   onStepResponse 
 }: { 
   step: ConversationStep;
   inputValue: string;
   setInputValue: (value: string) => void;
+  selectedFiles: File[];
+  setSelectedFiles: (files: File[]) => void;
   onStepResponse: (value: any) => void;
 }) => {
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    setSelectedFiles([...selectedFiles, ...files]);
+  };
+
+  const removeFile = (index: number) => {
+    setSelectedFiles(selectedFiles.filter((_, i) => i !== index));
+  };
+
+  const handleSkip = () => {
+    onStepResponse(''); // Submit empty response to skip
+  };
+
   if (step.type === 'choice' && step.options) {
     return (
       <div className="p-4 space-y-3">
@@ -248,21 +337,94 @@ const StepInput = ({
   }
 
   if (step.type === 'text') {
+    const isPhotoRequest = step.content?.toLowerCase().includes('foto') || step.content?.toLowerCase().includes('photo');
+    
     return (
       <div className="p-4 space-y-3">
-        <Textarea
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          placeholder="Typ hier je antwoord..."
-          className="min-h-[80px]"
-        />
-        <Button
-          onClick={() => onStepResponse(inputValue)}
-          disabled={!inputValue.trim()}
-          className="w-full bg-blue-500 hover:bg-blue-600"
-        >
-          Verstuur
-        </Button>
+        {isPhotoRequest ? (
+          <>
+            <div className="space-y-2">
+              <Button
+                onClick={() => fileInputRef.current?.click()}
+                variant="outline"
+                className="w-full h-auto p-3 border-2 border-dashed border-gray-300 hover:border-blue-300 rounded-xl transition-all duration-300"
+              >
+                <Upload className="w-4 h-4 mr-2" />
+                Foto's/Video's uploaden
+              </Button>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*,video/*"
+                multiple
+                onChange={handleFileSelect}
+                className="hidden"
+              />
+            </div>
+
+            {selectedFiles.length > 0 && (
+              <div className="space-y-2">
+                <p className="text-sm text-gray-600">Geselecteerde bestanden:</p>
+                {selectedFiles.map((file, index) => (
+                  <div key={index} className="flex items-center justify-between bg-gray-50 p-2 rounded-lg">
+                    <span className="text-sm truncate">{file.name}</span>
+                    <Button
+                      onClick={() => removeFile(index)}
+                      variant="ghost"
+                      size="sm"
+                      className="h-6 w-6 p-0"
+                    >
+                      ×
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <div className="flex gap-2">
+              <Button
+                onClick={() => onStepResponse(selectedFiles)}
+                disabled={selectedFiles.length === 0}
+                className="flex-1 bg-blue-500 hover:bg-blue-600"
+              >
+                Verstuur ({selectedFiles.length})
+              </Button>
+              <Button
+                onClick={handleSkip}
+                variant="outline"
+                className="flex-shrink-0"
+              >
+                Overslaan
+              </Button>
+            </div>
+          </>
+        ) : (
+          <>
+            <Textarea
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              placeholder={step.content?.includes('nog iets wat we moeten weten') ? 
+                "Typ hier eventuele opmerkingen..." : "Typ hier je antwoord..."}
+              className="min-h-[80px]"
+            />
+            <div className="flex gap-2">
+              <Button
+                onClick={() => onStepResponse(inputValue)}
+                disabled={!inputValue.trim()}
+                className="flex-1 bg-blue-500 hover:bg-blue-600"
+              >
+                Verstuur
+              </Button>
+              <Button
+                onClick={handleSkip}
+                variant="outline"
+                className="flex-shrink-0"
+              >
+                Overslaan
+              </Button>
+            </div>
+          </>
+        )}
       </div>
     );
   }
@@ -296,13 +458,17 @@ const HVACQuoteFlow: React.FC<HVACQuoteFlowProps> = ({
   currentStep,
   showEnhancedContactSelection,
   showContactForm,
+  showPersonalDetailsForm,
   contactMethods,
   inputValue,
   setInputValue,
+  selectedFiles,
+  setSelectedFiles,
   isProcessing,
   onServiceSelect,
   onContactMethodSelect,
   onContactFormSubmit,
+  onPersonalDetailsSubmit,
   onStepResponse
 }) => {
   if (isCompleted) {
@@ -311,6 +477,10 @@ const HVACQuoteFlow: React.FC<HVACQuoteFlowProps> = ({
 
   if (!serviceType) {
     return <ServiceSelectionButtons onServiceSelect={onServiceSelect} />;
+  }
+
+  if (showPersonalDetailsForm) {
+    return <PersonalDetailsForm onPersonalDetailsSubmit={onPersonalDetailsSubmit} />;
   }
 
   if (showEnhancedContactSelection) {
@@ -333,6 +503,8 @@ const HVACQuoteFlow: React.FC<HVACQuoteFlowProps> = ({
         step={currentStep}
         inputValue={inputValue}
         setInputValue={setInputValue}
+        selectedFiles={selectedFiles}
+        setSelectedFiles={setSelectedFiles}
         onStepResponse={onStepResponse}
       />
     );

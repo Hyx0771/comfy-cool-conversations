@@ -11,31 +11,20 @@ interface HVACMessageListProps {
 }
 
 const TypingIndicator: React.FC<{ onComplete: () => void; message: string }> = ({ onComplete, message }) => {
-  const [displayedText, setDisplayedText] = React.useState('');
-  const [currentIndex, setCurrentIndex] = React.useState(0);
-
+  // Instantly show the message and call onComplete
   useEffect(() => {
-    if (currentIndex < message.length) {
-      const timer = setTimeout(() => {
-        setDisplayedText(message.slice(0, currentIndex + 1));
-        setCurrentIndex(currentIndex + 1);
-      }, 30);
-      return () => clearTimeout(timer);
-    } else if (currentIndex === message.length) {
-      setTimeout(onComplete, 500);
-    }
-  }, [currentIndex, message, onComplete]);
+    onComplete();
+  }, [onComplete]);
 
   return (
-    <div className="flex space-x-3 animate-fade-in">
+    <div className="flex space-x-3">
       <Avatar className="w-8 h-8 flex-shrink-0">
         <AvatarImage src={boltAvatar} alt="Bolt" />
         <AvatarFallback className="bg-blue-500 text-white text-xs">B</AvatarFallback>
       </Avatar>
       <div className="bg-white rounded-2xl rounded-tl-md p-3 shadow-sm border max-w-[85%]">
         <p className="text-sm text-gray-800 leading-relaxed whitespace-pre-line">
-          {displayedText}
-          {currentIndex < message.length && <span className="animate-pulse">|</span>}
+          {message}
         </p>
       </div>
     </div>
@@ -63,7 +52,7 @@ const HVACMessageList: React.FC<HVACMessageListProps> = ({
       {messages.map((message) => (
         <div
           key={message.id}
-          className={`flex ${message.isBot ? 'justify-start' : 'justify-end'} animate-fade-in`}
+          className={`flex ${message.isBot ? 'justify-start' : 'justify-end'}`}
         >
           {message.isBot && (
             <Avatar className="w-8 h-8 mr-3 flex-shrink-0">

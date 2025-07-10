@@ -13,7 +13,8 @@ export const hvacFlowConfigs = {
       { id: 'pipe-length', field: 'pipeLength', content: '📐 Geschatte lengte leidingen (binnen → buiten)', type: 'choice', options: ['< 3 m', '3-10 m', '> 10 m', '🤷‍♂️ Weet ik niet'] },
       { id: 'condensation-drain', field: 'condensationDrain', content: '💧 Afvoer condenswater?', type: 'choice', options: ['Regenpijp buiten', 'Muurdoorvoer', 'Binnenafvoer', '🤷‍♂️ Onbekend'] },
       { id: 'photos', field: 'photos', content: '📸 Upload 2 foto\'s – binnenplek + buitenplek (optioneel)', type: 'text' },
-      { id: 'comments', field: 'comments', content: 'Opmerkingen:', type: 'text' },
+      { id: 'comments', field: 'comments', content: 'Is er nog iets wat we moeten weten?', type: 'text' },
+      { id: 'personal-details', field: 'personalDetails', content: 'We hebben je persoonlijke gegevens nodig voor de offerte.', type: 'contact' },
       { id: 'contact-info', field: 'contactInfo', content: 'Bijna klaar! Laat je gegevens achter voor een snelle offerte.', type: 'contact' }
     ]
   },
@@ -28,7 +29,8 @@ export const hvacFlowConfigs = {
       { id: 'pipe-diameter', field: 'pipeDiameter', content: '📐 Diameter cv-leidingen rond de ketel', type: 'choice', options: ['15 mm (½″)', '22 mm (¾″)', '28 mm (1″)', 'Gemengd / anders', '🤳 Weet ik niet – ik upload een foto'] },
       { id: 'solution-type', field: 'solutionType', content: '⚙️ Gewenste oplossing', type: 'choice', options: ['💧 Hybride (ketel + warmtepomp)', '🔌 Volledig elektrisch'] },
       { id: 'photos', field: 'photos', content: '📸 Upload foto van meterkast + cv-ketel / technische ruimte', type: 'text' },
-      { id: 'comments', field: 'comments', content: 'Opmerkingen:', type: 'text' },
+      { id: 'comments', field: 'comments', content: 'Is er nog iets wat we moeten weten?', type: 'text' },
+      { id: 'personal-details', field: 'personalDetails', content: 'We hebben je persoonlijke gegevens nodig voor de offerte.', type: 'contact' },
       { id: 'contact-info', field: 'contactInfo', content: 'Perfect! Laat je gegevens achter en we sturen je een uitgebreide offerte.', type: 'contact' }
     ]
   },
@@ -41,7 +43,8 @@ export const hvacFlowConfigs = {
       { id: 'error-code', field: 'errorCode', content: '⚠️ Foutcode op display?', type: 'choice', options: ['Ja', 'Nee', 'Geen display'] },
       { id: 'urgency', field: 'urgency', content: '⏱️ Hoe snel nodig?', type: 'choice', options: ['🚨 Spoed (≤ 24 u)', 'Binnen 1 week', 'Preventief / controle'] },
       { id: 'photos', field: 'photos', content: '📸 Optioneel: upload foto van typeplaatje of foutcode', type: 'text' },
-      { id: 'comments', field: 'comments', content: 'Opmerkingen:', type: 'text' },
+      { id: 'comments', field: 'comments', content: 'Is er nog iets wat we moeten weten?', type: 'text' },
+      { id: 'personal-details', field: 'personalDetails', content: 'We hebben je persoonlijke gegevens nodig voor de offerte.', type: 'contact' },
       { id: 'contact-info', field: 'contactInfo', content: 'We nemen zo snel mogelijk contact met je op voor het onderhoud!', type: 'contact' }
     ]
   },
@@ -53,7 +56,8 @@ export const hvacFlowConfigs = {
       { id: 'problem-start', field: 'problemStart', content: '📆 Wanneer begon het?', type: 'choice', options: ['Vandaag', 'Afgelopen week', '> 7 dagen', '🤷‍♂️ Weet ik niet'] },
       { id: 'urgency', field: 'urgency', content: '⏱️ Hoe snel wilt u hulp?', type: 'choice', options: ['🚨 Spoed (≤ 24 u)', '48 u', '3-5 dagen', 'Niet dringend'] },
       { id: 'media', field: 'media', content: '📸/🎥 Upload foto of korte video', type: 'text' },
-      { id: 'comments', field: 'comments', content: 'Opmerkingen:', type: 'text' },
+      { id: 'comments', field: 'comments', content: 'Is er nog iets wat we moeten weten?', type: 'text' },
+      { id: 'personal-details', field: 'personalDetails', content: 'We hebben je persoonlijke gegevens nodig voor de offerte.', type: 'contact' },
       { id: 'contact-info', field: 'contactInfo', content: 'We gaan meteen aan de slag om je probleem op te lossen!', type: 'contact' }
     ]
   },
@@ -67,7 +71,8 @@ export const hvacFlowConfigs = {
       { id: 'pipe-diameter', field: 'pipeDiameter', content: '⚙️ Diameter leidingen (optioneel)', type: 'choice', options: ['¼-⅜″', '⅜-⅝″', 'Onbekend'] },
       { id: 'invoice', field: 'invoice', content: '📄 Upload aankoopfactuur', type: 'text' },
       { id: 'date', field: 'date', content: '📅 Gewenste datum inbedrijfstelling', type: 'text' },
-      { id: 'comments', field: 'comments', content: 'Opmerkingen:', type: 'text' },
+      { id: 'comments', field: 'comments', content: 'Is er nog iets wat we moeten weten?', type: 'text' },
+      { id: 'personal-details', field: 'personalDetails', content: 'We hebben je persoonlijke gegevens nodig voor de offerte.', type: 'contact' },
       { id: 'contact-info', field: 'contactInfo', content: 'We plannen de inbedrijfstelling zo snel mogelijk in!', type: 'contact' }
     ]
   },
@@ -80,7 +85,8 @@ export const hvacFlowConfigs = {
       { id: 'budget', field: 'budget', content: '💶 Indicatief budget', type: 'choice', options: ['< €25k', '€25-75k', '€75-150k', '> €150k', 'Nog geen budget'] },
       { id: 'energy-goal', field: 'energyGoal', content: '🌱 Energie- / CO₂-doel (EPC/BENG)', type: 'choice', options: ['< 0,4', '0,4-0,6', '> 0,6', '🤷‍♂️ Weet ik niet'] },
       { id: 'delivery-date', field: 'deliveryDate', content: '📅 Gewenste opleverdatum', type: 'choice', options: ['< 3 mnd', '3-6 mnd', '> 6 mnd', 'Flexibel'] },
-      { id: 'comments', field: 'comments', content: 'Opmerkingen:', type: 'text' },
+      { id: 'comments', field: 'comments', content: 'Is er nog iets wat we moeten weten?', type: 'text' },
+      { id: 'personal-details', field: 'personalDetails', content: 'We hebben je persoonlijke gegevens nodig voor de offerte.', type: 'contact' },
       { id: 'contact-info', field: 'contactInfo', content: 'We nemen contact op voor een uitgebreid adviesgesprek!', type: 'contact' }
     ]
   }
