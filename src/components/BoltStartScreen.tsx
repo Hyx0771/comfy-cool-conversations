@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import AgentFixMessage from './AgentFixMessage';
 
-interface NoaStartScreenProps {
+interface BoltStartScreenProps {
   onModeSelect: (mode: 'quote' | 'support' | 'photo') => void;
 }
 
-const NoaStartScreen: React.FC<NoaStartScreenProps> = ({ onModeSelect }) => {
+const BoltStartScreen: React.FC<BoltStartScreenProps> = ({ onModeSelect }) => {
   const [showWelcomeMessage, setShowWelcomeMessage] = useState(false);
   const [showModeSelection, setShowModeSelection] = useState(false);
 
@@ -29,7 +29,7 @@ const NoaStartScreen: React.FC<NoaStartScreenProps> = ({ onModeSelect }) => {
       <div className="flex-1 p-4 sm:p-6 space-y-4 sm:space-y-6 overflow-y-auto">
         {showWelcomeMessage && (
           <AgentFixMessage
-            content="Hoi! Ik ben Noa van CoolComfort ❄️ 
+            content="Hoi! Ik ben Bolt van Clobol ❄️ 
 Waar kan ik je vandaag mee helpen?"
             onComplete={handleWelcomeComplete}
             delay={1200}
@@ -87,4 +87,4 @@ Waar kan ik je vandaag mee helpen?"
   );
 };
 
-export default NoaStartScreen;
+export default BoltStartScreen;

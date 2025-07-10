@@ -5,8 +5,8 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import HVACQuoteAssistant from './HVACQuoteAssistant';
 import SupportAssistant from './SupportAssistant';
-import NoaStartScreen from './MiguelStartScreen';
-import noaAvatar from '@/assets/noa-avatar.jpg';
+import BoltStartScreen from './BoltStartScreen';
+import boltAvatar from '@/assets/noa-avatar.jpg';
 
 type ChatMode = 'welcome' | 'quote' | 'support' | 'photo';
 
@@ -57,7 +57,7 @@ const ChatBotWidget = () => {
     if (currentMode === 'support') {
       return <SupportAssistant initialMode="support" />;
     }
-    return <NoaStartScreen onModeSelect={handleModeSelect} />;
+    return <BoltStartScreen onModeSelect={handleModeSelect} />;
   };
 
   return (
@@ -86,17 +86,17 @@ const ChatBotWidget = () => {
             <div className="bg-gradient-to-r from-[#007BFF] to-blue-600 text-white p-4 sm:p-5 flex items-center justify-between">
               <div className="flex items-center space-x-3">
                 <Avatar className="w-10 h-10 sm:w-12 sm:h-12 relative">
-                  <AvatarImage src={noaAvatar} alt="Noa" />
+                  <AvatarImage src={boltAvatar} alt="Bolt" />
                   <AvatarFallback className="bg-white bg-opacity-20 text-white font-bold text-lg sm:text-xl">
-                    N
+                    B
                   </AvatarFallback>
                   <div className="absolute -bottom-1 -right-1 text-sm">❄️</div>
                 </Avatar>
                 <div>
-                  <h3 className="font-bold text-base sm:text-lg">Noa</h3>
+                  <h3 className="font-bold text-base sm:text-lg">Bolt</h3>
                   <p className="text-xs sm:text-sm text-blue-100 flex items-center">
                     <span className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></span>
-                    CoolComfort assistent
+                    Clobol assistent
                   </p>
                 </div>
               </div>

@@ -6,7 +6,7 @@ const Index = () => {
       <div className="text-center max-w-4xl mx-auto p-8">
         <div className="mb-8">
           <h1 className="text-5xl font-bold mb-6 text-gray-800">
-            CoolComfort <span className="text-blue-600">❄️</span>
+            Clobol <span className="text-blue-600">❄️</span>
           </h1>
           <p className="text-xl text-gray-600 mb-8">
             Uw partner voor klimaat- en verwarmingsoplossingen
@@ -36,7 +36,7 @@ const Index = () => {
         <div className="bg-white p-8 rounded-2xl shadow-xl">
           <h2 className="text-3xl font-bold mb-4 text-gray-800">Vraag direct een offerte aan!</h2>
           <p className="text-lg text-gray-600 mb-6">
-            Gebruik onze chatbot Noa om binnen 2 minuten een offerte te krijgen. 
+            Gebruik onze chatbot Bolt om binnen 2 minuten een offerte te krijgen. 
             Eenvoudig, snel en persoonlijk advies!
           </p>
           <div className="flex justify-center items-center space-x-4">

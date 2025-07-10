@@ -55,9 +55,12 @@ const HVACQuoteAssistant = () => {
   const handleServiceSelect = (service: string) => {
     setServiceType(service);
     const serviceLabels: Record<string, string> = {
-      'ac-installation': 'Airco Installatie',
-      'heating-repair': 'Verwarming Reparatie',
-      'maintenance': 'Onderhoud'
+      'new-airco': '🌬️ Nieuwe airco (koelen / verwarmen)',
+      'heat-pump': '🔥 Warmtepomp',
+      'maintenance': '🛠️ Onderhoud / service',
+      'repair': '🚑 Reparatie / storing',
+      'commissioning': '✅ Inbedrijfstelling gekocht systeem',
+      'project-advice': '🏢 Advies groot project / VvE'
     };
     addUserMessage(`Ik wil graag een offerte voor: ${serviceLabels[service]}`);
   };
@@ -83,7 +86,7 @@ const HVACQuoteAssistant = () => {
     setTimeout(() => {
       if (method === 'whatsapp') {
         const whatsappMessage = `Hoi! Ik heb interesse in ${flowTitle}. Kunnen jullie me helpen met een offerte?`;
-        const whatsappUrl = `https://wa.me/31612345678?text=${encodeURIComponent(whatsappMessage)}`;
+        const whatsappUrl = `https://wa.me/31658769652?text=${encodeURIComponent(whatsappMessage)}`;
         window.open(whatsappUrl, '_blank');
         addUserMessage('WhatsApp contact gekozen');
       } else if (method === 'phone') {
