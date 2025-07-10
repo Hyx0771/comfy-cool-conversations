@@ -75,6 +75,9 @@ export const useContactMethods = ({
             setUploadedGalleryId(gallery.id);
             console.log('Gallery created successfully with ID:', gallery.id);
             addUserMessage(`${selectedFiles.length} foto${selectedFiles.length > 1 ? "'s" : ''} geüpload naar galerij`);
+            
+            // Small delay to ensure the database operation is complete
+            await new Promise(resolve => setTimeout(resolve, 500));
           } else {
             console.error('Gallery creation returned null');
             addUserMessage('Foto upload mislukt - doorgaan zonder foto\'s');
@@ -92,18 +95,18 @@ export const useContactMethods = ({
       if (method === 'whatsapp') {
         console.log('Generating WhatsApp message with gallery ID:', galleryId);
         const whatsappUrl = messageGenerator.generateWhatsAppUrl(customerData, galleryId);
-        console.log('Opening WhatsApp URL:', whatsappUrl);
+        console.log('Final WhatsApp URL with gallery:', whatsappUrl);
         window.open(whatsappUrl, '_blank');
-        addUserMessage('WhatsApp contact gekozen');
+        addUserMessage(galleryId ? 'WhatsApp bericht met fotogalerij verzonden' : 'WhatsApp contact gekozen');
       } else if (method === 'phone') {
         addUserMessage('Telefonisch contact gekozen');
       } else if (method === 'email') {
         console.log('Generating email with gallery ID:', galleryId);
         const emailData = messageGenerator.generateEmailData(customerData, galleryId);
         const mailtoUrl = `mailto:${emailData.to}?subject=${encodeURIComponent(emailData.subject)}&body=${encodeURIComponent(emailData.body)}`;
-        console.log('Opening email URL:', mailtoUrl);
+        console.log('Final email URL with gallery:', mailtoUrl);
         window.open(mailtoUrl, '_blank');
-        addUserMessage('E-mail contact gekozen');
+        addUserMessage(galleryId ? 'E-mail met fotogalerij link verzonden' : 'E-mail contact gekozen');
       }
       
       handleStepData({ preferredContact: method });
