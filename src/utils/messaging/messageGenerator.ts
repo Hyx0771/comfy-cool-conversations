@@ -40,6 +40,16 @@ export class MessageTemplateGenerator {
     return details.length > 0 ? details.join('\n') : '• Basis offerte aanvraag (geen extra details ingevuld)';
   }
 
+  private formatLocation(postcode?: string, huisnummer?: string, location?: string): string {
+    if (location) return location;
+    if (postcode && huisnummer) {
+      return `${postcode} ${huisnummer}`;
+    }
+    if (postcode) return postcode;
+    if (huisnummer) return `Huisnummer ${huisnummer}`;
+    return 'Niet opgegeven';
+  }
+
   private getPhotosStatus(photos: File[] | string | undefined): string {
     if (!photos) return 'Niet meegestuurd';
     if (typeof photos === 'string') return photos;
@@ -55,32 +65,53 @@ export class MessageTemplateGenerator {
     const serviceDisplayName = SERVICE_DISPLAY_NAMES[customerData.serviceType] || customerData.serviceType;
     const dynamicDetails = this.generateDynamicDetails(customerData.serviceType, customerData);
     const photosStatus = this.getPhotosStatus(customerData.photos);
+    const formattedLocation = this.formatLocation(
+      customerData.postcode, 
+      customerData.huisnummer, 
+      customerData.location
+    );
     
-    // Generate gallery section if galleryId is provided
+    // Enhanced gallery section with better formatting
     const gallerySection = galleryId ? `
 
-🖼️ Foto galerij: ${this.generateGalleryUrl(galleryId)}
-   Bekijk alle foto's in een overzichtelijke galerij` : '';
+📸 *FOTO GALERIJ BESCHIKBAAR*
+${this.generateGalleryUrl(galleryId)}
+↗️ Klik hier om alle foto's te bekijken` : '';
 
     console.log('Gallery section:', gallerySection);
 
-    const template = `👋 Hoi!
+    const template = `👋 Hallo!
 
-Ik heb net via ${this.config.name} een offerte aangevraagd. Hier zijn de details:
+Ik heb zojuist via ${this.config.name} een offerte aangevraagd. Hieronder vind je alle details:
 
+━━━━━━━━━━━━━━━━━━━━━━━━━━
+📋 *CONTACTGEGEVENS*
+━━━━━━━━━━━━━━━━━━━━━━━━━━
 👤 Naam: ${customerData.name || 'Niet opgegeven'}
-📞 Telefoonnummer: ${customerData.phone || 'Niet opgegeven'}
-📧 E-mailadres: ${customerData.email || 'Niet opgegeven'}
-📍 Locatie: ${customerData.location || 'Niet meegestuurd'}
-🖼️ Foto's: ${photosStatus}${gallerySection}
-🛠️ Gevraagde dienst: ${serviceDisplayName}
+📞 Telefoon: ${customerData.phone || 'Niet opgegeven'}  
+📧 E-mail: ${customerData.email || 'Niet opgegeven'}
+📍 Adres: ${formattedLocation}
 
-📋 Offertedetails:
+━━━━━━━━━━━━━━━━━━━━━━━━━━
+🛠️ *SERVICE AANVRAAG*
+━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎯 Gevraagde dienst: ${serviceDisplayName}
+🖼️ Foto's: ${photosStatus}${gallerySection}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━
+📝 *SPECIFICATIES*
+━━━━━━━━━━━━━━━━━━━━━━━━━━
 ${dynamicDetails}
 
-Laat ons weten of dit klopt of als je nog iets wilt aanvullen. Dan maken we direct een voorstel op maat voor je klaar! 💨
+━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Groeten van het ${this.config.name} team ${this.config.emoji}`;
+Graag jullie reactie of dit compleet is, dan kunnen we direct een scherpe offerte op maat maken! 
+
+🚀 Snelle service gegarandeerd
+💯 Vrijblijvende offerte
+
+Met vriendelijke groet,
+Het ${this.config.name} team ${this.config.emoji}`;
 
     return template;
   }
