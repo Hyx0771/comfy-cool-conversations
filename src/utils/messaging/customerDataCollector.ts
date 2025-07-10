@@ -20,6 +20,8 @@ export const collectCustomerData = (formData: Record<string, any>, serviceType: 
     phone: formData.phone || formData.phoneNumber || personalDetails.phone || contactInfo.phone,
     email: formData.email || formData.emailAddress || personalDetails.email || contactInfo.email,
     location: formData.location || formData.address,
+    postcode: formData.postcode || personalDetails.postcode,
+    huisnummer: formData.huisnummer || personalDetails.huisnummer,
     photos: formData.photos || formData.images,
     serviceType,
     // Include all other form data for dynamic details

@@ -74,44 +74,44 @@ export class MessageTemplateGenerator {
     // Enhanced gallery section with better formatting
     const gallerySection = galleryId ? `
 
-📸 *FOTO GALERIJ BESCHIKBAAR*
+*FOTO GALERIJ BESCHIKBAAR*
 ${this.generateGalleryUrl(galleryId)}
-↗️ Klik hier om alle foto's te bekijken` : '';
+Klik hier om alle foto's te bekijken` : '';
 
     console.log('Gallery section:', gallerySection);
 
-    const template = `👋 Hallo!
+    const template = `Hallo!
 
 Ik heb zojuist via ${this.config.name} een offerte aangevraagd. Hieronder vind je alle details:
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━
-📋 *CONTACTGEGEVENS*
-━━━━━━━━━━━━━━━━━━━━━━━━━━
-👤 Naam: ${customerData.name || 'Niet opgegeven'}
-📞 Telefoon: ${customerData.phone || 'Niet opgegeven'}  
-📧 E-mail: ${customerData.email || 'Niet opgegeven'}
-📍 Adres: ${formattedLocation}
+==============================
+*CONTACTGEGEVENS*
+==============================
+Naam: ${customerData.name || 'Niet opgegeven'}
+Telefoon: ${customerData.phone || 'Niet opgegeven'}  
+E-mail: ${customerData.email || 'Niet opgegeven'}
+Adres: ${formattedLocation}
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━
-🛠️ *SERVICE AANVRAAG*
-━━━━━━━━━━━━━━━━━━━━━━━━━━
-🎯 Gevraagde dienst: ${serviceDisplayName}
-🖼️ Foto's: ${photosStatus}${gallerySection}
+==============================
+*SERVICE AANVRAAG*
+==============================
+Gevraagde dienst: ${serviceDisplayName}
+Foto's: ${photosStatus}${gallerySection}
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━
-📝 *SPECIFICATIES*
-━━━━━━━━━━━━━━━━━━━━━━━━━━
+==============================
+*SPECIFICATIES*
+==============================
 ${dynamicDetails}
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━
+==============================
 
 Graag jullie reactie of dit compleet is, dan kunnen we direct een scherpe offerte op maat maken! 
 
-🚀 Snelle service gegarandeerd
-💯 Vrijblijvende offerte
+- Snelle service gegarandeerd
+- Vrijblijvende offerte
 
 Met vriendelijke groet,
-Het ${this.config.name} team ${this.config.emoji}`;
+Het ${this.config.name} team`;
 
     return template;
   }
