@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import AgentFixMessage from './AgentFixMessage';
 
@@ -16,9 +16,9 @@ const BoltStartScreen: React.FC<BoltStartScreenProps> = ({ onModeSelect }) => {
     }, 100); // Much faster - was likely longer before
   }, []);
 
-  const handleWelcomeComplete = () => {
+  const handleWelcomeComplete = useCallback(() => {
     setShowModeSelection(true);
-  };
+  }, []);
 
   const handleSupportClick = () => {
     onModeSelect('support');

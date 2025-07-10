@@ -17,6 +17,10 @@ const AgentFixMessage: React.FC<AgentFixMessageProps> = ({
   const [isComplete, setIsComplete] = useState(false);
 
   useEffect(() => {
+    // Reset state when content changes
+    setDisplayedText('');
+    setIsComplete(false);
+    
     const timer = setTimeout(() => {
       let currentIndex = 0;
       const typingInterval = setInterval(() => {
@@ -36,7 +40,7 @@ const AgentFixMessage: React.FC<AgentFixMessageProps> = ({
     }, delay);
 
     return () => clearTimeout(timer);
-  }, [content, delay, onComplete]);
+  }, [content, delay]); // Removed onComplete from dependencies to prevent double loading
 
   return (
     <div className="flex space-x-3 animate-fade-in">
