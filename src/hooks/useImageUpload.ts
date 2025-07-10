@@ -31,12 +31,19 @@ export const useImageUpload = () => {
     customerName?: string,
     serviceType: string = 'general'
   ): Promise<ImageGallery | null> => {
-    if (files.length === 0) return null;
+    console.log('🚀 uploadImages called with:', { filesCount: files.length, quoteId, customerName, serviceType });
+    
+    if (files.length === 0) {
+      console.log('❌ No files to upload, returning null');
+      return null;
+    }
 
     setIsUploading(true);
+    console.log('📤 Starting upload process...');
     
     try {
       // Create gallery record
+      console.log('📁 Creating gallery record...');
       const { data: gallery, error: galleryError } = await supabase
         .from('quote_galleries')
         .insert({
@@ -47,21 +54,37 @@ export const useImageUpload = () => {
         .select()
         .single();
 
-      if (galleryError) throw galleryError;
+      if (galleryError) {
+        console.error('❌ Gallery creation error:', galleryError);
+        throw galleryError;
+      }
+      
+      console.log('✅ Gallery created successfully:', gallery);
 
       const uploadedImages: UploadedImage[] = [];
 
       // Upload each file
-      for (const file of files) {
+      console.log(`📂 Starting upload of ${files.length} files...`);
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        console.log(`📷 Uploading file ${i + 1}/${files.length}: ${file.name} (${file.size} bytes)`);
+        
         const fileExt = file.name.split('.').pop();
         const fileName = `${gallery.id}/${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
+        console.log(`📝 Generated filename: ${fileName}`);
         
         // Upload to Supabase Storage
+        console.log('☁️ Uploading to Supabase Storage...');
         const { data: uploadData, error: uploadError } = await supabase.storage
           .from('quote-images')
           .upload(fileName, file);
 
-        if (uploadError) throw uploadError;
+        if (uploadError) {
+          console.error('❌ Storage upload error:', uploadError);
+          throw uploadError;
+        }
+        
+        console.log('✅ File uploaded to storage:', uploadData);
 
         // Get public URL
         const { data: { publicUrl } } = supabase.storage
@@ -69,6 +92,7 @@ export const useImageUpload = () => {
           .getPublicUrl(fileName);
 
         // Save image record to database
+        console.log('💾 Saving image record to database...');
         const { data: imageRecord, error: imageError } = await supabase
           .from('quote_images')
           .insert({
@@ -81,7 +105,12 @@ export const useImageUpload = () => {
           .select()
           .single();
 
-        if (imageError) throw imageError;
+        if (imageError) {
+          console.error('❌ Database insert error:', imageError);
+          throw imageError;
+        }
+        
+        console.log('✅ Image record saved:', imageRecord);
 
         uploadedImages.push({
           id: imageRecord.id,
@@ -103,6 +132,9 @@ export const useImageUpload = () => {
         expiresAt: gallery.expires_at,
       };
 
+      console.log('🎉 Upload complete! Final result:', result);
+      console.log(`📊 Gallery created with ID: ${result.id} containing ${result.images.length} images`);
+
       toast({
         title: "Afbeeldingen geüpload",
         description: `${files.length} afbeelding${files.length > 1 ? 'en' : ''} succesvol geüpload`,
@@ -110,7 +142,14 @@ export const useImageUpload = () => {
 
       return result;
     } catch (error) {
-      console.error('Upload error:', error);
+      console.error('💥 Upload error occurred:', error);
+      console.error('Error details:', {
+        message: error.message,
+        code: error.code,
+        details: error.details,
+        hint: error.hint
+      });
+      
       toast({
         title: "Upload mislukt",
         description: "Er is een fout opgetreden bij het uploaden van de afbeeldingen",
@@ -118,6 +157,7 @@ export const useImageUpload = () => {
       });
       return null;
     } finally {
+      console.log('🏁 Upload process finished, setting isUploading to false');
       setIsUploading(false);
     }
   };
