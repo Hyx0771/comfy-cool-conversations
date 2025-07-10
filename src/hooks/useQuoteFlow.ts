@@ -54,11 +54,25 @@ export const useQuoteFlow = (clearFiles?: () => void) => {
     addUserMessage(`Ik wil graag een offerte voor: ${serviceLabels[service]}`);
   };
 
-  const handleStepResponse = (value: any) => {
+  const handleStepResponse = async (value: any, files?: File[]) => {
     if (typeof value === 'string') {
       addUserMessage(value);
     }
-    handleStepData(value);
+    
+    // Handle file uploads before clearing files or proceeding
+    if (files && files.length > 0) {
+      console.log('🔄 Step response with files - triggering upload:', {
+        filesCount: files.length,
+        serviceType,
+        hasValue: !!value
+      });
+      
+      // We'll handle the upload in the parent component that has access to upload functions
+      handleStepData({ ...value, files });
+    } else {
+      handleStepData(value);
+    }
+    
     setInputValue('');
     clearFiles?.();
   };

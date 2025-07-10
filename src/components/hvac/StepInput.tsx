@@ -10,7 +10,7 @@ interface StepInputProps {
   setInputValue: (value: string) => void;
   selectedFiles: File[];
   setSelectedFiles: (files: File[]) => void;
-  onStepResponse: (value: any) => void;
+  onStepResponse: (value: any, files?: File[]) => void;
 }
 
 const StepInput: React.FC<StepInputProps> = ({ 
@@ -65,7 +65,7 @@ const StepInput: React.FC<StepInputProps> = ({
 
             <div className="flex gap-2 sticky bottom-0 bg-white p-2 border-t shadow-lg">
               <Button
-                onClick={() => onStepResponse(selectedFiles)}
+                onClick={() => onStepResponse(`${selectedFiles.length} foto${selectedFiles.length > 1 ? "'s" : ''} geselecteerd`, selectedFiles)}
                 disabled={selectedFiles.length === 0}
                 className="flex-1 bg-blue-500 hover:bg-blue-600"
               >
