@@ -43,7 +43,7 @@ export class MessageTemplateGenerator {
   private formatLocation(postcode?: string, huisnummer?: string, location?: string): string {
     if (location) return location;
     if (postcode && huisnummer) {
-      return `${postcode} ${huisnummer}`;
+      return `${postcode}, ${huisnummer}`;
     }
     if (postcode) return postcode;
     if (huisnummer) return `Huisnummer ${huisnummer}`;
