@@ -14,7 +14,7 @@ const ServiceSelectionButtons: React.FC<ServiceSelectionButtonsProps> = ({ onSer
       <div className="grid gap-3 pb-4 pr-2">
         <Button
           onClick={() => onServiceSelect('new-airco')}
-          className="h-auto p-4 justify-start text-left bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 min-h-[70px] flex items-center rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105 relative z-10 hover:z-20"
+          className="h-auto p-4 justify-start text-left bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 min-h-[70px] flex items-center rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-102 relative z-10 hover:z-20"
         >
           <div className="mr-3 text-2xl">❄️</div>
           <div className="flex-1">
@@ -29,7 +29,7 @@ const ServiceSelectionButtons: React.FC<ServiceSelectionButtonsProps> = ({ onSer
 
         <Button
           onClick={() => onServiceSelect('heat-pump')}
-          className="h-auto p-4 justify-start text-left bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 min-h-[70px] flex items-center rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105 relative z-10 hover:z-20"
+          className="h-auto p-4 justify-start text-left bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 min-h-[70px] flex items-center rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-102 relative z-10 hover:z-20"
         >
           <div className="mr-3 text-2xl">🔥</div>
           <div className="flex-1">
@@ -44,7 +44,7 @@ const ServiceSelectionButtons: React.FC<ServiceSelectionButtonsProps> = ({ onSer
 
         <Button
           onClick={() => onServiceSelect('maintenance')}
-          className="h-auto p-4 justify-start text-left bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 min-h-[70px] flex items-center rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105 relative z-10 hover:z-20"
+          className="h-auto p-4 justify-start text-left bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 min-h-[70px] flex items-center rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-102 relative z-10 hover:z-20"
         >
           <div className="mr-3 text-2xl">🔧</div>
           <div className="flex-1">
@@ -59,7 +59,7 @@ const ServiceSelectionButtons: React.FC<ServiceSelectionButtonsProps> = ({ onSer
 
         <Button
           onClick={() => onServiceSelect('repair')}
-          className="h-auto p-4 justify-start text-left bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 min-h-[70px] flex items-center rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105 relative z-10 hover:z-20"
+          className="h-auto p-4 justify-start text-left bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 min-h-[70px] flex items-center rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-102 relative z-10 hover:z-20"
         >
           <div className="mr-3 text-2xl">🚑</div>
           <div className="flex-1">
@@ -74,7 +74,7 @@ const ServiceSelectionButtons: React.FC<ServiceSelectionButtonsProps> = ({ onSer
 
         <Button
           onClick={() => onServiceSelect('commissioning')}
-          className="h-auto p-4 justify-start text-left bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 min-h-[70px] flex items-center rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105 relative z-10 hover:z-20"
+          className="h-auto p-4 justify-start text-left bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 min-h-[70px] flex items-center rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-102 relative z-10 hover:z-20"
         >
           <div className="mr-3 text-2xl">✅</div>
           <div className="flex-1">
@@ -89,7 +89,7 @@ const ServiceSelectionButtons: React.FC<ServiceSelectionButtonsProps> = ({ onSer
 
         <Button
           onClick={() => onServiceSelect('project-advice')}
-          className="h-auto p-4 justify-start text-left bg-gradient-to-r from-indigo-500 to-indigo-600 hover:from-indigo-600 hover:to-indigo-700 min-h-[70px] flex items-center rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105 relative z-10 hover:z-20"
+          className="h-auto p-4 justify-start text-left bg-gradient-to-r from-indigo-500 to-indigo-600 hover:from-indigo-600 hover:to-indigo-700 min-h-[70px] flex items-center rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-102 relative z-10 hover:z-20"
         >
           <div className="mr-3 text-2xl">🏢</div>
           <div className="flex-1">
