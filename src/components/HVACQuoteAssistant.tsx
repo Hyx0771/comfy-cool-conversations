@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useHVACQuoteConversation } from '../hooks/useHVACQuoteConversation';
 import { useHVACMessages } from '../hooks/useHVACMessages';
+import { messageGenerator, collectCustomerData } from '../utils/messageTemplates';
 import SupportHeader from './SupportHeader';
 import HVACQuoteFlow from './hvac/HVACQuoteFlow';
 import HVACMessageList from './hvac/HVACMessageList';
@@ -88,13 +89,19 @@ const HVACQuoteAssistant = () => {
     
     setTimeout(() => {
       if (method === 'whatsapp') {
-        const whatsappMessage = `Hoi! Ik heb interesse in ${flowTitle}. Kunnen jullie me helpen met een offerte?`;
-        const whatsappUrl = `https://wa.me/31658769652?text=${encodeURIComponent(whatsappMessage)}`;
+        // Generate personalized message using the template system
+        const customerData = collectCustomerData(conversationData, serviceType || '');
+        const whatsappUrl = messageGenerator.generateWhatsAppUrl(customerData);
         window.open(whatsappUrl, '_blank');
         addUserMessage('WhatsApp contact gekozen');
       } else if (method === 'phone') {
         addUserMessage('Telefonisch contact gekozen');
       } else if (method === 'email') {
+        // Generate personalized email data
+        const customerData = collectCustomerData(conversationData, serviceType || '');
+        const emailData = messageGenerator.generateEmailData(customerData);
+        const mailtoUrl = `mailto:${emailData.to}?subject=${encodeURIComponent(emailData.subject)}&body=${encodeURIComponent(emailData.body)}`;
+        window.open(mailtoUrl, '_blank');
         addUserMessage('E-mail contact gekozen');
       }
       
