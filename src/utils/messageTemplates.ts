@@ -27,45 +27,63 @@ export const DEFAULT_COMPANY_CONFIG: CompanyConfig = {
   emailAddress: "info@clobol.nl"
 };
 
-// Service-specific detail mappings
+// Service-specific detail mappings - Updated to match actual form field names
 export const SERVICE_DETAIL_MAPPINGS: ServiceDetails = {
   'new-airco': [
-    'AC Type: {acType}',
-    'Kamers: {rooms}',
-    'Locatie unit: {location}',
-    'Woningtype: {propertyType}',
-    'Tijdsplanning: {timing}'
+    'Doel: {aircoPurpose}',
+    'Aantal kamers: {roomCount}',
+    'Grootte grootste kamer: {roomSize}',
+    'Bouwjaar huis: {houseYear}',
+    'Muurmateriaal: {wallMaterial}',
+    'Locatie buitenunit: {outdoorUnitLocation}',
+    'Elektrische aansluiting: {electrical}',
+    'Voorkeursmerk: {brandPreference}',
+    'Leidinglengte: {pipeLength}',
+    'Condenswater afvoer: {condensationDrain}',
+    'Opmerkingen: {comments}'
   ],
   'heat-pump': [
     'Huidige verwarming: {currentHeating}',
-    'Isolatie: {insulation}',
-    'Gasverbruik: {gasUsage}',
-    'Vloeroppervlak: {floorArea}',
-    'Oplossing: {solution}'
+    'Isolatie/energielabel: {insulation}',
+    'Gasverbruik per jaar: {gasConsumption}',
+    'Verwarmd vloeroppervlak: {heatedArea}',
+    'Afgiftesysteem: {emissionSystem}',
+    'CV-leidingen diameter: {pipeDiameter}',
+    'Gewenste oplossing: {solutionType}',
+    'Opmerkingen: {comments}'
   ],
   'maintenance': [
-    'Merk: {brand}',
-    'Bouwjaar: {buildYear}',
+    'Merk buitendeel: {outdoorBrand}',
+    'Bouwjaar systeem: {systemYear}',
     'Laatste onderhoud: {lastMaintenance}',
-    'Urgentie: {urgency}'
+    'Foutcode op display: {errorCode}',
+    'Urgentie: {urgency}',
+    'Opmerkingen: {comments}'
   ],
   'repair': [
-    'Probleem: {problemType}',
+    'Type apparaat: {deviceType}',
+    'Probleem: {problem}',
     'Wanneer begon het: {problemStart}',
     'Urgentie: {urgency}',
-    'Symptomen: {symptoms}'
+    'Opmerkingen: {comments}'
   ],
   'commissioning': [
-    'Systeem type: {systemType}',
-    'Merk: {brand}',
-    'Gewenste datum: {preferredDate}',
-    'Locatie: {installationLocation}'
+    'Merk systeem: {systemBrand}',
+    'F-gassen certificaat: {certificate}',
+    'Lengte koelleidingen: {pipeLength}',
+    'Vacuum & druktest: {vacuumTest}',
+    'Diameter leidingen: {pipeDiameter}',
+    'Gewenste datum: {date}',
+    'Opmerkingen: {comments}'
   ],
   'project-advice': [
-    'Project type: {projectType}',
-    'Budget: {budget}',
-    'Energiedoel: {energyGoal}',
-    'Opleverdatum: {deliveryDate}'
+    'Type pand/project: {propertyType}',
+    'Omvang project: {projectSize}',
+    'Projectfase: {projectPhase}',
+    'Indicatief budget: {budget}',
+    'Energie/CO2-doel: {energyGoal}',
+    'Gewenste opleverdatum: {deliveryDate}',
+    'Opmerkingen: {comments}'
   ]
 };
 
@@ -108,13 +126,13 @@ export class MessageTemplateGenerator {
 
     detailTemplate.forEach(template => {
       const detail = this.replaceTemplateVariables(template, customerData);
-      // Only add detail if it contains meaningful data (not just "Niet opgegeven")
-      if (!detail.includes('Niet opgegeven: Niet opgegeven')) {
+      // Only add detail if it doesn't end with "Niet opgegeven" (meaning the field had actual data)
+      if (!detail.endsWith('Niet opgegeven')) {
         details.push(`• ${detail}`);
       }
     });
 
-    return details.length > 0 ? details.join('\n') : '• Basis offerte aanvraag';
+    return details.length > 0 ? details.join('\n') : '• Basis offerte aanvraag (geen extra details ingevuld)';
   }
 
   private getPhotosStatus(photos: File[] | string | undefined): string {
@@ -184,16 +202,38 @@ Groeten van het ${this.config.name} team ${this.config.emoji}`;
 // Export singleton instance with default config
 export const messageGenerator = new MessageTemplateGenerator();
 
-// Utility function to collect form data
+// Enhanced utility function to collect form data with proper field mapping
 export const collectCustomerData = (formData: Record<string, any>, serviceType: string): CustomerData => {
-  return {
-    name: formData.name,
-    phone: formData.phone || formData.phoneNumber,
-    email: formData.email || formData.emailAddress,
+  // Extract personal details if they exist
+  const personalDetails = formData.personalDetails || {};
+  const contactInfo = formData.contactInfo || {};
+  
+  // Create the base customer data
+  const customerData: CustomerData = {
+    name: formData.name || personalDetails.name,
+    phone: formData.phone || formData.phoneNumber || personalDetails.phone || contactInfo.phone,
+    email: formData.email || formData.emailAddress || personalDetails.email || contactInfo.email,
     location: formData.location || formData.address,
     photos: formData.photos || formData.images,
     serviceType,
     // Include all other form data for dynamic details
     ...formData
   };
+
+  // Clean up nested objects to flatten the data structure
+  Object.keys(customerData).forEach(key => {
+    const value = customerData[key];
+    // If it's an object but not an array or File, try to extract meaningful data
+    if (value && typeof value === 'object' && !Array.isArray(value) && !(value instanceof File)) {
+      // For nested objects, we might want to extract the main value
+      if (value.value || value.text || value.label || value.name) {
+        customerData[key] = value.value || value.text || value.label || value.name;
+      } else {
+        // For other objects, convert to string representation
+        customerData[key] = JSON.stringify(value);
+      }
+    }
+  });
+
+  return customerData;
 };
