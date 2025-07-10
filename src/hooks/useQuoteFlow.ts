@@ -44,12 +44,12 @@ export const useQuoteFlow = (clearFiles?: () => void) => {
   const handleServiceSelect = (service: string) => {
     setServiceType(service);
     const serviceLabels: Record<string, string> = {
-      'new-airco': 'Nieuwe airco (koelen / verwarmen)',
-      'heat-pump': 'Warmtepomp',
-      'maintenance': 'Onderhoud / service',
-      'repair': 'Reparatie / storing',
-      'commissioning': 'Inbedrijfstelling gekocht systeem',
-      'project-advice': 'Advies groot project / VvE'
+      'new-airco': '🌬️ Nieuwe airco (koelen / verwarmen)',
+      'heat-pump': '🔥 Warmtepomp',
+      'maintenance': '🛠️ Onderhoud / service',
+      'repair': '🚑 Reparatie / storing',
+      'commissioning': '✅ Inbedrijfstelling gekocht systeem',
+      'project-advice': '🏢 Advies groot project / VvE'
     };
     addUserMessage(`Ik wil graag een offerte voor: ${serviceLabels[service]}`);
   };

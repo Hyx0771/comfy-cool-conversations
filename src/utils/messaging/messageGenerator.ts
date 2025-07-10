@@ -1,6 +1,7 @@
 import { CompanyConfig, DEFAULT_COMPANY_CONFIG, SERVICE_DETAIL_MAPPINGS, SERVICE_DISPLAY_NAMES } from '../config/messageConfig';
 import { CustomerData } from './customerDataCollector';
 import { whatsappEncoder } from './whatsappEncoder';
+import { EmojiCleaner } from './emojiCleaner';
 
 export class MessageTemplateGenerator {
   private config: CompanyConfig;
@@ -62,13 +63,17 @@ export class MessageTemplateGenerator {
   generateMessage(customerData: CustomerData, galleryId?: string): string {
     console.log('Generating message with galleryId:', galleryId);
     
-    const serviceDisplayName = SERVICE_DISPLAY_NAMES[customerData.serviceType] || customerData.serviceType;
-    const dynamicDetails = this.generateDynamicDetails(customerData.serviceType, customerData);
-    const photosStatus = this.getPhotosStatus(customerData.photos);
+    // Clean all emojis from customer data for WhatsApp message
+    const cleanCustomerData = EmojiCleaner.cleanObject(customerData);
+    
+    const serviceDisplayName = SERVICE_DISPLAY_NAMES[cleanCustomerData.serviceType] || cleanCustomerData.serviceType;
+    const cleanServiceDisplayName = EmojiCleaner.cleanText(serviceDisplayName);
+    const dynamicDetails = this.generateDynamicDetails(cleanCustomerData.serviceType, cleanCustomerData);
+    const photosStatus = this.getPhotosStatus(cleanCustomerData.photos);
     const formattedLocation = this.formatLocation(
-      customerData.postcode, 
-      customerData.huisnummer, 
-      customerData.location
+      cleanCustomerData.postcode, 
+      cleanCustomerData.huisnummer, 
+      cleanCustomerData.location
     );
     
     // Enhanced gallery section with better formatting
@@ -87,15 +92,15 @@ Ik heb zojuist via ${this.config.name} een offerte aangevraagd. Hieronder vind j
 ==============================
 *CONTACTGEGEVENS*
 ==============================
-Naam: ${customerData.name || 'Niet opgegeven'}
-Telefoon: ${customerData.phone || 'Niet opgegeven'}  
-E-mail: ${customerData.email || 'Niet opgegeven'}
+Naam: ${cleanCustomerData.name || 'Niet opgegeven'}
+Telefoon: ${cleanCustomerData.phone || 'Niet opgegeven'}  
+E-mail: ${cleanCustomerData.email || 'Niet opgegeven'}
 Adres: ${formattedLocation}
 
 ==============================
 *SERVICE AANVRAAG*
 ==============================
-Gevraagde dienst: ${serviceDisplayName}
+Gevraagde dienst: ${cleanServiceDisplayName}
 Foto's: ${photosStatus}${gallerySection}
 
 ==============================
@@ -124,11 +129,14 @@ Het ${this.config.name} team`;
   }
 
   generateEmailData(customerData: CustomerData, galleryId?: string): { subject: string; body: string; to: string } {
-    const serviceDisplayName = SERVICE_DISPLAY_NAMES[customerData.serviceType] || customerData.serviceType;
+    // Clean emojis for email as well
+    const cleanCustomerData = EmojiCleaner.cleanObject(customerData);
+    const serviceDisplayName = SERVICE_DISPLAY_NAMES[cleanCustomerData.serviceType] || cleanCustomerData.serviceType;
+    const cleanServiceDisplayName = EmojiCleaner.cleanText(serviceDisplayName);
     const message = this.generateMessage(customerData, galleryId);
     
     return {
-      subject: `Offerte aanvraag - ${serviceDisplayName}`,
+      subject: `Offerte aanvraag - ${cleanServiceDisplayName}`,
       body: message,
       to: this.config.emailAddress
     };

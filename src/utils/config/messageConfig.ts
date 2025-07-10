@@ -79,10 +79,10 @@ export const SERVICE_DETAIL_MAPPINGS: ServiceDetails = {
 
 // Service type display names
 export const SERVICE_DISPLAY_NAMES: { [key: string]: string } = {
-  'new-airco': 'Nieuwe airco (koelen / verwarmen)',
-  'heat-pump': 'Warmtepomp',
-  'maintenance': 'Onderhoud / service',
-  'repair': 'Reparatie / storing',
-  'commissioning': 'Inbedrijfstelling gekocht systeem',
-  'project-advice': 'Advies groot project / VvE'
+  'new-airco': '🌬️ Nieuwe airco (koelen / verwarmen)',
+  'heat-pump': '🔥 Warmtepomp',
+  'maintenance': '🛠️ Onderhoud / service',
+  'repair': '🚑 Reparatie / storing',
+  'commissioning': '✅ Inbedrijfstelling gekocht systeem',
+  'project-advice': '🏢 Advies groot project / VvE'
 };
