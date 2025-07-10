@@ -2,10 +2,10 @@ import React, { useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Upload, X, Image, FileImage } from 'lucide-react';
+import { Upload, X, Image, FileImage, Video, Play } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-interface ImageUploadProps {
+interface MediaUploadProps {
   files: File[];
   onChange: (files: File[]) => void;
   maxFiles?: number;
@@ -13,16 +13,18 @@ interface ImageUploadProps {
   accept?: string;
   disabled?: boolean;
   className?: string;
+  allowVideos?: boolean;
 }
 
-export const ImageUpload: React.FC<ImageUploadProps> = ({
+export const ImageUpload: React.FC<MediaUploadProps> = ({
   files,
   onChange,
   maxFiles = 5,
   maxSize = 10,
   accept = "image/*",
   disabled = false,
-  className
+  className,
+  allowVideos = false
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [dragActive, setDragActive] = useState(false);
@@ -36,11 +38,16 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
         console.warn(`File ${file.name} is too large (max ${maxSize}MB)`);
         return false;
       }
-      // Check if it's an image
-      if (!file.type.startsWith('image/')) {
-        console.warn(`File ${file.name} is not an image`);
+      
+      // Check if it's a valid media type
+      const isImage = file.type.startsWith('image/');
+      const isVideo = allowVideos && file.type.startsWith('video/');
+      
+      if (!isImage && !isVideo) {
+        console.warn(`File ${file.name} is not a valid ${allowVideos ? 'image or video' : 'image'}`);
         return false;
       }
+      
       return true;
     });
 
@@ -109,27 +116,34 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
               <Upload className="h-12 w-12 text-muted-foreground" />
             )}
           </div>
-          <div className="space-y-2">
-            <h3 className="text-lg font-medium">
-              {files.length > 0 ? 'Voeg meer foto\'s toe' : 'Upload foto\'s'}
-            </h3>
-            <p className="text-sm text-muted-foreground">
-              Sleep bestanden hierheen of klik om te selecteren
-            </p>
-            <p className="text-xs text-muted-foreground">
-              Max {maxFiles} bestanden, {maxSize}MB per bestand
-            </p>
-          </div>
-          <Button 
-            type="button" 
-            variant="outline" 
-            size="sm" 
-            className="mt-4"
-            disabled={disabled}
-          >
-            <Image className="h-4 w-4 mr-2" />
-            Selecteer bestanden
-          </Button>
+           <div className="space-y-2">
+             <h3 className="text-lg font-medium">
+               {files.length > 0 ? 
+                 `Voeg meer ${allowVideos ? 'bestanden' : 'foto\'s'} toe` : 
+                 `Upload ${allowVideos ? 'foto\'s en video\'s' : 'foto\'s'}`
+               }
+             </h3>
+             <p className="text-sm text-muted-foreground">
+               Sleep bestanden hierheen of klik om te selecteren
+             </p>
+             <p className="text-xs text-muted-foreground">
+               Max {maxFiles} bestanden, {maxSize}MB per bestand
+             </p>
+           </div>
+           <Button 
+             type="button" 
+             variant="outline" 
+             size="sm" 
+             className="mt-4"
+             disabled={disabled}
+           >
+             {allowVideos ? (
+               <FileImage className="h-4 w-4 mr-2" />
+             ) : (
+               <Image className="h-4 w-4 mr-2" />
+             )}
+             Selecteer bestanden
+           </Button>
         </CardContent>
       </Card>
 
@@ -146,10 +160,14 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
                 key={`${file.name}-${index}`}
                 className="flex items-center justify-between p-3 bg-muted rounded-lg"
               >
-                <div className="flex items-center gap-3 flex-1 min-w-0">
-                  <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <Image className="h-6 w-6 text-primary" />
-                  </div>
+                 <div className="flex items-center gap-3 flex-1 min-w-0">
+                   <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                     {file.type.startsWith('video/') ? (
+                       <Video className="h-6 w-6 text-primary" />
+                     ) : (
+                       <Image className="h-6 w-6 text-primary" />
+                     )}
+                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium truncate">{file.name}</p>
                     <div className="flex items-center gap-2 mt-1">
@@ -183,7 +201,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
         ref={fileInputRef}
         type="file"
         multiple
-        accept={accept}
+        accept={allowVideos ? "image/*,video/*" : accept}
         onChange={(e) => handleFileSelect(e.target.files)}
         className="hidden"
         disabled={disabled}

@@ -51,11 +51,20 @@ export class MessageTemplateGenerator {
     return 'Niet opgegeven';
   }
 
-  private getPhotosStatus(photos: File[] | string | undefined): string {
+  private getMediaStatus(photos: File[] | string | undefined): string {
     if (!photos) return 'Niet meegestuurd';
     if (typeof photos === 'string') return photos;
     if (Array.isArray(photos) && photos.length > 0) {
-      return `${photos.length} foto${photos.length > 1 ? "'s" : ''} bijgevoegd`;
+      const imageCount = photos.filter(file => file.type.startsWith('image/')).length;
+      const videoCount = photos.filter(file => file.type.startsWith('video/')).length;
+      
+      if (imageCount > 0 && videoCount > 0) {
+        return `${imageCount} foto${imageCount > 1 ? "'s" : ''} en ${videoCount} video${videoCount > 1 ? "'s" : ''} bijgevoegd`;
+      } else if (imageCount > 0) {
+        return `${imageCount} foto${imageCount > 1 ? "'s" : ''} bijgevoegd`;
+      } else if (videoCount > 0) {
+        return `${videoCount} video${videoCount > 1 ? "'s" : ''} bijgevoegd`;
+      }
     }
     return 'Niet meegestuurd';
   }
@@ -69,7 +78,7 @@ export class MessageTemplateGenerator {
     const serviceDisplayName = SERVICE_DISPLAY_NAMES[cleanCustomerData.serviceType] || cleanCustomerData.serviceType;
     const cleanServiceDisplayName = EmojiCleaner.cleanText(serviceDisplayName);
     const dynamicDetails = this.generateDynamicDetails(cleanCustomerData.serviceType, cleanCustomerData);
-    const photosStatus = this.getPhotosStatus(cleanCustomerData.photos);
+    const mediaStatus = this.getMediaStatus(cleanCustomerData.photos);
     const formattedLocation = this.formatLocation(
       cleanCustomerData.postcode, 
       cleanCustomerData.huisnummer, 
@@ -79,9 +88,9 @@ export class MessageTemplateGenerator {
     // Enhanced gallery section with better formatting
     const gallerySection = galleryId ? `
 
-*FOTO GALERIJ BESCHIKBAAR*
+*MEDIA GALERIJ BESCHIKBAAR*
 ${this.generateGalleryUrl(galleryId)}
-Klik hier om alle foto's te bekijken` : '';
+Klik hier om alle foto's en video's te bekijken` : '';
 
     console.log('Gallery section:', gallerySection);
 
@@ -101,7 +110,7 @@ Adres: ${formattedLocation}
 *SERVICE AANVRAAG*
 ==============================
 Gevraagde dienst: ${cleanServiceDisplayName}
-Foto's: ${photosStatus}${gallerySection}
+Media: ${mediaStatus}${gallerySection}
 
 ==============================
 *SPECIFICATIES*

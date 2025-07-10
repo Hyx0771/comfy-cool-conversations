@@ -45,18 +45,22 @@ const StepInput: React.FC<StepInputProps> = ({
   }
 
   if (step.type === 'text') {
-    const isPhotoRequest = step.content?.toLowerCase().includes('foto') || step.content?.toLowerCase().includes('photo');
+    const isMediaRequest = step.content?.toLowerCase().includes('foto') || 
+                           step.content?.toLowerCase().includes('photo') ||
+                           step.content?.toLowerCase().includes('video') ||
+                           step.content?.toLowerCase().includes('film');
     
     return (
       <div className="p-4 space-y-3 max-h-[50vh] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
-        {isPhotoRequest ? (
+        {isMediaRequest ? (
           <>
             <ImageUpload
               files={selectedFiles}
               onChange={setSelectedFiles}
               maxFiles={10}
-              maxSize={10}
-              accept="image/*"
+              maxSize={25}
+              accept="image/*,video/*"
+              allowVideos={true}
             />
 
             <div className="flex gap-2 sticky bottom-0 bg-white p-2 border-t shadow-lg">
