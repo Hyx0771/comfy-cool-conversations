@@ -11,9 +11,13 @@ interface HVACMessageListProps {
 }
 
 const TypingIndicator: React.FC<{ onComplete: () => void; message: string }> = ({ onComplete, message }) => {
-  // Instantly show the message and call onComplete
+  // Super fast typing animation for initial load
   useEffect(() => {
-    onComplete();
+    const timer = setTimeout(() => {
+      onComplete();
+    }, 50); // Very fast - 50ms delay
+    
+    return () => clearTimeout(timer);
   }, [onComplete]);
 
   return (
@@ -40,12 +44,28 @@ const HVACMessageList: React.FC<HVACMessageListProps> = ({
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (messagesEndRef.current) {
+      // Force immediate scroll to bottom
+      messagesEndRef.current.scrollIntoView({ 
+        behavior: 'auto',
+        block: 'end',
+        inline: 'nearest'
+      });
+      
+      // Also ensure parent container scrolls
+      const container = messagesEndRef.current.closest('.overflow-y-auto');
+      if (container) {
+        container.scrollTop = container.scrollHeight;
+      }
+    }
   };
 
   useEffect(() => {
+    // Immediate scroll, then delayed scroll to handle layout changes
     scrollToBottom();
-  }, [messages, showTyping]);
+    const timer = setTimeout(scrollToBottom, 100);
+    return () => clearTimeout(timer);
+  }, [messages, showTyping, pendingBotMessage]);
 
   return (
     <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gradient-to-br from-blue-50 to-white">
