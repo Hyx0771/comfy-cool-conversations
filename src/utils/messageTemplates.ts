@@ -89,12 +89,12 @@ export const SERVICE_DETAIL_MAPPINGS: ServiceDetails = {
 
 // Service type display names
 export const SERVICE_DISPLAY_NAMES: { [key: string]: string } = {
-  'new-airco': '🌬️ Nieuwe airco (koelen / verwarmen)',
-  'heat-pump': '🔥 Warmtepomp',
-  'maintenance': '🛠️ Onderhoud / service',
-  'repair': '🚑 Reparatie / storing',
-  'commissioning': '✅ Inbedrijfstelling gekocht systeem',
-  'project-advice': '🏢 Advies groot project / VvE'
+  'new-airco': '\uD83C\uDF2C\uFE0F Nieuwe airco (koelen / verwarmen)',
+  'heat-pump': '\uD83D\uDD25 Warmtepomp',
+  'maintenance': '\uD83D\uDEE0\uFE0F Onderhoud / service',
+  'repair': '\uD83D\uDE91 Reparatie / storing',
+  'commissioning': '\u2705 Inbedrijfstelling gekocht systeem',
+  'project-advice': '\uD83C\uDFE2 Advies groot project / VvE'
 };
 
 export class MessageTemplateGenerator {
@@ -151,24 +151,24 @@ export class MessageTemplateGenerator {
     
     // Generate gallery section if galleryId is provided
     const gallerySection = galleryId ? `
-🖼️ Foto galerij: ${this.generateGalleryUrl(galleryId)}
+\uD83D\uDDBC\uFE0F Foto galerij: ${this.generateGalleryUrl(galleryId)}
    Bekijk alle foto's in een overzichtelijke galerij` : '';
 
-    const template = `👋 Hoi!
+    const template = `\uD83D\uDC4B Hoi!
 
 Ik heb net via ${this.config.name} een offerte aangevraagd. Hier zijn de details:
 
-👤 Naam: ${customerData.name || 'Niet opgegeven'}
-📞 Telefoonnummer: ${customerData.phone || 'Niet opgegeven'}
-📧 E-mailadres: ${customerData.email || 'Niet opgegeven'}
-📍 Locatie: ${customerData.location || 'Niet meegestuurd'}
-🖼️ Foto's: ${photosStatus}${gallerySection}
-🛠️ Gevraagde dienst: ${serviceDisplayName}
+\uD83D\uDC64 Naam: ${customerData.name || 'Niet opgegeven'}
+\uD83D\uDCDE Telefoonnummer: ${customerData.phone || 'Niet opgegeven'}
+\uD83D\uDCE7 E-mailadres: ${customerData.email || 'Niet opgegeven'}
+\uD83D\uDCCD Locatie: ${customerData.location || 'Niet meegestuurd'}
+\uD83D\uDDBC\uFE0F Foto's: ${photosStatus}${gallerySection}
+\uD83D\uDEE0\uFE0F Gevraagde dienst: ${serviceDisplayName}
 
-📋 Offertedetails:
+\uD83D\uDCCB Offertedetails:
 ${dynamicDetails}
 
-Laat ons weten of dit klopt of als je nog iets wilt aanvullen. Dan maken we direct een voorstel op maat voor je klaar! 💨
+Laat ons weten of dit klopt of als je nog iets wilt aanvullen. Dan maken we direct een voorstel op maat voor je klaar! \uD83D\uDCA8
 
 Groeten van het ${this.config.name} team ${this.config.emoji}`;
 
