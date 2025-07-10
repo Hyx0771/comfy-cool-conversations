@@ -21,10 +21,10 @@ interface ServiceDetails {
 
 // Default company configuration
 export const DEFAULT_COMPANY_CONFIG: CompanyConfig = {
-  name: "CoolComfort",
+  name: "Clobol",
   emoji: "❄️",
-  whatsappNumber: "+31612345678",
-  emailAddress: "info@coolcomfort.nl"
+  whatsappNumber: "+31658769652",
+  emailAddress: "info@clobol.nl"
 };
 
 // Service-specific detail mappings
