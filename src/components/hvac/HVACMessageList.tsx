@@ -11,11 +11,11 @@ interface HVACMessageListProps {
 }
 
 const TypingIndicator: React.FC<{ onComplete: () => void; message: string }> = ({ onComplete, message }) => {
-  // Ultra fast typing animation - 20ms delay
+  // Slightly slower typing animation for better UX
   useEffect(() => {
     const timer = setTimeout(() => {
       onComplete();
-    }, 20); // Ultra fast - 20ms delay
+    }, 120); // Slightly slower - 120ms delay
     
     return () => clearTimeout(timer);
   }, [onComplete]);
