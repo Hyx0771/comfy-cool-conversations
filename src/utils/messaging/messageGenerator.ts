@@ -86,13 +86,20 @@ export class MessageTemplateGenerator {
     );
     
     // Enhanced gallery section with better formatting
-    const gallerySection = galleryId ? `
+    const galleryUrl = galleryId ? this.generateGalleryUrl(galleryId) : null;
 
-*MEDIA GALERIJ BESCHIKBAAR*
-${this.generateGalleryUrl(galleryId)}
-Klik hier om alle foto's en video's te bekijken` : '';
+    console.log('Gallery URL:', galleryUrl);
 
-    console.log('Gallery section:', gallerySection);
+    // Build media section with gallery URL prominently displayed
+    let mediaSection = `Media: ${mediaStatus}`;
+    if (galleryUrl) {
+      mediaSection += `
+
+*🔗 BEKIJK ALLE FOTO'S EN VIDEO'S:*
+${galleryUrl}
+
+👆 Klik op de link hierboven om alle media te bekijken`;
+    }
 
     const template = `Hallo!
 
@@ -110,7 +117,7 @@ Adres: ${formattedLocation}
 *SERVICE AANVRAAG*
 ==============================
 Gevraagde dienst: ${cleanServiceDisplayName}
-Media: ${mediaStatus}${gallerySection}
+${mediaSection}
 
 ==============================
 *SPECIFICATIES*
