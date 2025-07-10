@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useHVACQuoteConversation } from '../hooks/useHVACQuoteConversation';
 import { useHVACMessages } from '../hooks/useHVACMessages';
+import { useImageUpload } from '../hooks/useImageUpload';
 import { messageGenerator, collectCustomerData } from '../utils/messageTemplates';
 import SupportHeader from './SupportHeader';
 import HVACQuoteFlow from './hvac/HVACQuoteFlow';
@@ -15,6 +16,7 @@ const HVACQuoteAssistant = () => {
   const [inputValue, setInputValue] = useState('');
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [uploadedGalleryId, setUploadedGalleryId] = useState<string | null>(null);
 
   const {
     currentStep,
@@ -35,6 +37,8 @@ const HVACQuoteAssistant = () => {
     handleTypingComplete,
     resetMessages
   } = useHVACMessages();
+
+  const { uploadImages, isUploading } = useImageUpload();
 
   const contactMethods: ContactMethod[] = [
     { id: 'whatsapp', label: 'WhatsApp', emoji: '📱', description: 'Direct chatten' },
@@ -78,7 +82,7 @@ const HVACQuoteAssistant = () => {
     setSelectedFiles([]);
   };
 
-  const handleContactMethodSelect = (method: string) => {
+  const handleContactMethodSelect = async (method: string) => {
     if (method === 'manual') {
       setShowContactForm(true);
       setShowEnhancedContactSelection(false);
@@ -87,27 +91,50 @@ const HVACQuoteAssistant = () => {
 
     setIsProcessing(true);
     
-    setTimeout(() => {
-      if (method === 'whatsapp') {
-        // Generate personalized message using the template system
-        const customerData = collectCustomerData(conversationData, serviceType || '');
-        const whatsappUrl = messageGenerator.generateWhatsAppUrl(customerData);
-        window.open(whatsappUrl, '_blank');
-        addUserMessage('WhatsApp contact gekozen');
-      } else if (method === 'phone') {
-        addUserMessage('Telefonisch contact gekozen');
-      } else if (method === 'email') {
-        // Generate personalized email data
-        const customerData = collectCustomerData(conversationData, serviceType || '');
-        const emailData = messageGenerator.generateEmailData(customerData);
-        const mailtoUrl = `mailto:${emailData.to}?subject=${encodeURIComponent(emailData.subject)}&body=${encodeURIComponent(emailData.body)}`;
-        window.open(mailtoUrl, '_blank');
-        addUserMessage('E-mail contact gekozen');
-      }
+    try {
+      let galleryId = uploadedGalleryId;
       
-      handleStepData({ preferredContact: method });
+      // Upload images if any are selected and not already uploaded
+      if (selectedFiles.length > 0 && !uploadedGalleryId) {
+        const customerData = collectCustomerData(conversationData, serviceType || '');
+        const gallery = await uploadImages(
+          selectedFiles,
+          `${serviceType}-${Date.now()}`,
+          customerData.name,
+          serviceType || 'general'
+        );
+        if (gallery) {
+          galleryId = gallery.id;
+          setUploadedGalleryId(gallery.id);
+          addUserMessage(`${selectedFiles.length} foto${selectedFiles.length > 1 ? "'s" : ''} geüpload naar galerij`);
+        }
+      }
+
+      setTimeout(() => {
+        if (method === 'whatsapp') {
+          // Generate personalized message using the template system
+          const customerData = collectCustomerData(conversationData, serviceType || '');
+          const whatsappUrl = messageGenerator.generateWhatsAppUrl(customerData, galleryId);
+          window.open(whatsappUrl, '_blank');
+          addUserMessage('WhatsApp contact gekozen');
+        } else if (method === 'phone') {
+          addUserMessage('Telefonisch contact gekozen');
+        } else if (method === 'email') {
+          // Generate personalized email data
+          const customerData = collectCustomerData(conversationData, serviceType || '');
+          const emailData = messageGenerator.generateEmailData(customerData, galleryId);
+          const mailtoUrl = `mailto:${emailData.to}?subject=${encodeURIComponent(emailData.subject)}&body=${encodeURIComponent(emailData.body)}`;
+          window.open(mailtoUrl, '_blank');
+          addUserMessage('E-mail contact gekozen');
+        }
+        
+        handleStepData({ preferredContact: method });
+        setIsProcessing(false);
+      }, 200);
+    } catch (error) {
+      console.error('Error processing contact method:', error);
       setIsProcessing(false);
-    }, 200); // Much faster - was 1000ms
+    }
   };
 
   const handleContactFormSubmit = (data: { phone: string; email: string }) => {
@@ -170,7 +197,8 @@ const HVACQuoteAssistant = () => {
             setInputValue={setInputValue}
             selectedFiles={selectedFiles}
             setSelectedFiles={setSelectedFiles}
-            isProcessing={isProcessing}
+            isProcessing={isProcessing || isUploading}
+            uploadedGalleryId={uploadedGalleryId}
             onServiceSelect={handleServiceSelect}
             onContactMethodSelect={handleContactMethodSelect}
             onContactFormSubmit={handleContactFormSubmit}

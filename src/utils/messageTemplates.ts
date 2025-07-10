@@ -86,6 +86,12 @@ export class MessageTemplateGenerator {
     this.config = config;
   }
 
+  private generateGalleryUrl(galleryId: string): string {
+    // Use the current domain for the gallery URL
+    const baseUrl = window.location.origin;
+    return `${baseUrl}/gallery/${galleryId}`;
+  }
+
   private replaceTemplateVariables(template: string, data: any): string {
     return template.replace(/\{([^}]+)\}/g, (match, key) => {
       const value = data[key];
@@ -120,10 +126,15 @@ export class MessageTemplateGenerator {
     return 'Niet meegestuurd';
   }
 
-  generateMessage(customerData: CustomerData): string {
+  generateMessage(customerData: CustomerData, galleryId?: string): string {
     const serviceDisplayName = SERVICE_DISPLAY_NAMES[customerData.serviceType] || customerData.serviceType;
     const dynamicDetails = this.generateDynamicDetails(customerData.serviceType, customerData);
     const photosStatus = this.getPhotosStatus(customerData.photos);
+    
+    // Generate gallery section if galleryId is provided
+    const gallerySection = galleryId ? `
+🖼️ Foto galerij: ${this.generateGalleryUrl(galleryId)}
+   Bekijk alle foto's in een overzichtelijke galerij` : '';
 
     const template = `👋 Hoi!
 
@@ -133,7 +144,7 @@ Ik heb net via ${this.config.name} een offerte aangevraagd. Hier zijn de details
 📞 Telefoonnummer: ${customerData.phone || 'Niet opgegeven'}
 📧 E-mailadres: ${customerData.email || 'Niet opgegeven'}
 📍 Locatie: ${customerData.location || 'Niet meegestuurd'}
-🖼️ Foto's: ${photosStatus}
+🖼️ Foto's: ${photosStatus}${gallerySection}
 🛠️ Gevraagde dienst: ${serviceDisplayName}
 
 📋 Offertedetails:
@@ -146,15 +157,15 @@ Groeten van het ${this.config.name} team ${this.config.emoji}`;
     return template;
   }
 
-  generateWhatsAppUrl(customerData: CustomerData): string {
-    const message = this.generateMessage(customerData);
+  generateWhatsAppUrl(customerData: CustomerData, galleryId?: string): string {
+    const message = this.generateMessage(customerData, galleryId);
     const encodedMessage = encodeURIComponent(message);
     return `https://wa.me/${this.config.whatsappNumber.replace(/[^0-9]/g, '')}?text=${encodedMessage}`;
   }
 
-  generateEmailData(customerData: CustomerData): { subject: string; body: string; to: string } {
+  generateEmailData(customerData: CustomerData, galleryId?: string): { subject: string; body: string; to: string } {
     const serviceDisplayName = SERVICE_DISPLAY_NAMES[customerData.serviceType] || customerData.serviceType;
-    const message = this.generateMessage(customerData);
+    const message = this.generateMessage(customerData, galleryId);
     
     return {
       subject: `Offerte aanvraag - ${serviceDisplayName}`,

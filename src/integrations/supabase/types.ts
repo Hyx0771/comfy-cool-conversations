@@ -14,7 +14,71 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      quote_galleries: {
+        Row: {
+          created_at: string
+          customer_name: string | null
+          expires_at: string | null
+          id: string
+          quote_id: string
+          service_type: string
+        }
+        Insert: {
+          created_at?: string
+          customer_name?: string | null
+          expires_at?: string | null
+          id?: string
+          quote_id: string
+          service_type: string
+        }
+        Update: {
+          created_at?: string
+          customer_name?: string | null
+          expires_at?: string | null
+          id?: string
+          quote_id?: string
+          service_type?: string
+        }
+        Relationships: []
+      }
+      quote_images: {
+        Row: {
+          file_name: string
+          file_path: string
+          file_size: number | null
+          gallery_id: string
+          id: string
+          mime_type: string | null
+          uploaded_at: string
+        }
+        Insert: {
+          file_name: string
+          file_path: string
+          file_size?: number | null
+          gallery_id: string
+          id?: string
+          mime_type?: string | null
+          uploaded_at?: string
+        }
+        Update: {
+          file_name?: string
+          file_path?: string
+          file_size?: number | null
+          gallery_id?: string
+          id?: string
+          mime_type?: string | null
+          uploaded_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quote_images_gallery_id_fkey"
+            columns: ["gallery_id"]
+            isOneToOne: false
+            referencedRelation: "quote_galleries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never

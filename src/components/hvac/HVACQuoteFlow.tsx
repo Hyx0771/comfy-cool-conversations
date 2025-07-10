@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent } from '@/components/ui/card';
 import { Upload, Phone, Mail, MessageCircle, CheckCircle } from 'lucide-react';
+import { ImageUpload } from '@/components/ui/image-upload';
 import type { ConversationStep, ContactMethod } from '../../types/conversation-types';
 
 interface HVACQuoteFlowProps {
@@ -21,6 +22,7 @@ interface HVACQuoteFlowProps {
   selectedFiles: File[];
   setSelectedFiles: (files: File[]) => void;
   isProcessing: boolean;
+  uploadedGalleryId?: string | null;
   onServiceSelect: (service: string) => void;
   onContactMethodSelect: (method: string) => void;
   onContactFormSubmit: (data: { phone: string; email: string }) => void;
@@ -304,17 +306,6 @@ const StepInput = ({
   setSelectedFiles: (files: File[]) => void;
   onStepResponse: (value: any) => void;
 }) => {
-  const fileInputRef = React.useRef<HTMLInputElement>(null);
-
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || []);
-    setSelectedFiles([...selectedFiles, ...files]);
-  };
-
-  const removeFile = (index: number) => {
-    setSelectedFiles(selectedFiles.filter((_, i) => i !== index));
-  };
-
   const handleSkip = () => {
     onStepResponse(''); // Submit empty response to skip
   };
@@ -345,43 +336,13 @@ const StepInput = ({
       <div className="p-4 space-y-3">
         {isPhotoRequest ? (
           <>
-            <div className="space-y-2">
-              <Button
-                onClick={() => fileInputRef.current?.click()}
-                variant="outline"
-                className="w-full h-auto p-3 border-2 border-dashed border-gray-300 hover:border-blue-300 rounded-xl transition-all duration-300"
-              >
-                <Upload className="w-4 h-4 mr-2" />
-                Foto's/Video's uploaden
-              </Button>
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/*,video/*"
-                multiple
-                onChange={handleFileSelect}
-                className="hidden"
-              />
-            </div>
-
-            {selectedFiles.length > 0 && (
-              <div className="space-y-2">
-                <p className="text-sm text-gray-600">Geselecteerde bestanden:</p>
-                {selectedFiles.map((file, index) => (
-                  <div key={index} className="flex items-center justify-between bg-gray-50 p-2 rounded-lg">
-                    <span className="text-sm truncate">{file.name}</span>
-                    <Button
-                      onClick={() => removeFile(index)}
-                      variant="ghost"
-                      size="sm"
-                      className="h-6 w-6 p-0"
-                    >
-                      ×
-                    </Button>
-                  </div>
-                ))}
-              </div>
-            )}
+            <ImageUpload
+              files={selectedFiles}
+              onChange={setSelectedFiles}
+              maxFiles={10}
+              maxSize={10}
+              accept="image/*"
+            />
 
             <div className="flex gap-2">
               <Button
