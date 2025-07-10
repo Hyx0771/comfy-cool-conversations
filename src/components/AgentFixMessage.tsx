@@ -27,10 +27,10 @@ const AgentFixMessage: React.FC<AgentFixMessageProps> = ({
           clearInterval(typingInterval);
           setIsComplete(true);
           if (onComplete) {
-            setTimeout(onComplete, 500);
+            setTimeout(onComplete, 200);
           }
         }
-      }, 30);
+      }, 10);
 
       return () => clearInterval(typingInterval);
     }, delay);
