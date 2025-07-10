@@ -117,30 +117,35 @@ Klik op de link hierboven om alle media te bekijken`;
 
     const template = `Hallo!
 
-Ik heb zojuist via ${this.config.name} een offerte aangevraagd. Hieronder vind je alle details:
+Ik heb zojuist via ${this.config.name} een offerte aangevraagd. 
+Hieronder vind je alle details:
 
 ==============================
 CONTACTGEGEVENS
 ==============================
+
 Naam: ${cleanCustomerData.name || 'Niet opgegeven'}
-Telefoon: ${cleanCustomerData.phone || 'Niet opgegeven'}  
+Telefoon: ${cleanCustomerData.phone || 'Niet opgegeven'}
 E-mail: ${cleanCustomerData.email || 'Niet opgegeven'}
 Adres: ${formattedLocation}
 
 ==============================
 SERVICE AANVRAAG
 ==============================
+
 Gevraagde dienst: ${cleanServiceDisplayName}
+
 ${mediaSection}
 
 ==============================
 SPECIFICATIES
 ==============================
+
 ${dynamicDetails}
 
 ==============================
 
-Graag jullie reactie of dit compleet is, dan kunnen we direct een scherpe offerte op maat maken! 
+Graag jullie reactie of dit compleet is, dan kunnen we direct een scherpe offerte op maat maken!
 
 - Snelle service gegarandeerd
 - Vrijblijvende offerte
