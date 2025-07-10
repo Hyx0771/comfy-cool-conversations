@@ -61,7 +61,17 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				chatbot: {
+					primary: 'hsl(var(--chatbot-primary))',
+					'primary-dark': 'hsl(var(--chatbot-primary-dark))',
+					accent: 'hsl(var(--chatbot-accent))',
+					success: 'hsl(var(--chatbot-success))'
 				}
+			},
+			backgroundImage: {
+				'gradient-primary': 'var(--gradient-primary)',
+				'gradient-accent': 'var(--gradient-accent)'
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
