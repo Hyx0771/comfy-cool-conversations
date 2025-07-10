@@ -52,8 +52,21 @@ export class MessageTemplateGenerator {
   }
 
   private getMediaStatus(photos: File[] | string | undefined): string {
+    console.log('getMediaStatus input:', photos, typeof photos);
+    
     if (!photos) return 'Niet meegestuurd';
-    if (typeof photos === 'string') return photos;
+    
+    // If it's already a formatted string (like "1 foto geselecteerd"), use it
+    if (typeof photos === 'string') {
+      // Check if it looks like a photo count string
+      if (photos.includes('foto') || photos.includes('video') || photos.includes('geselecteerd') || photos.includes('bijgevoegd')) {
+        return photos;
+      }
+      // If it's some other string, treat as "not sent"
+      return 'Niet meegestuurd';
+    }
+    
+    // Handle File array
     if (Array.isArray(photos) && photos.length > 0) {
       const imageCount = photos.filter(file => file.type.startsWith('image/')).length;
       const videoCount = photos.filter(file => file.type.startsWith('video/')).length;
@@ -66,6 +79,7 @@ export class MessageTemplateGenerator {
         return `${videoCount} video${videoCount > 1 ? "'s" : ''} bijgevoegd`;
       }
     }
+    
     return 'Niet meegestuurd';
   }
 

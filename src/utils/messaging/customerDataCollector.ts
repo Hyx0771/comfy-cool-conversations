@@ -31,13 +31,19 @@ export const collectCustomerData = (formData: Record<string, any>, serviceType: 
   // Clean up nested objects to flatten the data structure
   Object.keys(customerData).forEach(key => {
     const value = customerData[key];
+    // Special handling for photos field - don't convert to JSON string
+    if (key === 'photos' || key === 'images') {
+      // Keep photos as-is (should be File[] or string)
+      return;
+    }
+    
     // If it's an object but not an array or File, try to extract meaningful data
     if (value && typeof value === 'object' && !Array.isArray(value) && !(value instanceof File)) {
       // For nested objects, we might want to extract the main value
       if (value.value || value.text || value.label || value.name) {
         customerData[key] = value.value || value.text || value.label || value.name;
       } else {
-        // For other objects, convert to string representation
+        // For other objects, convert to string representation (but not for photos)
         customerData[key] = JSON.stringify(value);
       }
     }

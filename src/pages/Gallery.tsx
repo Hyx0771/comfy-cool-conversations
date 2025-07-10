@@ -41,10 +41,19 @@ const Gallery = () => {
   const fetchGallery = async () => {
     if (!galleryId) return;
     
+    console.log('🔍 Fetching gallery with ID:', galleryId);
     setLoading(true);
-    const galleryData = await getGallery(galleryId);
-    setGallery(galleryData);
-    setLoading(false);
+    
+    try {
+      const galleryData = await getGallery(galleryId);
+      console.log('📁 Gallery data received:', galleryData);
+      setGallery(galleryData);
+    } catch (error) {
+      console.error('❌ Error fetching gallery:', error);
+      setGallery(null);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const formatFileSize = (bytes: number) => {
