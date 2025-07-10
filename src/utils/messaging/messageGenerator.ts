@@ -104,15 +104,15 @@ export class MessageTemplateGenerator {
 
     console.log('Gallery URL:', galleryUrl);
 
-    // Build media section with gallery URL prominently displayed
+    // Build media section with gallery URL prominently displayed (no emojis for WhatsApp)
     let mediaSection = `Media: ${mediaStatus}`;
     if (galleryUrl) {
       mediaSection += `
 
-*🔗 BEKIJK ALLE FOTO'S EN VIDEO'S:*
+BEKIJK ALLE FOTO'S EN VIDEO'S:
 ${galleryUrl}
 
-👆 Klik op de link hierboven om alle media te bekijken`;
+Klik op de link hierboven om alle media te bekijken`;
     }
 
     const template = `Hallo!
@@ -120,7 +120,7 @@ ${galleryUrl}
 Ik heb zojuist via ${this.config.name} een offerte aangevraagd. Hieronder vind je alle details:
 
 ==============================
-*CONTACTGEGEVENS*
+CONTACTGEGEVENS
 ==============================
 Naam: ${cleanCustomerData.name || 'Niet opgegeven'}
 Telefoon: ${cleanCustomerData.phone || 'Niet opgegeven'}  
@@ -128,13 +128,13 @@ E-mail: ${cleanCustomerData.email || 'Niet opgegeven'}
 Adres: ${formattedLocation}
 
 ==============================
-*SERVICE AANVRAAG*
+SERVICE AANVRAAG
 ==============================
 Gevraagde dienst: ${cleanServiceDisplayName}
 ${mediaSection}
 
 ==============================
-*SPECIFICATIES*
+SPECIFICATIES
 ==============================
 ${dynamicDetails}
 
@@ -148,7 +148,8 @@ Graag jullie reactie of dit compleet is, dan kunnen we direct een scherpe offert
 Met vriendelijke groet,
 Het ${this.config.name} team`;
 
-    return template;
+    // Apply comprehensive emoji cleaning to the entire message for WhatsApp
+    return EmojiCleaner.cleanForWhatsApp(template);
   }
 
   generateWhatsAppUrl(customerData: CustomerData, galleryId?: string): string {
