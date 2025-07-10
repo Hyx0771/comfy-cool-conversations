@@ -11,8 +11,8 @@ export class MessageTemplateGenerator {
   }
 
   private generateGalleryUrl(galleryId: string): string {
-    // Use the production domain for the gallery URL
-    const baseUrl = 'https://clobol-demo-aigento.com';
+    // Use the correct production domain for the gallery URL
+    const baseUrl = 'https://clobol-aigento.com';
     return `${baseUrl}/gallery/${galleryId}`;
   }
 
