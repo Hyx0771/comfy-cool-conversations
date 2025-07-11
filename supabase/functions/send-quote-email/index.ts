@@ -31,7 +31,7 @@ const handler = async (req: Request): Promise<Response> => {
 
       const emailResponse = await resend.emails.send({
         from: "Aigento.ai FAQ Chatbot <faq@app.aigento.ai>",
-        to: ["yves@aigento.ai"],
+        to: ["yves@aigento.ai", "info@clobol.nl"],
         subject: `💬 Nieuwe FAQ Vraag - ${contactMethod === 'call' ? 'Bel verzoek' : 'E-mail verzoek'} van ${contactInfo.name}`,
         html: htmlContent,
         text: textContent,
@@ -68,7 +68,7 @@ const handler = async (req: Request): Promise<Response> => {
       
       const emailResponse = await resend.emails.send({
         from: "Aigento.ai Quote System <quotes@app.aigento.ai>",
-        to: ["yves@aigento.ai"],
+        to: ["yves@aigento.ai", "info@clobol.nl"],
         subject: `🏠 Nieuwe Offerte Aanvraag - ${customerData.serviceType || 'Service'} (${requestType === 'call' ? 'Bel verzoek' : 'E-mail verzoek'})`,
         html: htmlContent,
         text: message,
