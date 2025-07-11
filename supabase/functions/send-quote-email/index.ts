@@ -14,6 +14,104 @@ interface QuoteEmailRequest {
   requestType: 'call' | 'email';
 }
 
+// Complete message generation logic (replicated from frontend)
+const SERVICE_DISPLAY_NAMES: { [key: string]: string } = {
+  'new-airco': '🌬️ Nieuwe airco (koelen / verwarmen)',
+  'heat-pump': '🔥 Warmtepomp',
+  'maintenance': '🛠️ Onderhoud / service',
+  'repair': '🚑 Reparatie / storing',
+  'commissioning': '✅ Inbedrijfstelling gekocht systeem',
+  'project-advice': '🏢 Advies groot project / VvE'
+};
+
+const SERVICE_DETAIL_MAPPINGS: { [key: string]: string[] } = {
+  'new-airco': [
+    'Doel: {aircoPurpose}',
+    'Aantal kamers: {roomCount}',
+    'Grootte grootste kamer: {roomSize}',
+    'Bouwjaar huis: {houseYear}',
+    'Muurmateriaal: {wallMaterial}',
+    'Locatie buitenunit: {outdoorUnitLocation}',
+    'Elektrische aansluiting: {electrical}',
+    'Voorkeursmerk: {brandPreference}',
+    'Leidinglengte: {pipeLength}',
+    'Condenswater afvoer: {condensationDrain}',
+    'Opmerkingen: {comments}'
+  ],
+  'heat-pump': [
+    'Huidige verwarming: {currentHeating}',
+    'Isolatie/energielabel: {insulation}',
+    'Gasverbruik per jaar: {gasConsumption}',
+    'Verwarmd vloeroppervlak: {heatedArea}',
+    'Afgiftesysteem: {emissionSystem}',
+    'CV-leidingen diameter: {pipeDiameter}',
+    'Gewenste oplossing: {solutionType}',
+    'Opmerkingen: {comments}'
+  ],
+  'maintenance': [
+    'Merk buitendeel: {outdoorBrand}',
+    'Bouwjaar systeem: {systemYear}',
+    'Laatste onderhoud: {lastMaintenance}',
+    'Foutcode op display: {errorCode}',
+    'Urgentie: {urgency}',
+    'Opmerkingen: {comments}'
+  ],
+  'repair': [
+    'Type apparaat: {deviceType}',
+    'Probleem: {problem}',
+    'Wanneer begon het: {problemStart}',
+    'Urgentie: {urgency}',
+    'Opmerkingen: {comments}'
+  ],
+  'commissioning': [
+    'Merk systeem: {systemBrand}',
+    'F-gassen certificaat: {certificate}',
+    'Lengte koelleidingen: {pipeLength}',
+    'Vacuum & druktest: {vacuumTest}',
+    'Diameter leidingen: {pipeDiameter}',
+    'Gewenste datum: {date}',
+    'Opmerkingen: {comments}'
+  ],
+  'project-advice': [
+    'Type pand/project: {propertyType}',
+    'Omvang project: {projectSize}',
+    'Projectfase: {projectPhase}',
+    'Indicatief budget: {budget}',
+    'Energie/CO2-doel: {energyGoal}',
+    'Gewenste opleverdatum: {deliveryDate}',
+    'Opmerkingen: {comments}'
+  ]
+};
+
+// Emoji cleaning functions
+const cleanEmojis = (text: string): string => {
+  if (!text) return '';
+  
+  // Remove emojis while preserving text
+  return text
+    .replace(/[\u{1F600}-\u{1F64F}]/gu, '') // Emoticons
+    .replace(/[\u{1F300}-\u{1F5FF}]/gu, '') // Symbols & Pictographs
+    .replace(/[\u{1F680}-\u{1F6FF}]/gu, '') // Transport & Map
+    .replace(/[\u{1F1E0}-\u{1F1FF}]/gu, '') // Flags
+    .replace(/[\u{2600}-\u{26FF}]/gu, '')   // Miscellaneous symbols
+    .replace(/[\u{2700}-\u{27BF}]/gu, '')   // Dingbats
+    .replace(/[\u{1F900}-\u{1F9FF}]/gu, '') // Supplemental Symbols and Pictographs
+    .replace(/[\u{1FA70}-\u{1FAFF}]/gu, '') // Symbols and Pictographs Extended-A
+    .trim();
+};
+
+const cleanCustomerData = (data: any): any => {
+  const cleaned: any = {};
+  for (const [key, value] of Object.entries(data)) {
+    if (typeof value === 'string') {
+      cleaned[key] = cleanEmojis(value);
+    } else {
+      cleaned[key] = value;
+    }
+  }
+  return cleaned;
+};
+
 const generateHtmlTemplate = (message: string, customerData: any, galleryId?: string, requestType?: string): string => {
   const sections = message.split('==================================================');
   const contactSection = sections[1]?.trim() || '';
@@ -23,6 +121,15 @@ const generateHtmlTemplate = (message: string, customerData: any, galleryId?: st
   
   const galleryUrl = galleryId ? `https://clobol-aigento.com/gallery/${galleryId}` : null;
   const requestTypeText = requestType === 'call' ? 'telefonisch contact' : 'e-mail contact';
+  
+  // Enhanced service name with proper emoji handling
+  const serviceDisplayName = SERVICE_DISPLAY_NAMES[customerData.serviceType] || customerData.serviceType;
+  const serviceIcon = serviceDisplayName.includes('🌬️') ? '🌬️' : 
+                     serviceDisplayName.includes('🔥') ? '🔥' :
+                     serviceDisplayName.includes('🛠️') ? '🛠️' :
+                     serviceDisplayName.includes('🚑') ? '🚑' :
+                     serviceDisplayName.includes('✅') ? '✅' :
+                     serviceDisplayName.includes('🏢') ? '🏢' : '🔧';
   
   return `
 <!DOCTYPE html>
@@ -182,13 +289,134 @@ const handler = async (req: Request): Promise<Response> => {
     const { customerData, galleryId, requestType }: QuoteEmailRequest = await req.json();
     console.log('📧 Quote email request:', { customerData, galleryId, requestType });
 
-    // Import message generation logic (simplified version)
-    const generateMessage = (customerData: any, galleryId?: string): string => {
-      const serviceDisplayName = customerData.serviceType || 'Service';
-      const formattedLocation = customerData.postcode && customerData.huisnummer 
-        ? `${customerData.postcode}, ${customerData.huisnummer}`
-        : customerData.location || 'Niet opgegeven';
+    // Complete message generation logic with all service-specific details
+    const replaceTemplateVariables = (template: string, data: any): string => {
+      return template.replace(/\{([^}]+)\}/g, (match, key) => {
+        const value = data[key];
+        if (value === undefined || value === null || value === '') {
+          return 'Niet opgegeven';
+        }
+        return String(value);
+      });
+    };
 
+    const generateDynamicDetails = (serviceType: string, customerData: any): string => {
+      const detailTemplate = SERVICE_DETAIL_MAPPINGS[serviceType] || [];
+      const details: string[] = [];
+
+      detailTemplate.forEach(template => {
+        const detail = replaceTemplateVariables(template, customerData);
+        // Only add detail if it doesn't end with "Niet opgegeven" (meaning the field had actual data)
+        if (!detail.endsWith('Niet opgegeven')) {
+          details.push(`• ${detail}`);
+        }
+      });
+
+      return details.length > 0 ? details.join('\n') : '• Basis offerte aanvraag (geen extra details ingevuld)';
+    };
+
+    const formatLocation = (postcode?: string, huisnummer?: string, location?: string): string => {
+      if (location) return location;
+      if (postcode && huisnummer) {
+        return `${postcode}, ${huisnummer}`;
+      }
+      if (postcode) return postcode;
+      if (huisnummer) return `Huisnummer ${huisnummer}`;
+      return 'Niet opgegeven';
+    };
+
+    const getMediaStatus = (photos: any, galleryId?: string): { status: string; hasMedia: boolean } => {
+      console.log('getMediaStatus input:', photos, typeof photos, 'galleryId:', galleryId);
+      
+      // If we have a gallery ID, we definitely have media
+      if (galleryId) {
+        if (typeof photos === 'string' && (photos.includes('foto') || photos.includes('video'))) {
+          return { status: photos, hasMedia: true };
+        }
+        if (Array.isArray(photos) && photos.length > 0) {
+          const imageCount = photos.filter((file: any) => file.type?.startsWith('image/')).length;
+          const videoCount = photos.filter((file: any) => file.type?.startsWith('video/')).length;
+          
+          if (imageCount > 0 && videoCount > 0) {
+            return { 
+              status: `${imageCount} foto${imageCount > 1 ? "'s" : ''} en ${videoCount} video${videoCount > 1 ? "'s" : ''} bijgevoegd`,
+              hasMedia: true 
+            };
+          } else if (imageCount > 0) {
+            return { 
+              status: `${imageCount} foto${imageCount > 1 ? "'s" : ''} bijgevoegd`,
+              hasMedia: true 
+            };
+          } else if (videoCount > 0) {
+            return { 
+              status: `${videoCount} video${videoCount > 1 ? "'s" : ''} bijgevoegd`,
+              hasMedia: true 
+            };
+          }
+        }
+        // Fallback when we have gallery but unclear media count
+        return { status: "Media bijgevoegd", hasMedia: true };
+      }
+      
+      // No gallery ID - check if we have files
+      if (!photos) return { status: 'Geen media bijgevoegd', hasMedia: false };
+      
+      // Handle string format
+      if (typeof photos === 'string') {
+        if (photos.includes('foto') || photos.includes('video') || photos.includes('geselecteerd') || photos.includes('bijgevoegd')) {
+          return { status: photos, hasMedia: true };
+        }
+        return { status: 'Geen media bijgevoegd', hasMedia: false };
+      }
+      
+      // Handle File array
+      if (Array.isArray(photos) && photos.length > 0) {
+        const imageCount = photos.filter((file: any) => file.type?.startsWith('image/')).length;
+        const videoCount = photos.filter((file: any) => file.type?.startsWith('video/')).length;
+        
+        if (imageCount > 0 && videoCount > 0) {
+          return { 
+            status: `${imageCount} foto${imageCount > 1 ? "'s" : ''} en ${videoCount} video${videoCount > 1 ? "'s" : ''} bijgevoegd`,
+            hasMedia: true 
+          };
+        } else if (imageCount > 0) {
+          return { 
+            status: `${imageCount} foto${imageCount > 1 ? "'s" : ''} bijgevoegd`,
+            hasMedia: true 
+          };
+        } else if (videoCount > 0) {
+          return { 
+            status: `${videoCount} video${videoCount > 1 ? "'s" : ''} bijgevoegd`,
+            hasMedia: true 
+          };
+        }
+      }
+      
+      return { status: 'Geen media bijgevoegd', hasMedia: false };
+    };
+
+    const generateMessage = (customerData: any, galleryId?: string): string => {
+      console.log('Generating message with galleryId:', galleryId);
+      
+      // Clean all emojis from customer data for WhatsApp/Email message
+      const cleanedCustomerData = cleanCustomerData(customerData);
+      
+      const serviceDisplayName = SERVICE_DISPLAY_NAMES[cleanedCustomerData.serviceType] || cleanedCustomerData.serviceType;
+      const cleanServiceDisplayName = cleanEmojis(serviceDisplayName);
+      const dynamicDetails = generateDynamicDetails(cleanedCustomerData.serviceType, cleanedCustomerData);
+      const mediaInfo = getMediaStatus(cleanedCustomerData.photos, galleryId);
+      const formattedLocation = formatLocation(
+        cleanedCustomerData.postcode, 
+        cleanedCustomerData.huisnummer, 
+        cleanedCustomerData.location
+      );
+      
+      // Enhanced gallery section with better formatting
+      const galleryUrl = galleryId ? `https://clobol-aigento.com/gallery/${galleryId}` : null;
+
+      console.log('Gallery URL:', galleryUrl);
+
+      // Build the complete message with perfect formatting
       let template = `Hallo!
 
 Ik heb zojuist via Clobol een offerte aangevraagd.
@@ -198,31 +426,39 @@ Hieronder vind je alle details:
 CONTACTGEGEVENS
 ==================================================
 
-Naam: ${customerData.name || 'Niet opgegeven'}
-Telefoon: ${customerData.phone || 'Niet opgegeven'}
-E-mail: ${customerData.email || 'Niet opgegeven'}
+Naam: ${cleanedCustomerData.name || 'Niet opgegeven'}
+Telefoon: ${cleanedCustomerData.phone || 'Niet opgegeven'}
+E-mail: ${cleanedCustomerData.email || 'Niet opgegeven'}
 Adres: ${formattedLocation}
 
 ==================================================
 GEVRAAGDE SERVICE
 ==================================================
 
-Service: ${serviceDisplayName}`;
+Service: ${cleanServiceDisplayName}`;
 
-      if (galleryId) {
-        const galleryUrl = `https://clobol-aigento.com/gallery/${galleryId}`;
+      // Add media section based on whether we have media or not
+      if (mediaInfo.hasMedia && galleryUrl) {
         template += `
 
 ==================================================
 FOTO'S EN VIDEO'S
 ==================================================
 
-Media bijgevoegd
+${mediaInfo.status}
 
 BEKIJK ALLE MEDIA HIER:
 ${galleryUrl}
 
 Klik op bovenstaande link om alle foto's en video's te bekijken.`;
+      } else if (mediaInfo.hasMedia) {
+        template += `
+
+Media: ${mediaInfo.status}`;
+      } else {
+        template += `
+
+Media: ${mediaInfo.status}`;
       }
 
       template += `
@@ -231,7 +467,7 @@ Klik op bovenstaande link om alle foto's en video's te bekijken.`;
 SPECIFICATIES
 ==================================================
 
-• Basis offerte aanvraag
+${dynamicDetails}
 
 ==================================================
 
@@ -243,9 +479,10 @@ ONZE SERVICE:
 - Professioneel advies
 
 Met vriendelijke groet,
-Het Aigento team`;
+Het Clobol team`;
 
-      return template;
+      // Apply comprehensive emoji cleaning to the entire message for email
+      return cleanEmojis(template);
     };
 
     const message = generateMessage(customerData, galleryId);
