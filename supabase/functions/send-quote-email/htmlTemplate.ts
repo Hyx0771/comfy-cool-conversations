@@ -240,7 +240,7 @@ export const generateHtmlTemplate = (message: string, customerData: any, gallery
                             <span style="color: white; font-size: 35px;">🖼️</span>
                         </div>
                         <p style="margin: 0; color: #92400e; font-size: 18px; font-weight: 600; line-height: 1.4;">
-                            ${mediaSection.includes('foto') || mediaSection.includes('video') ? mediaSection.split('\n').find(line => line.includes('foto') || line.includes('video')) || 'Professionele media bijgevoegd' : 'Uitgebreide media documentatie toegevoegd'}
+                            Professionele media documentatie toegevoegd
                         </p>
                     </div>
                     
