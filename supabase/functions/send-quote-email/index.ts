@@ -21,7 +21,7 @@ const generateHtmlTemplate = (message: string, customerData: any, galleryId?: st
   const mediaSection = sections[3] ? sections[3].trim() : '';
   const specificationsSection = sections[4]?.trim() || '';
   
-  const galleryUrl = galleryId ? `https://app.aigento.ai/gallery/${galleryId}` : null;
+  const galleryUrl = galleryId ? `https://clobol-aigento.com/gallery/${galleryId}` : null;
   const requestTypeText = requestType === 'call' ? 'telefonisch contact' : 'e-mail contact';
   
   return `
@@ -210,7 +210,7 @@ GEVRAAGDE SERVICE
 Service: ${serviceDisplayName}`;
 
       if (galleryId) {
-        const galleryUrl = `https://app.aigento.ai/gallery/${galleryId}`;
+        const galleryUrl = `https://clobol-aigento.com/gallery/${galleryId}`;
         template += `
 
 ==================================================

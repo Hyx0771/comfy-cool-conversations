@@ -12,7 +12,7 @@ export class MessageTemplateGenerator {
 
   private generateGalleryUrl(galleryId: string): string {
     // Use the correct production domain for the gallery URL
-    const baseUrl = 'https://app.aigento.ai';
+    const baseUrl = 'https://clobol-aigento.com';
     return `${baseUrl}/gallery/${galleryId}`;
   }
 
