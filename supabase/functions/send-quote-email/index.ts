@@ -23,13 +23,20 @@ const handler = async (req: Request): Promise<Response> => {
     const message = generateMessage(customerData, galleryId);
     const htmlContent = generateHtmlTemplate(message, customerData, galleryId, requestType);
 
+    console.log('📧 Attempting to send email with domain: app.aigento.ai');
+    
     const emailResponse = await resend.emails.send({
-      from: "Clobol Quote System <quotes@app.clobol.nl>",
+      from: "Clobol Quote System <quotes@app.aigento.ai>",
       to: ["yves@aigento.ai"],
       subject: `🏠 Nieuwe Offerte Aanvraag - ${customerData.serviceType || 'Service'} (${requestType === 'call' ? 'Bel verzoek' : 'E-mail verzoek'})`,
       html: htmlContent,
       text: message,
     });
+
+    if (emailResponse.error) {
+      console.error('❌ Resend API Error:', emailResponse.error);
+      throw new Error(`Email delivery failed: ${emailResponse.error.message || 'Unknown error'}`);
+    }
 
     console.log("✅ Quote email sent successfully:", emailResponse);
 
