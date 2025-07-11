@@ -73,11 +73,17 @@ export const generateHtmlTemplate = (message: string, customerData: any, gallery
     return conversationHistory.map((msg, index) => {
       // Handle different message formats that might come from the frontend
       const messageContent = msg.content || msg.text || msg.message || '';
-      const messageType = msg.type || (messageContent.includes('Aigento') ? 'bot' : 'user');
+      
+      // Use isBot field to determine message type, with fallback logic
+      const isBot = msg.isBot !== undefined ? msg.isBot : 
+                   msg.type === 'bot' || 
+                   (typeof messageContent === 'string' && messageContent.includes('Aigento'));
+      
+      const messageType = isBot ? 'bot' : 'user';
       const timestamp = msg.timestamp || new Date();
       
       // Determine sender based on message type
-      const sender = messageType === 'bot' ? 'Aigento.ai Assistant' : customerData.name || 'Klant';
+      const sender = isBot ? 'Aigento.ai Assistant' : customerData.name || 'Klant';
       
       return {
         type: messageType,
