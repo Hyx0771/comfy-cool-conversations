@@ -1,10 +1,10 @@
 import { SERVICE_DISPLAY_NAMES } from './constants.ts';
 
 export const generateHtmlTemplate = (message: string, customerData: any, galleryId?: string, requestType?: string, conversationHistory?: any[]): string => {
-  const galleryUrl = galleryId ? `https://aigento.ai/gallery/${galleryId}` : null;
-  const requestTypeText = requestType === 'call' ? 'telefonisch contact' : 'e-mail contact';
+  const galleryUrl = galleryId ? `https://clobol-aigento.com/gallery/${galleryId}` : null;
+  const requestTypeText = requestType === 'call' ? 'Bel verzoek' : 'E-mail verzoek';
   
-  // Enhanced service name with proper emoji handling
+  // Enhanced service name with proper emoji handling and Dutch translations
   const serviceDisplayName = SERVICE_DISPLAY_NAMES[customerData.serviceType] || customerData.serviceType;
   const serviceIcon = serviceDisplayName.includes('🌬️') ? '🌬️' : 
                      serviceDisplayName.includes('🔥') ? '🔥' :
@@ -22,9 +22,21 @@ export const generateHtmlTemplate = (message: string, customerData: any, gallery
     return parts.length > 0 ? parts.join(', ') : 'Niet opgegeven';
   };
   
-  // Generate technical specifications from customer data
+  // Generate technical specifications from customer data with Dutch labels
   const generateTechnicalSpecs = () => {
     const specs = [];
+    const fieldTranslations: Record<string, string> = {
+      'currentHeating': 'Huidige Verwarming',
+      'insulation': 'Isolatie',
+      'gasConsumption': 'Gasverbruik',
+      'heatedArea': 'Verwarmingsoppervlak',
+      'emissionSystem': 'Emissiesysteem',
+      'pipeDiameter': 'Leidingdiameter',
+      'solutionType': 'Oplossingstype',
+      'comments': 'Opmerkingen',
+      'personalDetails': 'Persoonlijke Details'
+    };
+    
     Object.entries(customerData).forEach(([key, value]) => {
       // Skip basic contact info and metadata
       if (['name', 'phone', 'email', 'postcode', 'huisnummer', 'location', 'serviceType', 'photos', 'conversationHistory'].includes(key)) {
@@ -32,8 +44,8 @@ export const generateHtmlTemplate = (message: string, customerData: any, gallery
       }
       
       if (value && value !== '' && value !== null && value !== undefined) {
-        // Format the key to be more readable
-        const readableKey = key
+        // Use Dutch translation if available, otherwise format the key
+        const readableKey = fieldTranslations[key] || key
           .replace(/([A-Z])/g, ' $1')
           .replace(/^./, str => str.toUpperCase())
           .trim();
@@ -52,6 +64,31 @@ export const generateHtmlTemplate = (message: string, customerData: any, gallery
     return specs.length > 0 ? specs : ['Basis offerte aanvraag (geen extra specificaties ingevuld)'];
   };
   
+  // Process conversation history properly to show both speakers
+  const processConversationHistory = () => {
+    if (!conversationHistory || !Array.isArray(conversationHistory) || conversationHistory.length === 0) {
+      return [];
+    }
+    
+    return conversationHistory.map((msg, index) => {
+      // Handle different message formats that might come from the frontend
+      const messageContent = msg.content || msg.text || msg.message || '';
+      const messageType = msg.type || (messageContent.includes('Aigento') ? 'bot' : 'user');
+      const timestamp = msg.timestamp || new Date();
+      
+      // Determine sender based on message type
+      const sender = messageType === 'bot' ? 'Aigento.ai Assistant' : customerData.name || 'Klant';
+      
+      return {
+        type: messageType,
+        content: messageContent,
+        sender: sender,
+        timestamp: timestamp
+      };
+    });
+  };
+  
+  const processedConversation = processConversationHistory();
   const technicalSpecs = generateTechnicalSpecs();
   
   return `
@@ -258,7 +295,7 @@ export const generateHtmlTemplate = (message: string, customerData: any, gallery
         </div>
         ` : ''}
 
-        ${conversationHistory && conversationHistory.length > 0 ? `
+        ${processedConversation && processedConversation.length > 0 ? `
         <!-- Premium Conversation History Section -->
         <div style="padding: 40px;" class="responsive-padding fade-in">
             <div style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border-radius: 16px; padding: 30px; border-left: 5px solid #0ea5e9; position: relative; overflow: hidden;">
@@ -275,38 +312,42 @@ export const generateHtmlTemplate = (message: string, customerData: any, gallery
                 </div>
                 
                 <div style="background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); max-height: 500px; overflow-y: auto; position: relative; z-index: 2;">
-                    ${conversationHistory.map((msg, index) => {
+                    ${processedConversation.map((msg, index) => {
                       const time = msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString('nl-NL', { 
                         hour: '2-digit', 
                         minute: '2-digit' 
                       }) : '';
                       
                       const isBot = msg.type === 'bot';
-                      const sender = isBot ? 'Aigento.ai Assistant' : customerData.name || 'Klant';
-                      const bgColor = isBot ? '#f8fafc' : '#0ea5e9';
-                      const textColor = isBot ? '#1f2937' : '#ffffff';
+                      const sender = msg.sender;
+                      const senderIcon = isBot ? '🤖' : '👤';
+                      const bgColor = isBot ? '#f1f5f9' : '#0ea5e9';
+                      const textColor = isBot ? '#1e293b' : '#ffffff';
                       const alignment = isBot ? 'flex-start' : 'flex-end';
-                      const borderRadius = isBot ? 'border-bottom-left-radius: 6px' : 'border-bottom-right-radius: 6px';
+                      const borderRadius = isBot ? '20px 20px 20px 6px' : '20px 20px 6px 20px';
                       
                       return `
-                        <div style="margin: 15px 0; display: flex; justify-content: ${alignment};">
+                        <div style="margin: 20px 0; display: flex; justify-content: ${alignment}; align-items: flex-end;">
+                          ${isBot ? `<div style="margin-right: 10px; font-size: 20px;">${senderIcon}</div>` : ''}
                           <div style="
                             max-width: 70%;
-                            padding: 12px 16px;
-                            border-radius: 18px;
-                            ${borderRadius};
+                            padding: 16px 20px;
+                            border-radius: ${borderRadius};
                             background-color: ${bgColor};
                             color: ${textColor};
-                            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                            position: relative;
                           ">
-                            <div style="font-weight: 600; font-size: 12px; margin-bottom: 4px; opacity: 0.8;">
+                            <div style="font-weight: 700; font-size: 14px; margin-bottom: 8px; opacity: ${isBot ? '0.8' : '0.9'}; display: flex; align-items: center;">
+                              <span style="margin-right: 6px;">${senderIcon}</span>
                               ${sender}
                             </div>
-                            <div style="line-height: 1.5; white-space: pre-wrap;">
-                              ${msg.content || msg.text || ''}
+                            <div style="line-height: 1.6; white-space: pre-wrap; font-size: 15px;">
+                              ${msg.content}
                             </div>
-                            ${time ? `<div style="font-size: 11px; margin-top: 6px; opacity: 0.7;">${time}</div>` : ''}
+                            ${time ? `<div style="font-size: 12px; margin-top: 8px; opacity: 0.7; font-weight: 500;">${time}</div>` : ''}
                           </div>
+                          ${!isBot ? `<div style="margin-left: 10px; font-size: 20px;">${senderIcon}</div>` : ''}
                         </div>
                       `;
                     }).join('')}
@@ -394,7 +435,7 @@ export const generateHtmlTemplate = (message: string, customerData: any, gallery
                     <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #3b82f6, #1d4ed8); border-radius: 15px; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);">
                         <span style="font-size: 28px;">⚡</span>
                     </div>
-                    <h4 style="margin: 0 0 8px 0; font-size: 18px; font-weight: 700; color: white;">Snelle Service</h4>
+                    <h4 style="margin: 0 0 8px 0; font-size: 18px; font-weight: 700; color: white;">Snelle Reactie</h4>
                     <p style="margin: 0; font-size: 14px; color: rgba(255,255,255,0.8); line-height: 1.4;">24/7 bereikbaarheid en snelle reactietijden</p>
                 </div>
                 
@@ -410,8 +451,16 @@ export const generateHtmlTemplate = (message: string, customerData: any, gallery
                     <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #f59e0b, #d97706); border-radius: 15px; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);">
                         <span style="font-size: 28px;">🎯</span>
                     </div>
-                    <h4 style="margin: 0 0 8px 0; font-size: 18px; font-weight: 700; color: white;">Professioneel Advies</h4>
+                    <h4 style="margin: 0 0 8px 0; font-size: 18px; font-weight: 700; color: white;">Deskundig Advies</h4>
                     <p style="margin: 0; font-size: 14px; color: rgba(255,255,255,0.8); line-height: 1.4;">Expertise van gecertificeerde specialisten</p>
+                </div>
+
+                <div style="flex: 1; min-width: 200px; max-width: 250px; padding: 25px; background: linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(124, 58, 237, 0.15) 100%); border-radius: 16px; border: 1px solid rgba(139, 92, 246, 0.3); text-align: center; backdrop-filter: blur(10px);">
+                    <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #8b5cf6, #7c3aed); border-radius: 15px; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);">
+                        <span style="font-size: 28px;">🛡️</span>
+                    </div>
+                    <h4 style="margin: 0 0 8px 0; font-size: 18px; font-weight: 700; color: white;">Kwaliteitsgarantie</h4>
+                    <p style="margin: 0; font-size: 14px; color: rgba(255,255,255,0.8); line-height: 1.4;">Professionele service met tevredenheidsgarantie</p>
                 </div>
             </div>
         </div>
@@ -422,17 +471,18 @@ export const generateHtmlTemplate = (message: string, customerData: any, gallery
                 <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 12px; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center;">
                     <span style="color: white; font-size: 24px; font-weight: bold;">A</span>
                 </div>
-                <h4 style="margin: 0 0 10px 0; color: white; font-size: 20px; font-weight: 700;">Het Aigento.ai Team</h4>
+                <h4 style="margin: 0 0 10px 0; color: white; font-size: 20px; font-weight: 700;">Aigento.ai</h4>
                 <p style="margin: 0; font-size: 14px; line-height: 1.6; max-width: 400px; margin: 0 auto;">
-                    Deze premium offerte aanvraag is automatisch gegenereerd via ons geavanceerde Aigento.ai platform. 
+                    Deze conversatie is automatisch gegenereerd via onze geavanceerde FAQ Chatbot.
                     <br><br>
-                    <strong style="color: #ccc;">Powered by AI • Driven by Excellence</strong>
+                    <strong style="color: #ccc;">Mogelijk gemaakt door AI • Gedreven door Excellentie</strong>
                 </p>
             </div>
             
             <div style="padding-top: 20px; border-top: 1px solid #333; margin-top: 20px;">
                 <p style="margin: 0; font-size: 12px; color: #666;">
-                    © 2024 Aigento.ai. Alle rechten voorbehouden. | Premium HVAC Solutions
+                    © 2024 Aigento.ai. Alle rechten voorbehouden.<br>
+                    Premium HVAC & Service Oplossingen
                 </p>
             </div>
         </div>
