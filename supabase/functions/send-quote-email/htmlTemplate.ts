@@ -1,7 +1,7 @@
 import { SERVICE_DISPLAY_NAMES } from './constants.ts';
 
 export const generateHtmlTemplate = (message: string, customerData: any, galleryId?: string, requestType?: string, conversationHistory?: any[]): string => {
-  const galleryUrl = galleryId ? `https://clobol-aigento.com/gallery/${galleryId}` : null;
+  const galleryUrl = galleryId ? `https://aigento.ai/gallery/${galleryId}` : null;
   const requestTypeText = requestType === 'call' ? 'telefonisch contact' : 'e-mail contact';
   
   // Enhanced service name with proper emoji handling
