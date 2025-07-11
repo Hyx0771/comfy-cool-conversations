@@ -30,7 +30,7 @@ const handler = async (req: Request): Promise<Response> => {
       const textContent = `Nieuwe FAQ vraag van ${contactInfo.name}\n\nVraag: ${customQuestion}\n\nContact: ${contactInfo.email}${contactInfo.phone ? ` / ${contactInfo.phone}` : ''}`;
 
       const emailResponse = await resend.emails.send({
-        from: "Clobol FAQ Chatbot <faq@app.aigento.ai>",
+        from: "Aigento.ai FAQ Chatbot <faq@app.aigento.ai>",
         to: ["yves@aigento.ai"],
         subject: `💬 Nieuwe FAQ Vraag - ${contactMethod === 'call' ? 'Bel verzoek' : 'E-mail verzoek'} van ${contactInfo.name}`,
         html: htmlContent,
@@ -67,7 +67,7 @@ const handler = async (req: Request): Promise<Response> => {
       console.log('📧 Attempting to send email with domain: app.aigento.ai');
       
       const emailResponse = await resend.emails.send({
-        from: "Clobol Quote System <quotes@app.aigento.ai>",
+        from: "Aigento.ai Quote System <quotes@app.aigento.ai>",
         to: ["yves@aigento.ai"],
         subject: `🏠 Nieuwe Offerte Aanvraag - ${customerData.serviceType || 'Service'} (${requestType === 'call' ? 'Bel verzoek' : 'E-mail verzoek'})`,
         html: htmlContent,

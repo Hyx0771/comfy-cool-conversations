@@ -1,12 +1,6 @@
 import { SERVICE_DISPLAY_NAMES } from './constants.ts';
 
 export const generateHtmlTemplate = (message: string, customerData: any, galleryId?: string, requestType?: string, conversationHistory?: any[]): string => {
-  const sections = message.split('==================================================');
-  const contactSection = sections[1]?.trim() || '';
-  const serviceSection = sections[2]?.trim() || '';
-  const mediaSection = sections[3] ? sections[3].trim() : '';
-  const specificationsSection = sections[4]?.trim() || '';
-  
   const galleryUrl = galleryId ? `https://clobol-aigento.com/gallery/${galleryId}` : null;
   const requestTypeText = requestType === 'call' ? 'telefonisch contact' : 'e-mail contact';
   
@@ -19,13 +13,54 @@ export const generateHtmlTemplate = (message: string, customerData: any, gallery
                      serviceDisplayName.includes('✅') ? '✅' :
                      serviceDisplayName.includes('🏢') ? '🏢' : '🔧';
   
+  // Format address from customer data
+  const formatAddress = () => {
+    const parts = [];
+    if (customerData.postcode) parts.push(customerData.postcode);
+    if (customerData.huisnummer) parts.push(customerData.huisnummer);
+    if (customerData.location) parts.push(customerData.location);
+    return parts.length > 0 ? parts.join(', ') : 'Niet opgegeven';
+  };
+  
+  // Generate technical specifications from customer data
+  const generateTechnicalSpecs = () => {
+    const specs = [];
+    Object.entries(customerData).forEach(([key, value]) => {
+      // Skip basic contact info and metadata
+      if (['name', 'phone', 'email', 'postcode', 'huisnummer', 'location', 'serviceType', 'photos', 'conversationHistory'].includes(key)) {
+        return;
+      }
+      
+      if (value && value !== '' && value !== null && value !== undefined) {
+        // Format the key to be more readable
+        const readableKey = key
+          .replace(/([A-Z])/g, ' $1')
+          .replace(/^./, str => str.toUpperCase())
+          .trim();
+        
+        let displayValue = String(value);
+        if (Array.isArray(value)) {
+          displayValue = value.join(', ');
+        } else if (typeof value === 'object') {
+          displayValue = JSON.stringify(value);
+        }
+        
+        specs.push(`${readableKey}: ${displayValue}`);
+      }
+    });
+    
+    return specs.length > 0 ? specs : ['Basis offerte aanvraag (geen extra specificaties ingevuld)'];
+  };
+  
+  const technicalSpecs = generateTechnicalSpecs();
+  
   return `
 <!DOCTYPE html>
 <html lang="nl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nieuwe Offerte Aanvraag - Clobol</title>
+    <title>Nieuwe Offerte Aanvraag - Aigento.ai</title>
     <style>
         /* Modern CSS Reset */
         * { box-sizing: border-box; }
@@ -112,7 +147,7 @@ export const generateHtmlTemplate = (message: string, customerData: any, gallery
                     Nieuwe Premium Offerte
                 </h1>
                 <p style="margin: 0; font-size: 18px; color: rgba(255,255,255,0.9); font-weight: 500;">
-                    ${serviceDisplayName} via Clobol Platform
+                    ${serviceDisplayName} via Aigento.ai Platform
                 </p>
                 <div style="margin-top: 20px; padding: 12px 24px; background: rgba(255,255,255,0.15); border-radius: 50px; display: inline-block; backdrop-filter: blur(10px);">
                     <span style="color: white; font-weight: 600; font-size: 14px; text-transform: uppercase; letter-spacing: 1px;">
@@ -132,24 +167,28 @@ export const generateHtmlTemplate = (message: string, customerData: any, gallery
                     <div style="width: 45px; height: 45px; background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-right: 15px; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);">
                         <span style="color: white; font-size: 20px;">👤</span>
                     </div>
-                    <h2 style="margin: 0; color: #1e293b; font-size: 24px; font-weight: 700; letter-spacing: -0.3px;">
+                    <h2 style="margin: 0; color: #000000; font-size: 24px; font-weight: 700; letter-spacing: -0.3px;">
                         Contactgegevens
                     </h2>
                 </div>
                 
                 <div style="background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
-                    ${contactSection.split('\n').map(line => {
-                      if (line.trim() && !line.includes('CONTACTGEGEVENS')) {
-                        const [label, value] = line.split(':').map(s => s.trim());
-                        return `
-                          <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #f1f5f9;">
-                            <span style="color: #64748b; font-weight: 500; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px;">${label}</span>
-                            <span style="color: #1e293b; font-weight: 600; font-size: 16px;">${value}</span>
-                          </div>
-                        `;
-                      }
-                      return '';
-                    }).join('')}
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #f1f5f9;">
+                      <span style="color: #64748b; font-weight: 500; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px;">Naam</span>
+                      <span style="color: #1e293b; font-weight: 600; font-size: 16px;">${customerData.name || 'Niet opgegeven'}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #f1f5f9;">
+                      <span style="color: #64748b; font-weight: 500; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px;">Telefoon</span>
+                      <span style="color: #1e293b; font-weight: 600; font-size: 16px;">${customerData.phone || 'Niet opgegeven'}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #f1f5f9;">
+                      <span style="color: #64748b; font-weight: 500; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px;">E-mail</span>
+                      <span style="color: #1e293b; font-weight: 600; font-size: 16px;">${customerData.email || 'Niet opgegeven'}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0;">
+                      <span style="color: #64748b; font-weight: 500; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px;">Adres</span>
+                      <span style="color: #1e293b; font-weight: 600; font-size: 16px;">${formatAddress()}</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -164,23 +203,16 @@ export const generateHtmlTemplate = (message: string, customerData: any, gallery
                     <div style="width: 45px; height: 45px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-right: 15px; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);">
                         <span style="color: white; font-size: 20px;">${serviceIcon}</span>
                     </div>
-                    <h2 style="margin: 0; color: #1e293b; font-size: 24px; font-weight: 700; letter-spacing: -0.3px;">
+                    <h2 style="margin: 0; color: #000000; font-size: 24px; font-weight: 700; letter-spacing: -0.3px;">
                         Gevraagde Service
                     </h2>
                 </div>
                 
                 <div style="background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); position: relative; z-index: 2;">
-                    ${serviceSection.split('\n').map(line => {
-                      if (line.trim() && !line.includes('GEVRAAGDE SERVICE')) {
-                        return `
-                          <p style="margin: 15px 0; color: #065f46; font-size: 18px; font-weight: 600; display: flex; align-items: center;">
-                            <span style="width: 8px; height: 8px; background: #10b981; border-radius: 50%; margin-right: 12px; display: inline-block;"></span>
-                            ${line}
-                          </p>
-                        `;
-                      }
-                      return '';
-                    }).join('')}
+                    <p style="margin: 15px 0; color: #065f46; font-size: 18px; font-weight: 600; display: flex; align-items: center;">
+                      <span style="width: 8px; height: 8px; background: #10b981; border-radius: 50%; margin-right: 12px; display: inline-block;"></span>
+                      ${serviceDisplayName}
+                    </p>
                 </div>
             </div>
         </div>
@@ -197,7 +229,7 @@ export const generateHtmlTemplate = (message: string, customerData: any, gallery
                     <div style="width: 45px; height: 45px; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-right: 15px; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);">
                         <span style="color: white; font-size: 20px;">📸</span>
                     </div>
-                    <h2 style="margin: 0; color: #1e293b; font-size: 24px; font-weight: 700; letter-spacing: -0.3px;">
+                    <h2 style="margin: 0; color: #000000; font-size: 24px; font-weight: 700; letter-spacing: -0.3px;">
                         Foto's en Video's
                     </h2>
                 </div>
@@ -237,7 +269,7 @@ export const generateHtmlTemplate = (message: string, customerData: any, gallery
                     <div style="width: 45px; height: 45px; background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-right: 15px; box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3);">
                         <span style="color: white; font-size: 20px;">💬</span>
                     </div>
-                    <h2 style="margin: 0; color: #1e293b; font-size: 24px; font-weight: 700; letter-spacing: -0.3px;">
+                    <h2 style="margin: 0; color: #000000; font-size: 24px; font-weight: 700; letter-spacing: -0.3px;">
                         Volledige Conversatie
                     </h2>
                 </div>
@@ -250,7 +282,7 @@ export const generateHtmlTemplate = (message: string, customerData: any, gallery
                       }) : '';
                       
                       const isBot = msg.type === 'bot';
-                      const sender = isBot ? 'Clobol Assistant' : customerData.name || 'Klant';
+                      const sender = isBot ? 'Aigento.ai Assistant' : customerData.name || 'Klant';
                       const bgColor = isBot ? '#f8fafc' : '#0ea5e9';
                       const textColor = isBot ? '#1f2937' : '#ffffff';
                       const alignment = isBot ? 'flex-start' : 'flex-end';
@@ -293,23 +325,18 @@ export const generateHtmlTemplate = (message: string, customerData: any, gallery
                     <div style="width: 45px; height: 45px; background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-right: 15px; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);">
                         <span style="color: white; font-size: 20px;">📋</span>
                     </div>
-                    <h2 style="margin: 0; color: #1e293b; font-size: 24px; font-weight: 700; letter-spacing: -0.3px;">
+                    <h2 style="margin: 0; color: #000000; font-size: 24px; font-weight: 700; letter-spacing: -0.3px;">
                         Technische Specificaties
                     </h2>
                 </div>
                 
                 <div style="background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); position: relative; z-index: 2;">
-                    ${specificationsSection.split('\n').map(line => {
-                      if (line.trim() && !line.includes('SPECIFICATIES')) {
-                        return `
-                          <div style="padding: 15px 0; border-bottom: 1px solid #f3e8ff; display: flex; align-items: center;">
-                            <div style="width: 10px; height: 10px; background: linear-gradient(135deg, #8b5cf6, #7c3aed); border-radius: 50%; margin-right: 15px; flex-shrink: 0;"></div>
-                            <span style="color: #581c87; font-size: 16px; font-weight: 500; line-height: 1.5;">${line}</span>
-                          </div>
-                        `;
-                      }
-                      return '';
-                    }).join('')}
+                    ${technicalSpecs.map(spec => `
+                      <div style="padding: 15px 0; border-bottom: 1px solid #f3e8ff; display: flex; align-items: center;">
+                        <div style="width: 10px; height: 10px; background: linear-gradient(135deg, #8b5cf6, #7c3aed); border-radius: 50%; margin-right: 15px; flex-shrink: 0;"></div>
+                        <span style="color: #581c87; font-size: 16px; font-weight: 500; line-height: 1.5;">${spec}</span>
+                      </div>
+                    `).join('')}
                 </div>
             </div>
         </div>
@@ -342,7 +369,7 @@ export const generateHtmlTemplate = (message: string, customerData: any, gallery
                         <span style="margin-right: 10px;">📞</span> Bel ${customerData.name || 'Klant'} Nu
                     </a>
                     ` : ''}
-                    <a href="mailto:${customerData.email || ''}?subject=Premium%20Offerte%20Reactie%20-%20Clobol" 
+                    <a href="mailto:${customerData.email || ''}?subject=Premium%20Offerte%20Reactie%20-%20Aigento.ai" 
                        class="btn-primary btn-responsive"
                        style="display: inline-block; background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); color: white; padding: 20px 40px; text-decoration: none; border-radius: 12px; font-weight: 700; font-size: 18px; margin: 0 15px 15px 0; box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4); transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 1px;">
                         <span style="margin-right: 10px;">✉️</span> Verstuur E-mail
@@ -393,11 +420,11 @@ export const generateHtmlTemplate = (message: string, customerData: any, gallery
         <div style="padding: 40px; background: #000; color: #888; text-align: center; border-top: 1px solid rgba(255,255,255,0.1);" class="responsive-padding">
             <div style="margin-bottom: 20px;">
                 <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 12px; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center;">
-                    <span style="color: white; font-size: 24px; font-weight: bold;">C</span>
+                    <span style="color: white; font-size: 24px; font-weight: bold;">A</span>
                 </div>
-                <h4 style="margin: 0 0 10px 0; color: white; font-size: 20px; font-weight: 700;">Het Clobol Team</h4>
+                <h4 style="margin: 0 0 10px 0; color: white; font-size: 20px; font-weight: 700;">Het Aigento.ai Team</h4>
                 <p style="margin: 0; font-size: 14px; line-height: 1.6; max-width: 400px; margin: 0 auto;">
-                    Deze premium offerte aanvraag is automatisch gegenereerd via ons geavanceerde Clobol platform. 
+                    Deze premium offerte aanvraag is automatisch gegenereerd via ons geavanceerde Aigento.ai platform. 
                     <br><br>
                     <strong style="color: #ccc;">Powered by AI • Driven by Excellence</strong>
                 </p>
@@ -405,7 +432,7 @@ export const generateHtmlTemplate = (message: string, customerData: any, gallery
             
             <div style="padding-top: 20px; border-top: 1px solid #333; margin-top: 20px;">
                 <p style="margin: 0; font-size: 12px; color: #666;">
-                    © 2024 Clobol. Alle rechten voorbehouden. | Premium HVAC Solutions
+                    © 2024 Aigento.ai. Alle rechten voorbehouden. | Premium HVAC Solutions
                 </p>
             </div>
         </div>
