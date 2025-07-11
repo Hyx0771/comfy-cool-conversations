@@ -1,6 +1,5 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { MessageSquare, Mail, Phone } from 'lucide-react';
 import { ContactMethod } from '@/types/chatbot-types';
 
 interface ContactButtonsProps {
@@ -21,7 +20,6 @@ export const ContactButtons: React.FC<ContactButtonsProps> = ({ onMethodSelect }
           onClick={() => onMethodSelect('whatsapp')}
           className="w-full bg-green-600 hover:bg-green-700 text-white py-4 h-auto"
         >
-          <MessageSquare className="w-5 h-5 mr-3" />
           <div className="text-left">
             <div className="font-semibold">💬 WhatsApp</div>
             <div className="text-sm text-green-100">Direct chatten</div>
@@ -33,7 +31,6 @@ export const ContactButtons: React.FC<ContactButtonsProps> = ({ onMethodSelect }
           variant="outline"
           className="w-full border-[#1E88E5] text-[#1E88E5] hover:bg-[#1E88E5] hover:text-white py-4 h-auto"
         >
-          <Mail className="w-5 h-5 mr-3" />
           <div className="text-left">
             <div className="font-semibold">📧 E-mail</div>
             <div className="text-sm opacity-70">We mailen je terug</div>
@@ -45,7 +42,6 @@ export const ContactButtons: React.FC<ContactButtonsProps> = ({ onMethodSelect }
           variant="outline"
           className="w-full border-orange-500 text-orange-600 hover:bg-orange-500 hover:text-white py-4 h-auto"
         >
-          <Phone className="w-5 h-5 mr-3" />
           <div className="text-left">
             <div className="font-semibold">📞 Belverzoek</div>
             <div className="text-sm opacity-70">We bellen je terug</div>
