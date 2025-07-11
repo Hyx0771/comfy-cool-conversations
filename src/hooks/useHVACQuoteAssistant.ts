@@ -90,7 +90,8 @@ export const useHVACQuoteAssistant = () => {
     handleStepData: handleStepDataWithUpload,
     setUploadedGalleryId: imageHandling.setUploadedGalleryId,
     setSelectedFiles: imageHandling.setSelectedFiles,
-    setIsProcessing: quoteFlow.setIsProcessing
+    setIsProcessing: quoteFlow.setIsProcessing,
+    messages: quoteFlow.messages
   });
 
   return {

@@ -61,7 +61,8 @@ const handler = async (req: Request): Promise<Response> => {
       console.log('📧 Quote email request:', { customerData, galleryId, requestType });
 
       const message = generateMessage(customerData, galleryId);
-      const htmlContent = generateHtmlTemplate(message, customerData, galleryId, requestType);
+      const conversationHistory = customerData.conversationHistory || [];
+      const htmlContent = generateHtmlTemplate(message, customerData, galleryId, requestType, conversationHistory);
 
       console.log('📧 Attempting to send email with domain: app.aigento.ai');
       

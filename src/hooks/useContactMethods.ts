@@ -15,6 +15,7 @@ interface UseContactMethodsProps {
   setUploadedGalleryId: (id: string | null) => void;
   setSelectedFiles: (files: File[]) => void;
   setIsProcessing: (processing: boolean) => void;
+  messages: any[];
 }
 
 export const useContactMethods = ({
@@ -28,7 +29,8 @@ export const useContactMethods = ({
   handleStepData,
   setUploadedGalleryId,
   setSelectedFiles,
-  setIsProcessing
+  setIsProcessing,
+  messages
 }: UseContactMethodsProps) => {
   const [showEnhancedContactSelection, setShowEnhancedContactSelection] = useState(false);
   const [showContactForm, setShowContactForm] = useState(false);
@@ -79,10 +81,15 @@ export const useContactMethods = ({
       } else if (method === 'phone' || method === 'email') {
         console.log(`📧 Sending ${method} request via email function with gallery ID:`, galleryId);
         
-        // Call the email edge function
+        // Call the email edge function with conversation history
+        const customerDataWithHistory = {
+          ...customerData,
+          conversationHistory: messages || []
+        };
+        
         const { data, error } = await supabase.functions.invoke('send-quote-email', {
           body: {
-            customerData,
+            customerData: customerDataWithHistory,
             galleryId,
             requestType: method === 'phone' ? 'call' : 'email'
           }

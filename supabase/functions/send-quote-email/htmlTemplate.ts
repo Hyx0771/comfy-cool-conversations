@@ -1,6 +1,6 @@
 import { SERVICE_DISPLAY_NAMES } from './constants.ts';
 
-export const generateHtmlTemplate = (message: string, customerData: any, galleryId?: string, requestType?: string): string => {
+export const generateHtmlTemplate = (message: string, customerData: any, galleryId?: string, requestType?: string, conversationHistory?: any[]): string => {
   const sections = message.split('==================================================');
   const contactSection = sections[1]?.trim() || '';
   const serviceSection = sections[2]?.trim() || '';
@@ -221,6 +221,63 @@ export const generateHtmlTemplate = (message: string, customerData: any, gallery
                     <p style="margin: 20px 0 0 0; color: #78716c; font-size: 14px; font-style: italic;">
                         Klik hierboven voor de volledige media ervaring
                     </p>
+                </div>
+            </div>
+        </div>
+        ` : ''}
+
+        ${conversationHistory && conversationHistory.length > 0 ? `
+        <!-- Premium Conversation History Section -->
+        <div style="padding: 40px;" class="responsive-padding fade-in">
+            <div style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border-radius: 16px; padding: 30px; border-left: 5px solid #0ea5e9; position: relative; overflow: hidden;">
+                <!-- Decorative Elements -->
+                <div style="position: absolute; top: -10px; right: -10px; width: 60px; height: 60px; background: linear-gradient(135deg, #0ea5e9, #0284c7); border-radius: 50%; opacity: 0.2;"></div>
+                
+                <div style="display: flex; align-items: center; margin-bottom: 25px; position: relative; z-index: 2;">
+                    <div style="width: 45px; height: 45px; background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-right: 15px; box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3);">
+                        <span style="color: white; font-size: 20px;">💬</span>
+                    </div>
+                    <h2 style="margin: 0; color: #1e293b; font-size: 24px; font-weight: 700; letter-spacing: -0.3px;">
+                        Volledige Conversatie
+                    </h2>
+                </div>
+                
+                <div style="background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); max-height: 500px; overflow-y: auto; position: relative; z-index: 2;">
+                    ${conversationHistory.map((msg, index) => {
+                      const time = msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString('nl-NL', { 
+                        hour: '2-digit', 
+                        minute: '2-digit' 
+                      }) : '';
+                      
+                      const isBot = msg.type === 'bot';
+                      const sender = isBot ? 'Clobol Assistant' : customerData.name || 'Klant';
+                      const bgColor = isBot ? '#f8fafc' : '#0ea5e9';
+                      const textColor = isBot ? '#1f2937' : '#ffffff';
+                      const alignment = isBot ? 'flex-start' : 'flex-end';
+                      const borderRadius = isBot ? 'border-bottom-left-radius: 6px' : 'border-bottom-right-radius: 6px';
+                      
+                      return `
+                        <div style="margin: 15px 0; display: flex; justify-content: ${alignment};">
+                          <div style="
+                            max-width: 70%;
+                            padding: 12px 16px;
+                            border-radius: 18px;
+                            ${borderRadius};
+                            background-color: ${bgColor};
+                            color: ${textColor};
+                            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                          ">
+                            <div style="font-weight: 600; font-size: 12px; margin-bottom: 4px; opacity: 0.8;">
+                              ${sender}
+                            </div>
+                            <div style="line-height: 1.5; white-space: pre-wrap;">
+                              ${msg.content || msg.text || ''}
+                            </div>
+                            ${time ? `<div style="font-size: 11px; margin-top: 6px; opacity: 0.7;">${time}</div>` : ''}
+                          </div>
+                        </div>
+                      `;
+                    }).join('')}
                 </div>
             </div>
         </div>

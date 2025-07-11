@@ -117,7 +117,7 @@ export const generateEmailTemplate = (
                     Specifieke Vraag
                 </h2>
                 <div style="background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
-                    <p style="margin: 0; color: #92400e; font-size: 16px; font-weight: 500; line-height: 1.6;">
+                    <p style="margin: 0; color: #1f2937; font-size: 16px; font-weight: 500; line-height: 1.6;">
                         "${customQuestion}"
                     </p>
                 </div>
