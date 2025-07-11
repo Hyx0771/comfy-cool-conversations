@@ -18,18 +18,18 @@ export const ChatInput: React.FC<ChatInputProps> = ({
 }) => {
   return (
     <div className="border-t bg-white p-4 flex-shrink-0">
-      <div className="flex gap-2">
+      <div className="flex gap-3">
         <Input
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
-          className="flex-1 border-gray-200 focus:border-[#007BFF] focus:ring-[#007BFF]"
+          className="flex-1 border-gray-200 focus:border-[#007BFF] focus:ring-[#007BFF] rounded-xl px-4 py-3 text-sm"
           onKeyPress={(e) => e.key === 'Enter' && onSubmit()}
         />
         <Button
           onClick={onSubmit}
           disabled={!value.trim()}
-          className="bg-[#007BFF] hover:bg-blue-600 text-white px-4"
+          className="bg-gradient-to-r from-[#007BFF] to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-200"
         >
           <Send className="w-4 h-4" />
         </Button>

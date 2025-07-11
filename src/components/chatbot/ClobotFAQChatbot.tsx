@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { useConversation } from '@/hooks/useConversation';
 import { useFAQChat } from '@/hooks/useFAQChat';
-import { ChatHeader } from './ChatHeader';
 import { MessagesList } from './MessagesList';
 import { ChatInput } from './ChatInput';
 import { FAQGrid } from './FAQGrid';
@@ -12,11 +11,13 @@ import { ContactForm } from './ContactForm';
 interface ClobotFAQChatbotProps {
   isOpen: boolean;
   onClose: () => void;
+  showHeader?: boolean;
 }
 
 export const ClobotFAQChatbot: React.FC<ClobotFAQChatbotProps> = ({
   isOpen,
-  onClose
+  onClose,
+  showHeader = true
 }) => {
   const {
     context,
@@ -51,51 +52,58 @@ export const ClobotFAQChatbot: React.FC<ClobotFAQChatbotProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="h-full flex flex-col">
-      <Card className="h-full bg-white border-0 rounded-none overflow-hidden flex flex-col">
-        <ChatHeader 
-          onClose={onClose}
-        />
+    <div className="h-full flex flex-col bg-gray-50">
+      <MessagesList 
+        messages={context.conversationHistory}
+        isTyping={isTyping}
+        messagesEndRef={messagesEndRef}
+      />
 
-        <MessagesList 
-          messages={context.conversationHistory}
-          isTyping={isTyping}
-          messagesEndRef={messagesEndRef}
-        />
-
-        {/* FAQ Grid */}
-        {(context.state === 'welcome' || context.state === 'faq-display') && (
-          <div className="p-4">
-            <FAQGrid onFAQClick={handleFAQClick} />
-          </div>
-        )}
-
-        {/* Contact Buttons */}
-        {context.state === 'contact-selection' && (
-          <div className="p-4">
-            <ContactButtons onMethodSelect={handleContactMethodSelect} />
-          </div>
-        )}
-
-        {/* Contact Form */}
-        {context.state === 'contact-form' && context.contactMethod && (
-          <div className="p-4">
-            <ContactForm
-              contactMethod={context.contactMethod}
-              onSubmit={handleContactFormSubmit}
+      {/* FAQ Grid and immediate input option */}
+      {(context.state === 'welcome' || context.state === 'faq-display') && (
+        <div className="p-4 space-y-4">
+          <FAQGrid onFAQClick={handleFAQClick} />
+          
+          {/* Add immediate text input */}
+          <div className="border-t pt-4">
+            <p className="text-sm text-gray-600 mb-3 text-center">
+              Of stel je eigen vraag:
+            </p>
+            <ChatInput
+              value={currentInput}
+              onChange={setCurrentInput}
+              onSubmit={handleCustomQuestion}
+              placeholder="Stel hier je vraag..."
             />
           </div>
-        )}
+        </div>
+      )}
 
-        {/* Input Area */}
-        {(context.state === 'custom-question' || context.state === 'faq-answered') && (
-          <ChatInput
-            value={currentInput}
-            onChange={setCurrentInput}
-            onSubmit={handleCustomQuestion}
+      {/* Contact Buttons */}
+      {context.state === 'contact-selection' && (
+        <div className="p-4">
+          <ContactButtons onMethodSelect={handleContactMethodSelect} />
+        </div>
+      )}
+
+      {/* Contact Form */}
+      {context.state === 'contact-form' && context.contactMethod && (
+        <div className="p-4">
+          <ContactForm
+            contactMethod={context.contactMethod}
+            onSubmit={handleContactFormSubmit}
           />
-        )}
-      </Card>
+        </div>
+      )}
+
+      {/* Input Area for other states */}
+      {(context.state === 'custom-question' || context.state === 'faq-answered') && (
+        <ChatInput
+          value={currentInput}
+          onChange={setCurrentInput}
+          onSubmit={handleCustomQuestion}
+        />
+      )}
     </div>
   );
 };
