@@ -139,7 +139,7 @@ export const ClobotFAQChatbot: React.FC<ClobotFAQChatbotProps> = ({
   const handleWhatsAppRedirect = () => {
     const question = context.customQuestion || 'Ik heb een vraag over jullie diensten.';
     const encodedMessage = encodeURIComponent(`Hoi Clobol, ik heb een vraag: ${question}`);
-    const whatsappUrl = `https://wa.me/31612345678?text=${encodedMessage}`;
+    const whatsappUrl = `https://wa.me/31658769652?text=${encodedMessage}`;
     
     window.open(whatsappUrl, '_blank');
     
@@ -191,17 +191,11 @@ export const ClobotFAQChatbot: React.FC<ClobotFAQChatbotProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-end p-4 md:p-6">
-      {/* Backdrop */}
-      <div 
-        className="absolute inset-0 bg-black/20 backdrop-blur-sm"
-        onClick={onClose}
-      />
-      
+    <div className="h-full flex flex-col">
       {/* Chat Container */}
-      <Card className="relative w-full max-w-md h-[600px] bg-white shadow-2xl border-0 rounded-2xl overflow-hidden flex flex-col animate-fade-in">
+      <Card className="h-full bg-white border-0 rounded-none overflow-hidden flex flex-col">
         {/* Header */}
-        <div className="bg-gradient-to-r from-[#1E88E5] to-[#64B5F6] p-4 text-white">
+        <div className="bg-gradient-to-r from-[#007BFF] to-blue-600 p-4 text-white flex-shrink-0">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
@@ -209,7 +203,7 @@ export const ClobotFAQChatbot: React.FC<ClobotFAQChatbotProps> = ({
               </div>
               <div>
                 <h3 className="font-semibold text-lg">Bolt</h3>
-                <p className="text-sm text-blue-100">Clobol assistent</p>
+                <p className="text-sm text-blue-100">FAQ assistent</p>
               </div>
             </div>
             <div className="flex gap-2">
@@ -276,19 +270,19 @@ export const ClobotFAQChatbot: React.FC<ClobotFAQChatbotProps> = ({
 
         {/* Input Area */}
         {(context.state === 'custom-question' || context.state === 'faq-answered') && (
-          <div className="border-t bg-white p-4">
+          <div className="border-t bg-white p-4 flex-shrink-0">
             <div className="flex gap-2">
               <Input
                 value={currentInput}
                 onChange={(e) => setCurrentInput(e.target.value)}
                 placeholder="Stel hier uw vraag..."
-                className="flex-1 border-gray-200 focus:border-[#1E88E5] focus:ring-[#1E88E5]"
+                className="flex-1 border-gray-200 focus:border-[#007BFF] focus:ring-[#007BFF]"
                 onKeyPress={(e) => e.key === 'Enter' && handleCustomQuestion()}
               />
               <Button
                 onClick={handleCustomQuestion}
                 disabled={!currentInput.trim()}
-                className="bg-[#1E88E5] hover:bg-[#1976D2] text-white px-4"
+                className="bg-[#007BFF] hover:bg-blue-600 text-white px-4"
               >
                 <Send className="w-4 h-4" />
               </Button>

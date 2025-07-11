@@ -6,9 +6,10 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import HVACQuoteAssistant from './HVACQuoteAssistant';
 import SupportAssistant from './SupportAssistant';
 import BoltStartScreen from './BoltStartScreen';
+import { ClobotFAQChatbot } from './chatbot/ClobotFAQChatbot';
 import professionalAvatar from '@/assets/hvac-professional-avatar.jpg';
 
-type ChatMode = 'welcome' | 'quote' | 'support' | 'photo';
+type ChatMode = 'welcome' | 'quote' | 'support' | 'photo' | 'faq';
 
 const ChatBotWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -16,7 +17,7 @@ const ChatBotWidget = () => {
 
   useEffect(() => {
     const preferredFlow = localStorage.getItem('preferredFlow');
-    if (preferredFlow === 'quote' || preferredFlow === 'support') {
+    if (preferredFlow === 'quote' || preferredFlow === 'support' || preferredFlow === 'faq') {
       setCurrentMode(preferredFlow);
     }
 
@@ -40,7 +41,7 @@ const ChatBotWidget = () => {
     }
   };
 
-  const handleModeSelect = (mode: 'quote' | 'support' | 'photo') => {
+  const handleModeSelect = (mode: 'quote' | 'support' | 'photo' | 'faq') => {
     if (mode === 'photo') {
       setCurrentMode('quote');
       localStorage.setItem('preferredFlow', 'quote');
@@ -56,6 +57,9 @@ const ChatBotWidget = () => {
     }
     if (currentMode === 'support') {
       return <SupportAssistant initialMode="support" />;
+    }
+    if (currentMode === 'faq') {
+      return <ClobotFAQChatbot isOpen={true} onClose={() => setCurrentMode('welcome')} />;
     }
     return <BoltStartScreen onModeSelect={handleModeSelect} />;
   };

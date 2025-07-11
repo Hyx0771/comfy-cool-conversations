@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import AgentFixMessage from './AgentFixMessage';
 
 interface BoltStartScreenProps {
-  onModeSelect: (mode: 'quote' | 'support' | 'photo') => void;
+  onModeSelect: (mode: 'quote' | 'support' | 'photo' | 'faq') => void;
 }
 
 const BoltStartScreen: React.FC<BoltStartScreenProps> = ({ onModeSelect }) => {
@@ -21,7 +21,7 @@ const BoltStartScreen: React.FC<BoltStartScreenProps> = ({ onModeSelect }) => {
   }, []);
 
   const handleSupportClick = () => {
-    onModeSelect('support');
+    onModeSelect('faq');
   };
 
   return (
