@@ -21,7 +21,7 @@ const generateHtmlTemplate = (message: string, customerData: any, galleryId?: st
   const mediaSection = sections[3] ? sections[3].trim() : '';
   const specificationsSection = sections[4]?.trim() || '';
   
-  const galleryUrl = galleryId ? `https://clobol-aigento.com/gallery/${galleryId}` : null;
+  const galleryUrl = galleryId ? `https://app.aigento.ai/gallery/${galleryId}` : null;
   const requestTypeText = requestType === 'call' ? 'telefonisch contact' : 'e-mail contact';
   
   return `
@@ -41,7 +41,7 @@ const generateHtmlTemplate = (message: string, customerData: any, galleryId?: st
                 🏠 Nieuwe Offerte Aanvraag
             </h1>
             <p style="margin: 10px 0 0 0; font-size: 16px; opacity: 0.9;">
-                Via Clobol - ${requestTypeText} gewenst
+                Via Aigento - ${requestTypeText} gewenst
             </p>
         </div>
 
@@ -163,8 +163,8 @@ const generateHtmlTemplate = (message: string, customerData: any, galleryId?: st
         <!-- Footer -->
         <div style="padding: 25px 30px; background: #0f172a; color: #94a3b8; text-align: center; font-size: 14px;">
             <p style="margin: 0; line-height: 1.5;">
-                <strong style="color: #f1f5f9;">Het Clobol Team</strong><br>
-                Deze offerte aanvraag is automatisch gegenereerd via het Clobol platform.
+                <strong style="color: #f1f5f9;">Het Aigento Team</strong><br>
+                Deze offerte aanvraag is automatisch gegenereerd via het Aigento platform.
             </p>
         </div>
 
@@ -210,7 +210,7 @@ GEVRAAGDE SERVICE
 Service: ${serviceDisplayName}`;
 
       if (galleryId) {
-        const galleryUrl = `https://clobol-aigento.com/gallery/${galleryId}`;
+        const galleryUrl = `https://app.aigento.ai/gallery/${galleryId}`;
         template += `
 
 ==================================================
@@ -243,7 +243,7 @@ ONZE SERVICE:
 - Professioneel advies
 
 Met vriendelijke groet,
-Het Clobol team`;
+Het Aigento team`;
 
       return template;
     };
@@ -252,7 +252,7 @@ Het Clobol team`;
     const htmlContent = generateHtmlTemplate(message, customerData, galleryId, requestType);
 
     const emailResponse = await resend.emails.send({
-      from: "Clobol Quote System <quotes@clobol-aigento.com>",
+      from: "Aigento Quote System <quotes@app.aigento.ai>",
       to: ["yves@aigento.ai"],
       subject: `🏠 Nieuwe Offerte Aanvraag - ${customerData.serviceType || 'Service'} (${requestType === 'call' ? 'Bel verzoek' : 'E-mail verzoek'})`,
       html: htmlContent,
