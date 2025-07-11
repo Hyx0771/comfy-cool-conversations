@@ -98,7 +98,7 @@ export const generateHtmlTemplate = (message: string, customerData: any, gallery
     <div style="max-width: 650px; margin: 20px auto; background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1); position: relative;">
         
         <!-- Elegant Header with Animated Background -->
-        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); position: relative; overflow: hidden;">
+        <div style="background: linear-gradient(135deg, #1E88E5 0%, #64B5F6 100%); position: relative; overflow: hidden;">
             <!-- Subtle Pattern Overlay -->
             <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(255,255,255,0.08) 0%, transparent 50%);"></div>
             
@@ -109,10 +109,10 @@ export const generateHtmlTemplate = (message: string, customerData: any, gallery
                 </div>
                 
                 <h1 style="margin: 0 0 10px 0; font-size: 32px; font-weight: 700; color: white; text-shadow: 0 2px 10px rgba(0,0,0,0.2); letter-spacing: -0.5px;" class="fade-in">
-                    Nieuwe Offerte Aanvraag
+                    Nieuwe Premium Offerte
                 </h1>
                 <p style="margin: 0; font-size: 18px; color: rgba(255,255,255,0.9); font-weight: 500;">
-                    Premium Service via Clobol Platform
+                    ${serviceDisplayName} via Clobol Platform
                 </p>
                 <div style="margin-top: 20px; padding: 12px 24px; background: rgba(255,255,255,0.15); border-radius: 50px; display: inline-block; backdrop-filter: blur(10px);">
                     <span style="color: white; font-weight: 600; font-size: 14px; text-transform: uppercase; letter-spacing: 1px;">
