@@ -54,8 +54,6 @@ export const ClobotFAQChatbot: React.FC<ClobotFAQChatbotProps> = ({
     <div className="h-full flex flex-col">
       <Card className="h-full bg-white border-0 rounded-none overflow-hidden flex flex-col">
         <ChatHeader 
-          showBackButton={context.state !== 'welcome'}
-          onBack={resetChat}
           onClose={onClose}
         />
 
