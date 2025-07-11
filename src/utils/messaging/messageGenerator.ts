@@ -51,19 +51,48 @@ export class MessageTemplateGenerator {
     return 'Niet opgegeven';
   }
 
-  private getMediaStatus(photos: File[] | string | undefined): string {
-    console.log('getMediaStatus input:', photos, typeof photos);
+  private getMediaStatus(photos: File[] | string | undefined, galleryId?: string): { status: string; hasMedia: boolean } {
+    console.log('getMediaStatus input:', photos, typeof photos, 'galleryId:', galleryId);
     
-    if (!photos) return 'Niet meegestuurd';
-    
-    // If it's already a formatted string (like "1 foto geselecteerd"), use it
-    if (typeof photos === 'string') {
-      // Check if it looks like a photo count string
-      if (photos.includes('foto') || photos.includes('video') || photos.includes('geselecteerd') || photos.includes('bijgevoegd')) {
-        return photos;
+    // If we have a gallery ID, we definitely have media
+    if (galleryId) {
+      if (typeof photos === 'string' && (photos.includes('foto') || photos.includes('video'))) {
+        return { status: photos, hasMedia: true };
       }
-      // If it's some other string, treat as "not sent"
-      return 'Niet meegestuurd';
+      if (Array.isArray(photos) && photos.length > 0) {
+        const imageCount = photos.filter(file => file.type.startsWith('image/')).length;
+        const videoCount = photos.filter(file => file.type.startsWith('video/')).length;
+        
+        if (imageCount > 0 && videoCount > 0) {
+          return { 
+            status: `${imageCount} foto${imageCount > 1 ? "'s" : ''} en ${videoCount} video${videoCount > 1 ? "'s" : ''} bijgevoegd`,
+            hasMedia: true 
+          };
+        } else if (imageCount > 0) {
+          return { 
+            status: `${imageCount} foto${imageCount > 1 ? "'s" : ''} bijgevoegd`,
+            hasMedia: true 
+          };
+        } else if (videoCount > 0) {
+          return { 
+            status: `${videoCount} video${videoCount > 1 ? "'s" : ''} bijgevoegd`,
+            hasMedia: true 
+          };
+        }
+      }
+      // Fallback when we have gallery but unclear media count
+      return { status: "Media bijgevoegd", hasMedia: true };
+    }
+    
+    // No gallery ID - check if we have files
+    if (!photos) return { status: 'Geen media bijgevoegd', hasMedia: false };
+    
+    // Handle string format
+    if (typeof photos === 'string') {
+      if (photos.includes('foto') || photos.includes('video') || photos.includes('geselecteerd') || photos.includes('bijgevoegd')) {
+        return { status: photos, hasMedia: true };
+      }
+      return { status: 'Geen media bijgevoegd', hasMedia: false };
     }
     
     // Handle File array
@@ -72,15 +101,24 @@ export class MessageTemplateGenerator {
       const videoCount = photos.filter(file => file.type.startsWith('video/')).length;
       
       if (imageCount > 0 && videoCount > 0) {
-        return `${imageCount} foto${imageCount > 1 ? "'s" : ''} en ${videoCount} video${videoCount > 1 ? "'s" : ''} bijgevoegd`;
+        return { 
+          status: `${imageCount} foto${imageCount > 1 ? "'s" : ''} en ${videoCount} video${videoCount > 1 ? "'s" : ''} bijgevoegd`,
+          hasMedia: true 
+        };
       } else if (imageCount > 0) {
-        return `${imageCount} foto${imageCount > 1 ? "'s" : ''} bijgevoegd`;
+        return { 
+          status: `${imageCount} foto${imageCount > 1 ? "'s" : ''} bijgevoegd`,
+          hasMedia: true 
+        };
       } else if (videoCount > 0) {
-        return `${videoCount} video${videoCount > 1 ? "'s" : ''} bijgevoegd`;
+        return { 
+          status: `${videoCount} video${videoCount > 1 ? "'s" : ''} bijgevoegd`,
+          hasMedia: true 
+        };
       }
     }
     
-    return 'Niet meegestuurd';
+    return { status: 'Geen media bijgevoegd', hasMedia: false };
   }
 
   generateMessage(customerData: CustomerData, galleryId?: string): string {
@@ -92,7 +130,7 @@ export class MessageTemplateGenerator {
     const serviceDisplayName = SERVICE_DISPLAY_NAMES[cleanCustomerData.serviceType] || cleanCustomerData.serviceType;
     const cleanServiceDisplayName = EmojiCleaner.cleanText(serviceDisplayName);
     const dynamicDetails = this.generateDynamicDetails(cleanCustomerData.serviceType, cleanCustomerData);
-    const mediaStatus = this.getMediaStatus(cleanCustomerData.photos);
+    const mediaInfo = this.getMediaStatus(cleanCustomerData.photos, galleryId);
     const formattedLocation = this.formatLocation(
       cleanCustomerData.postcode, 
       cleanCustomerData.huisnummer, 
@@ -104,51 +142,67 @@ export class MessageTemplateGenerator {
 
     console.log('Gallery URL:', galleryUrl);
 
-    // Build media section with gallery URL prominently displayed (no emojis for WhatsApp)
-    let mediaSection = `Media: ${mediaStatus}`;
-    if (galleryUrl) {
-      mediaSection += `
+    // Build the complete message with perfect formatting
+    let template = `Hallo!
 
-BEKIJK ALLE FOTO'S EN VIDEO'S:
-${galleryUrl}
-
-Klik op de link hierboven om alle media te bekijken`;
-    }
-
-    const template = `Hallo!
-
-Ik heb zojuist via ${this.config.name} een offerte aangevraagd. 
+Ik heb zojuist via ${this.config.name} een offerte aangevraagd.
 Hieronder vind je alle details:
 
-==============================
+==================================================
 CONTACTGEGEVENS
-==============================
+==================================================
 
 Naam: ${cleanCustomerData.name || 'Niet opgegeven'}
 Telefoon: ${cleanCustomerData.phone || 'Niet opgegeven'}
 E-mail: ${cleanCustomerData.email || 'Niet opgegeven'}
 Adres: ${formattedLocation}
 
-==============================
-SERVICE AANVRAAG
-==============================
+==================================================
+GEVRAAGDE SERVICE
+==================================================
 
-Gevraagde dienst: ${cleanServiceDisplayName}
+Service: ${cleanServiceDisplayName}`;
 
-${mediaSection}
+    // Add media section based on whether we have media or not
+    if (mediaInfo.hasMedia && galleryUrl) {
+      template += `
 
-==============================
+==================================================
+FOTO'S EN VIDEO'S
+==================================================
+
+${mediaInfo.status}
+
+BEKIJK ALLE MEDIA HIER:
+${galleryUrl}
+
+Klik op bovenstaande link om alle foto's en video's te bekijken.`;
+    } else if (mediaInfo.hasMedia) {
+      template += `
+
+Media: ${mediaInfo.status}`;
+    } else {
+      template += `
+
+Media: ${mediaInfo.status}`;
+    }
+
+    template += `
+
+==================================================
 SPECIFICATIES
-==============================
+==================================================
 
 ${dynamicDetails}
 
-==============================
+==================================================
 
-Graag jullie reactie of dit compleet is, dan kunnen we direct een scherpe offerte op maat maken!
+Graag jullie reactie of deze informatie compleet is, dan kunnen we direct een scherpe offerte op maat maken!
 
+ONZE SERVICE:
 - Snelle service gegarandeerd
 - Vrijblijvende offerte
+- Professioneel advies
 
 Met vriendelijke groet,
 Het ${this.config.name} team`;

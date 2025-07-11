@@ -33,8 +33,9 @@ export class EmojiCleaner {
 
   /**
    * Aggressive cleaning for WhatsApp messages to ensure no diamond question marks
+   * PRESERVES line breaks and formatting for readability
    * @param text - The text to clean thoroughly
-   * @returns Text safe for WhatsApp
+   * @returns Text safe for WhatsApp with proper formatting
    */
   static cleanForWhatsApp(text: string): string {
     if (!text) return text;
@@ -45,8 +46,9 @@ export class EmojiCleaner {
       .replace(/[\u{1F000}-\u{1FFFF}]/gu, '') // Remove all extended unicode symbols
       .replace(/[\u{2000}-\u{2BFF}]/gu, '') // Remove punctuation and symbols
       .replace(/\*+/g, '') // Remove markdown formatting
-      .replace(/[^\x00-\x7F\u00C0-\u00FF\u0100-\u017F\u0180-\u024F]/g, '') // Keep only basic Latin + extensions
-      .replace(/\s+/g, ' ') // Normalize whitespace
+      .replace(/[^\x00-\x7F\u00C0-\u00FF\u0100-\u017F\u0180-\u024F\n\r]/g, '') // Keep only basic Latin + extensions + line breaks
+      .replace(/[ \t]+/g, ' ') // Normalize horizontal whitespace but keep line breaks
+      .replace(/\n{3,}/g, '\n\n') // Limit to max 2 consecutive line breaks
       .trim(); // Remove leading/trailing spaces
   }
 
