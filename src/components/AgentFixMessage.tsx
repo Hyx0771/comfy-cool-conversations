@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import professionalAvatar from '@/assets/hvac-professional-avatar.jpg';
 
 interface AgentFixMessageProps {
   content: string;
@@ -44,7 +45,7 @@ const AgentFixMessage: React.FC<AgentFixMessageProps> = ({
   return (
     <div className="flex space-x-3 animate-fade-in">
       <Avatar className="w-8 h-8 flex-shrink-0">
-        <AvatarImage src="/lovable-uploads/c2b79f7f-ccca-4902-ac9c-39f5875892b7.png" alt="HVAC Professional" />
+        <AvatarImage src={professionalAvatar} alt="HVAC Professional" className="object-cover w-full h-full" />
         <AvatarFallback className="bg-blue-500 text-white text-xs">B</AvatarFallback>
       </Avatar>
       <div className="bg-white rounded-2xl rounded-tl-md p-3 shadow-sm border max-w-[85%]">
