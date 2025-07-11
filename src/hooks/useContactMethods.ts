@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { messageGenerator, collectCustomerData } from '../utils/messageTemplates';
 import { ContactMethod } from '../types/conversation-types';
+import { supabase } from '@/integrations/supabase/client';
 
 interface UseContactMethodsProps {
   currentStep: any;
@@ -75,15 +76,29 @@ export const useContactMethods = ({
         console.log('Final WhatsApp URL:', whatsappUrl);
         window.open(whatsappUrl, '_blank');
         addUserMessage(galleryId ? 'WhatsApp bericht met fotogalerij verzonden' : 'WhatsApp contact gekozen');
-      } else if (method === 'phone') {
-        addUserMessage('Telefonisch contact gekozen');
-      } else if (method === 'email') {
-        console.log('📧 Generating email with gallery ID:', galleryId);
-        const emailData = messageGenerator.generateEmailData(customerData, galleryId);
-        const mailtoUrl = `mailto:${emailData.to}?subject=${encodeURIComponent(emailData.subject)}&body=${encodeURIComponent(emailData.body)}`;
-        console.log('Final email URL:', mailtoUrl);
-        window.open(mailtoUrl, '_blank');
-        addUserMessage(galleryId ? 'E-mail met fotogalerij link verzonden' : 'E-mail contact gekozen');
+      } else if (method === 'phone' || method === 'email') {
+        console.log(`📧 Sending ${method} request via email function with gallery ID:`, galleryId);
+        
+        // Call the email edge function
+        const { data, error } = await supabase.functions.invoke('send-quote-email', {
+          body: {
+            customerData,
+            galleryId,
+            requestType: method === 'phone' ? 'call' : 'email'
+          }
+        });
+
+        if (error) {
+          console.error('Error sending email:', error);
+          addUserMessage(`Fout bij versturen ${method === 'phone' ? 'bel verzoek' : 'e-mail'} - probeer het opnieuw`);
+        } else {
+          console.log('Email sent successfully:', data);
+          if (method === 'phone') {
+            addUserMessage(galleryId ? 'Bel verzoek met fotogalerij verzonden per e-mail' : 'Bel verzoek verzonden per e-mail');
+          } else {
+            addUserMessage(galleryId ? 'E-mail verzoek met fotogalerij verzonden' : 'E-mail verzoek verzonden');
+          }
+        }
       }
       
       handleStepData({ preferredContact: method });
