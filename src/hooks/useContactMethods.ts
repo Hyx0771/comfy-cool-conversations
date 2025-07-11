@@ -35,7 +35,7 @@ export const useContactMethods = ({
   // Contact methods configuration
   const contactMethods: ContactMethod[] = [
     { id: 'whatsapp', label: 'WhatsApp', emoji: '📱', description: 'Direct chatten' },
-    { id: 'phone', label: 'Bellen', emoji: '📞', description: 'Telefonisch contact' },
+    { id: 'phone', label: 'Bel mij', emoji: '📞', description: 'Telefonisch contact' },
     { id: 'email', label: 'E-mail', emoji: '📧', description: 'Per e-mail' }
   ];
 
