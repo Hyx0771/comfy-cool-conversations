@@ -6,7 +6,7 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import HVACQuoteAssistant from './HVACQuoteAssistant';
 import SupportAssistant from './SupportAssistant';
 import BoltStartScreen from './BoltStartScreen';
-import boltAvatar from '@/assets/noa-avatar.jpg';
+import boltAvatar from '@/assets/professional-avatar.jpg';
 
 type ChatMode = 'welcome' | 'quote' | 'support' | 'photo';
 
@@ -86,7 +86,7 @@ const ChatBotWidget = () => {
             <div className="bg-gradient-to-r from-[#007BFF] to-blue-600 text-white p-4 sm:p-5 flex items-center justify-between">
               <div className="flex items-center space-x-3">
                 <Avatar className="w-10 h-10 sm:w-12 sm:h-12 relative">
-                  <AvatarImage src={boltAvatar} alt="Bolt" />
+                  <AvatarImage src={boltAvatar} alt="HVAC Professional" />
                   <AvatarFallback className="bg-white bg-opacity-20 text-white font-bold text-lg sm:text-xl">
                     B
                   </AvatarFallback>

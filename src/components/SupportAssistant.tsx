@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Send, ArrowLeft } from 'lucide-react';
-import noaAvatar from '@/assets/noa-avatar.jpg';
+import professionalAvatar from '@/assets/professional-avatar.jpg';
 
 interface SupportAssistantProps {
   initialMode: 'support' | 'question';
@@ -104,7 +104,7 @@ const SupportAssistant: React.FC<SupportAssistantProps> = ({ initialMode }) => {
           >
             {message.isBot && (
               <Avatar className="w-8 h-8 mr-2 flex-shrink-0">
-                <AvatarImage src={noaAvatar} alt="Noa" />
+                <AvatarImage src={professionalAvatar} alt="HVAC Professional" />
                 <AvatarFallback className="bg-blue-500 text-white text-xs">N</AvatarFallback>
               </Avatar>
             )}
@@ -126,7 +126,7 @@ const SupportAssistant: React.FC<SupportAssistantProps> = ({ initialMode }) => {
         {isTyping && (
           <div className="flex justify-start animate-fade-in">
             <Avatar className="w-8 h-8 mr-2 flex-shrink-0">
-              <AvatarImage src={noaAvatar} alt="Noa" />
+              <AvatarImage src={professionalAvatar} alt="HVAC Professional" />
               <AvatarFallback className="bg-blue-500 text-white text-xs">N</AvatarFallback>
             </Avatar>
             <div className="bg-gray-100 p-3 rounded-2xl rounded-tl-md">
