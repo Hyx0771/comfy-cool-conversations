@@ -32,10 +32,10 @@ export const generateHtmlTemplate = (message: string, customerData: any, gallery
         
         <!-- Header -->
         <div style="background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); color: white; padding: 40px 30px; text-align: center;">
-            <h1 style="margin: 0; font-size: 28px; font-weight: bold; text-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+            <h1 style="margin: 0; font-size: 28px; font-weight: bold; text-shadow: 0 2px 4px rgba(0,0,0,0.3); color: white;">
                 🏠 Nieuwe Offerte Aanvraag
             </h1>
-            <p style="margin: 10px 0 0 0; font-size: 16px; opacity: 0.9;">
+            <p style="margin: 10px 0 0 0; font-size: 16px; opacity: 0.9; color: white;">
                 Via Clobol - ${requestTypeText} gewenst
             </p>
         </div>
@@ -137,20 +137,20 @@ export const generateHtmlTemplate = (message: string, customerData: any, gallery
         </div>
 
         <!-- Service Highlights -->
-        <div style="padding: 30px; background: #1e293b; color: white; text-align: center;">
+        <div style="padding: 30px; background: #1e293b; color: #f1f5f9; text-align: center;">
             <h3 style="margin: 0 0 20px 0; color: #f1f5f9; font-size: 20px;">Onze Service Garanties</h3>
             <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; max-width: 100%;">
-                <div style="flex: 1; min-width: 150px; padding: 15px; background: rgba(59, 130, 246, 0.1); border-radius: 8px; border: 1px solid rgba(59, 130, 246, 0.2);">
+                <div style="flex: 1; min-width: 150px; padding: 15px; background: rgba(59, 130, 246, 0.2); border-radius: 8px; border: 1px solid rgba(59, 130, 246, 0.4);">
                     <div style="font-size: 24px; margin-bottom: 8px;">⚡</div>
-                    <div style="font-size: 14px; font-weight: 500;">Snelle Service</div>
+                    <div style="font-size: 14px; font-weight: 500; color: #f1f5f9;">Snelle Service</div>
                 </div>
-                <div style="flex: 1; min-width: 150px; padding: 15px; background: rgba(16, 185, 129, 0.1); border-radius: 8px; border: 1px solid rgba(16, 185, 129, 0.2);">
+                <div style="flex: 1; min-width: 150px; padding: 15px; background: rgba(16, 185, 129, 0.2); border-radius: 8px; border: 1px solid rgba(16, 185, 129, 0.4);">
                     <div style="font-size: 24px; margin-bottom: 8px;">💯</div>
-                    <div style="font-size: 14px; font-weight: 500;">Vrijblijvende Offerte</div>
+                    <div style="font-size: 14px; font-weight: 500; color: #f1f5f9;">Vrijblijvende Offerte</div>
                 </div>
-                <div style="flex: 1; min-width: 150px; padding: 15px; background: rgba(245, 158, 11, 0.1); border-radius: 8px; border: 1px solid rgba(245, 158, 11, 0.2);">
+                <div style="flex: 1; min-width: 150px; padding: 15px; background: rgba(245, 158, 11, 0.2); border-radius: 8px; border: 1px solid rgba(245, 158, 11, 0.4);">
                     <div style="font-size: 24px; margin-bottom: 8px;">🎯</div>
-                    <div style="font-size: 14px; font-weight: 500;">Professioneel Advies</div>
+                    <div style="font-size: 14px; font-weight: 500; color: #f1f5f9;">Professioneel Advies</div>
                 </div>
             </div>
         </div>

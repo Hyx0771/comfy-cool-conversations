@@ -5,6 +5,7 @@ export const generateDynamicDetails = (serviceType: string, customerData: any): 
   const detailTemplate = SERVICE_DETAIL_MAPPINGS[serviceType] || [];
   const details: string[] = [];
 
+  // First add all service-specific template fields
   detailTemplate.forEach(template => {
     const detail = replaceTemplateVariables(template, customerData);
     // Only add detail if it doesn't end with "Niet opgegeven" (meaning the field had actual data)
@@ -13,10 +14,41 @@ export const generateDynamicDetails = (serviceType: string, customerData: any): 
     }
   });
 
+  // Now add ANY additional fields that might not be in the template but exist in customerData
+  const knownFields = [
+    'name', 'phone', 'email', 'postcode', 'huisnummer', 'location', 'serviceType', 'photos',
+    // Extract field names from templates to avoid duplicates
+    ...detailTemplate.flatMap(template => {
+      const matches = template.match(/\{([^}]+)\}/g);
+      return matches ? matches.map(match => match.slice(1, -1)) : [];
+    })
+  ];
+
+  // Add any extra fields that weren't captured in the templates
+  Object.entries(customerData).forEach(([key, value]) => {
+    if (!knownFields.includes(key) && value && value !== '' && value !== null && value !== undefined) {
+      // Format the key to be more readable
+      const readableKey = key
+        .replace(/([A-Z])/g, ' $1')
+        .replace(/^./, str => str.toUpperCase())
+        .trim();
+      
+      let displayValue = String(value);
+      if (Array.isArray(value)) {
+        displayValue = value.join(', ');
+      } else if (typeof value === 'object') {
+        displayValue = JSON.stringify(value);
+      }
+      
+      details.push(`• ${readableKey}: ${displayValue}`);
+    }
+  });
+
   return details.length > 0 ? details.join('\n') : '• Basis offerte aanvraag (geen extra details ingevuld)';
 };
 
 export const generateMessage = (customerData: any, galleryId?: string): string => {
+  console.log('🔍 COMPLETE customerData received:', JSON.stringify(customerData, null, 2));
   console.log('Generating message with galleryId:', galleryId);
   
   // Clean all emojis from customer data for WhatsApp/Email message
