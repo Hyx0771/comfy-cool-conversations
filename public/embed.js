@@ -73,7 +73,7 @@
     // Set iframe size and position
     var container = document.createElement('div');
     container.id = 'clobol-widget-container';
-    container.style.cssText = 'position: fixed; z-index: 999999; pointer-events: none;';
+    container.style.cssText = 'position: fixed; z-index: 999999;';
     
     // Set position based on config
     var positions = {
@@ -91,7 +91,9 @@
     iframe.style.height = '80px';
     iframe.style.borderRadius = '50%';
     iframe.style.overflow = 'hidden';
-    iframe.style.pointerEvents = 'auto';
+    iframe.style.backgroundColor = config.primaryColor || '#007BFF';
+    iframe.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.15)';
+    console.log('Clobol Widget: Created iframe with dimensions:', iframe.style.width, 'x', iframe.style.height);
     
     // Add error handling
     iframe.onerror = function() {
