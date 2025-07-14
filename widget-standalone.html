@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clobol Widget</title>
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { 
+      margin: 0; 
+      padding: 0; 
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+      background: transparent;
+      height: 100vh;
+      overflow: hidden;
+    }
+    
+    .widget-container {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 999999;
+    }
+    
+    .widget-trigger {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: #007BFF;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      color: white;
+      font-size: 24px;
+    }
+    
+    .widget-trigger:hover {
+      transform: scale(1.1);
+    }
+    
+    .widget-chat-window {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 380px;
+      height: 600px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.3s ease;
+      max-height: 80vh;
+      border: 1px solid #e2e8f0;
+    }
+    
+    .widget-header {
+      background: #007BFF;
+      color: white;
+      padding: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      min-height: 60px;
+      box-sizing: border-box;
+    }
+    
+    .widget-header h3 {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 600;
+    }
+    
+    .widget-header p {
+      margin: 0;
+      font-size: 14px;
+      opacity: 0.9;
+    }
+    
+    .header-buttons {
+      display: flex;
+      gap: 8px;
+    }
+    
+    .header-button {
+      color: white;
+      background: transparent;
+      border: none;
+      padding: 4px;
+      cursor: pointer;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .header-button:hover {
+      background: rgba(255,255,255,0.1);
+    }
+    
+    .chat-content {
+      flex: 1;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      background: #f8fafc;
+    }
+    
+    .start-screen {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      background: linear-gradient(135deg, #f0f9ff 0%, #ffffff 100%);
+      padding: 24px;
+      gap: 24px;
+    }
+    
+    .welcome-message {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      border-bottom-left-radius: 4px;
+      padding: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      animation: fadeIn 0.3s ease-out;
+    }
+    
+    .mode-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      animation: fadeIn 0.3s ease-out 0.5s both;
+    }
+    
+    .mode-button {
+      display: flex;
+      align-items: center;
+      padding: 16px;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: left;
+      min-height: 80px;
+      font-family: inherit;
+    }
+    
+    .mode-button.primary {
+      background: linear-gradient(135deg, #007BFF 0%, #0056b3 100%);
+      color: white;
+      box-shadow: 0 4px 12px rgba(0,123,255,0.3);
+    }
+    
+    .mode-button.primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0,123,255,0.4);
+    }
+    
+    .mode-button.secondary {
+      background: white;
+      color: #374151;
+      border: 2px solid #e5e7eb;
+    }
+    
+    .mode-button.secondary:hover {
+      border-color: #007BFF;
+      background: #f8fafc;
+    }
+    
+    .mode-icon {
+      font-size: 24px;
+      margin-right: 12px;
+    }
+    
+    .mode-title {
+      font-weight: 600;
+      font-size: 16px;
+      margin-bottom: 4px;
+    }
+    
+    .mode-subtitle {
+      font-size: 14px;
+      opacity: 0.8;
+    }
+    
+    .info-box {
+      background: rgba(255,255,255,0.7);
+      border-radius: 8px;
+      padding: 16px;
+      text-align: center;
+      margin-top: auto;
+    }
+    
+    .info-box p {
+      margin: 0;
+      font-size: 14px;
+      color: #6b7280;
+    }
+    
+    .info-box .highlight {
+      color: #007BFF;
+      font-weight: 600;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @media (max-width: 400px) {
+      .widget-chat-window {
+        width: 100vw;
+        height: 100vh;
+        bottom: 0;
+        right: 0;
+        border-radius: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="widget-root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    const ClobolWidget = () => {
+      const [isOpen, setIsOpen] = useState(false);
+      const [showWelcome, setShowWelcome] = useState(false);
+      const [showButtons, setShowButtons] = useState(false);
+
+      useEffect(() => {
+        if (isOpen) {
+          setTimeout(() => setShowWelcome(true), 300);
+          setTimeout(() => setShowButtons(true), 1500);
+        } else {
+          setShowWelcome(false);
+          setShowButtons(false);
+        }
+      }, [isOpen]);
+
+      const handleModeSelect = (mode) => {
+        console.log('Selected mode:', mode);
+        // Here you would handle the mode selection
+      };
+
+      return (
+        <div className="widget-container">
+          {!isOpen && (
+            <button 
+              className="widget-trigger"
+              onClick={() => setIsOpen(true)}
+            >
+              💬
+            </button>
+          )}
+
+          {isOpen && (
+            <div className="widget-chat-window">
+              <div className="widget-header">
+                <div>
+                  <h3>Clobol Support</h3>
+                  <p>Hoe kunnen we helpen?</p>
+                </div>
+                <div className="header-buttons">
+                  <button 
+                    className="header-button"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    ✕
+                  </button>
+                </div>
+              </div>
+
+              <div className="chat-content">
+                <div className="start-screen">
+                  {showWelcome && (
+                    <div className="welcome-message">
+                      <p style={{margin: 0, fontSize: '14px', lineHeight: '1.5'}}>
+                        Hoi! Ik ben Bolt van Clobol ❄️<br/>
+                        Waar kan ik je vandaag mee helpen?
+                      </p>
+                    </div>
+                  )}
+
+                  {showButtons && (
+                    <div className="mode-buttons">
+                      <button 
+                        className="mode-button primary"
+                        onClick={() => handleModeSelect('quote')}
+                      >
+                        <div className="mode-icon">❄️</div>
+                        <div>
+                          <div className="mode-title">🔥 Offerte</div>
+                          <div className="mode-subtitle">Installatie of reparatie</div>
+                        </div>
+                      </button>
+
+                      <button 
+                        className="mode-button secondary"
+                        onClick={() => handleModeSelect('faq')}
+                      >
+                        <div className="mode-icon">💬</div>
+                        <div>
+                          <div className="mode-title">Vraag stellen</div>
+                          <div className="mode-subtitle">Over prijzen of diensten</div>
+                        </div>
+                      </button>
+                    </div>
+                  )}
+
+                  <div className="info-box">
+                    <p>
+                      <span className="highlight">Geen zorgen!</span> Ik help je stap voor stap. 
+                      Binnen 2 minuten weet je waar je aan toe bent. 😊
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    };
+
+    ReactDOM.render(<ClobolWidget />, document.getElementById('widget-root'));
+  </script>
+</body>
+</html>
