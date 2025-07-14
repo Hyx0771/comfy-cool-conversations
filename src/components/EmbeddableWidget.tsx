@@ -21,6 +21,7 @@ interface EmbeddableWidgetProps {
 }
 
 export const EmbeddableWidget: React.FC<EmbeddableWidgetProps> = ({ config }) => {
+  console.log('EmbeddableWidget: Rendering with config:', config);
   const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
 

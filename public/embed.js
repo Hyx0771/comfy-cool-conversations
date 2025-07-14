@@ -65,6 +65,7 @@
     }
     
     iframe.src = baseUrl + '/?' + params.toString();
+    console.log('Clobol Widget: Loading iframe from:', iframe.src);
     iframe.style.cssText = 'border: none; position: fixed; z-index: 999999; transition: all 0.3s ease;';
     iframe.allow = 'clipboard-write';
     iframe.title = 'Clobol Support Widget';
