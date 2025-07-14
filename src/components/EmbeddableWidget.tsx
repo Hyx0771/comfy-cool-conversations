@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ClobotFAQChatbot } from './chatbot/ClobotFAQChatbot';
 import HVACQuoteAssistant from './HVACQuoteAssistant';
 import SupportAssistant from './SupportAssistant';
+import BoltStartScreen from './BoltStartScreen';
 import { Button } from './ui/button';
 import { MessageCircle, X, Minimize2, Maximize2 } from 'lucide-react';
 
@@ -74,8 +75,24 @@ export const EmbeddableWidget: React.FC<EmbeddableWidgetProps> = ({ config }) =>
     setIsMinimized(!isMinimized);
   };
 
+  const [selectedMode, setSelectedMode] = useState<string | null>(null);
+  
   const renderChatContent = () => {
-    switch (config.mode) {
+    // If no specific mode is set via config and user hasn't selected, show start screen
+    if (!config.mode && !selectedMode) {
+      return (
+        <BoltStartScreen 
+          onModeSelect={(mode) => {
+            setSelectedMode(mode);
+          }} 
+        />
+      );
+    }
+
+    // Use selected mode or fallback to config mode
+    const currentMode = selectedMode || config.mode || 'faq';
+    
+    switch (currentMode) {
       case 'quote':
         return <HVACQuoteAssistant />;
       case 'support':
