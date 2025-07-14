@@ -1,141 +1,180 @@
-# Clobol Chat Widget - Deployment Guide
-
-This guide explains how to deploy the Clobol Chat Widget as a standalone embeddable component.
+# Clobol Widget Deployment Guide
 
 ## Overview
+The Clobol Widget is an embeddable chat support system that can be integrated into any website with a single script tag. It provides FAQ support, HVAC quotes, and general customer support functionality.
 
-The widget is built as a standalone JavaScript library that can be embedded on any website. It includes:
-- Main widget bundle (`clobol-widget.iife.js`)
-- Styles (`clobol-widget.css`)
-- Easy embed script (`embed.js`)
-- Standalone widget page (`index.html`)
+## Build Process
 
-## Building the Widget
-
+### 1. Build the Widget
 ```bash
-# Build the widget for deployment
-node build-widget.js
+# Build the widget version
+npm run build -- --mode widget
+
+# This creates a dist-widget folder with:
+# - clobol-widget.iife.js (the widget JavaScript)
+# - clobol-widget.css (widget styles)
 ```
 
-This creates a `dist-widget` folder with all the necessary files.
+### 2. Build the Main App
+```bash
+# Build the main application
+npm run build
 
-## Deployment Options
+# This creates a dist folder with the full application
+```
 
-### Option 1: Netlify (Recommended)
+## Deployment Structure
 
-1. **Setup Repository**:
-   ```bash
-   git add .
-   git commit -m "Add widget deployment configuration"
-   git push origin main
-   ```
+Your deployment should serve both:
+1. **Main Application** (`/dist` folder) - The full Clobol application
+2. **Widget Files** (`/dist-widget` folder) - The embeddable widget files
+3. **Embed Script** (`/public/embed.js`) - The integration script
 
-2. **Deploy to Netlify**:
-   - Connect your GitHub repository to Netlify
-   - Set build command: `npm run build:widget`
-   - Set publish directory: `dist-widget`
-   - Deploy!
+### Recommended File Structure
+```
+your-domain.com/
+├── / (main app from /dist)
+├── embed.js (from /public/embed.js)
+└── widget/ (optional, for testing widget directly)
+```
 
-3. **Environment Variables** (if needed):
-   - Set `NODE_VERSION=18` in Netlify dashboard
+## Integration for Customers
 
-4. **Custom Domain** (optional):
-   - Add your custom domain in Netlify dashboard
-   - Update embed script URLs to use your domain
+### Basic Integration
+Customers add this script tag to their website:
 
-### Option 2: Manual Deployment
-
-1. **Build the widget**:
-   ```bash
-   node build-widget.js
-   ```
-
-2. **Upload dist-widget contents** to your web server or CDN
-
-3. **Update URLs** in your integration code
-
-## Integration Instructions
-
-### Quick Embed (Recommended)
 ```html
 <script 
-  src="https://your-domain.netlify.app/embed.js"
+  src="https://your-domain.com/embed.js"
   data-mode="faq"
   data-theme="light"
   data-position="bottom-right"
+  data-primary-color="#007BFF"
+  data-title="Customer Support"
+  data-subtitle="How can we help you?"
 ></script>
 ```
 
-### Direct Integration
-```html
-<link rel="stylesheet" href="https://your-domain.netlify.app/clobol-widget.css">
-<script src="https://your-domain.netlify.app/clobol-widget.iife.js"></script>
-<script>
-  const widget = new ClobolChatWidget({
-    mode: 'faq',
-    theme: 'light',
-    position: 'bottom-right'
-  });
-  widget.init();
-</script>
-```
+### Configuration Options
 
-## Configuration Options
+| Attribute | Values | Default | Description |
+|-----------|--------|---------|-------------|
+| `data-mode` | `faq`, `quote`, `support` | `faq` | Widget functionality mode |
+| `data-theme` | `light`, `dark` | `light` | Widget theme |
+| `data-position` | `bottom-right`, `bottom-left`, `top-right`, `top-left` | `bottom-right` | Widget position |
+| `data-primary-color` | Any CSS color | `#007BFF` | Primary brand color |
+| `data-title` | String | `Clobol Support` | Widget header title |
+| `data-subtitle` | String | `Hoe kunnen we helpen?` | Widget header subtitle |
 
-- **mode**: `'faq' | 'quote' | 'support'`
-- **theme**: `'light' | 'dark'`
-- **position**: `'bottom-right' | 'bottom-left' | 'top-right' | 'top-left'`
-- **primaryColor**: Any CSS color value
-- **title**: Widget title text
-- **subtitle**: Widget subtitle text
-- **welcomeMessage**: Initial greeting message
+## JavaScript API
 
-## Widget API
+The widget exposes a global API for programmatic control:
 
 ```javascript
-// Access widget instance
+// Open the widget
 window.ClobolWidgetAPI.open();
+
+// Close the widget  
 window.ClobolWidgetAPI.close();
-window.ClobolWidgetAPI.updateConfig({ theme: 'dark' });
+
+// Toggle widget visibility
+window.ClobolWidgetAPI.toggle();
+
+// Update configuration
+window.ClobolWidgetAPI.updateConfig({
+  primaryColor: '#ff6b6b',
+  title: 'New Title'
+});
+
+// Remove the widget completely
 window.ClobolWidgetAPI.destroy();
 ```
 
-## Testing
+## Testing the Widget
 
-1. **Local Testing**:
-   ```bash
-   node build-widget.js
-   # Open dist-widget/index.html in browser
-   ```
+### Local Testing
+1. Start the development server: `npm run dev`
+2. Open `examples/index.html` in your browser
+3. The widget should appear in the bottom-right corner
 
-2. **Integration Testing**:
-   - Test embed script on different websites
-   - Verify cross-origin functionality
-   - Test different configuration options
+### Production Testing
+1. Deploy your files to your domain
+2. Test the integration URL: `https://your-domain.com/?widget=true&mode=faq`
+3. Test the embed script with the example HTML
+
+## Widget Modes
+
+### FAQ Mode (`data-mode="faq"`)
+- Displays frequently asked questions
+- Interactive chat interface
+- Best for general customer support
+
+### Quote Mode (`data-mode="quote"`)  
+- HVAC quote request flow
+- Image upload capability
+- Contact form integration
+- Best for service-based businesses
+
+### Support Mode (`data-mode="support"`)
+- General customer support chat
+- Contact options
+- Best for technical support
+
+## Customization
+
+### Styling
+The widget respects the customer's `data-primary-color` for consistent branding. All other styling is contained within the widget to avoid conflicts.
+
+### Content
+Widget content can be customized through:
+- Configuration attributes
+- The JavaScript API
+- Backend configuration (if implemented)
+
+## Security Considerations
+
+1. **CORS**: Ensure your domain allows iframe embedding
+2. **CSP**: Widget uses iframe for isolation
+3. **XSS**: All user inputs are sanitized
+4. **Privacy**: No tracking cookies or external requests
+
+## Performance
+
+- **Initial Load**: ~50KB gzipped (including React)
+- **Lazy Loading**: Widget content loads only when opened
+- **CDN Ready**: All assets can be served from CDN
+- **Mobile Optimized**: Responsive design for all devices
+
+## Browser Support
+
+- Chrome 60+
+- Firefox 55+  
+- Safari 12+
+- Edge 79+
+- Mobile browsers (iOS Safari, Chrome Mobile)
 
 ## Troubleshooting
 
-### CORS Issues
-- Ensure proper headers are set in `netlify.toml`
-- Check that your CDN allows cross-origin requests
+### Widget Not Appearing
+1. Check console for JavaScript errors
+2. Verify embed.js URL is accessible
+3. Check for CSP restrictions
+4. Ensure proper script placement (before `</body>`)
 
-### Widget Not Loading
-- Verify script URLs are correct
-- Check browser console for errors
-- Ensure proper configuration attributes
+### Widget Not Opening
+1. Verify API calls: `window.ClobolWidgetAPI`
+2. Check iframe loading in browser dev tools
+3. Test with direct widget URL: `?widget=true`
 
 ### Styling Issues
-- CSS conflicts with host site
-- Z-index problems (widget uses z-index: 999999)
-- Theme not applying correctly
+1. Check for CSS conflicts
+2. Verify primary color format
+3. Test in incognito mode
+4. Check mobile viewport settings
 
-## Production Checklist
+## Support
 
-- [ ] Widget builds successfully
-- [ ] All files present in dist-widget
-- [ ] Embed script works on test sites
-- [ ] CORS headers configured
-- [ ] Custom domain configured (if applicable)
-- [ ] Performance optimization enabled
-- [ ] Analytics configured (if needed)
-- [ ] Error monitoring setup
+For technical support with widget integration:
+- Email: support@clobol.com
+- Documentation: https://docs.clobol.com
+- Examples: https://your-domain.com/examples/

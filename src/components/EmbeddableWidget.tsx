@@ -30,9 +30,44 @@ export const EmbeddableWidget: React.FC<EmbeddableWidgetProps> = ({ config }) =>
     }
   }, [config.primaryColor]);
 
+  // Listen for messages from parent window (embed.js)
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      if (event.data?.type === 'clobol-widget-open') {
+        setIsOpen(true);
+        setIsMinimized(false);
+      } else if (event.data?.type === 'clobol-widget-close') {
+        setIsOpen(false);
+        setIsMinimized(false);
+      }
+    };
+
+    window.addEventListener('message', handleMessage);
+    return () => window.removeEventListener('message', handleMessage);
+  }, []);
+
+  // Send resize messages to parent window
+  useEffect(() => {
+    if (window.parent !== window) {
+      window.parent.postMessage({
+        type: 'clobol-widget-resize',
+        isOpen: isOpen && !isMinimized
+      }, '*');
+    }
+  }, [isOpen, isMinimized]);
+
   const toggleWidget = () => {
-    setIsOpen(!isOpen);
+    const newIsOpen = !isOpen;
+    setIsOpen(newIsOpen);
     setIsMinimized(false);
+    
+    // Send message to parent window for iframe sizing
+    if (window.parent !== window) {
+      window.parent.postMessage({
+        type: 'clobol-widget-resize',
+        isOpen: newIsOpen
+      }, '*');
+    }
   };
 
   const minimizeWidget = () => {
