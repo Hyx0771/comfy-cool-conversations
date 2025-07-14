@@ -1,204 +1,413 @@
 (function() {
-  'use strict';
-  
-  // Default configuration
-  var defaultConfig = {
-    mode: 'faq',
-    theme: 'light',
-    position: 'bottom-right',
-    primaryColor: '#007BFF',
-    title: 'Clobol Support',
-    subtitle: 'Hoe kunnen we helpen?',
-    welcomeMessage: 'Hoi! Waar kan ik je mee helpen?'
-  };
-
-  // Get the current script to extract configuration
-  var currentScript = document.currentScript || (function() {
-    var scripts = document.getElementsByTagName('script');
-    return scripts[scripts.length - 1];
-  })();
-
-  // Parse configuration from script attributes
-  var config = {};
-  if (currentScript) {
-    // Get data attributes
-    var dataset = currentScript.dataset;
-    for (var key in dataset) {
-      if (dataset.hasOwnProperty(key)) {
-        config[key] = dataset[key];
-      }
+    'use strict';
+    
+    // Prevent multiple loads
+    if (window.ClobolWidgetLoaded) {
+        console.log('Clobol Widget already loaded');
+        return;
     }
+    window.ClobolWidgetLoaded = true;
     
-    // Parse JSON config if provided
-    var jsonConfig = currentScript.getAttribute('data-config');
-    if (jsonConfig) {
-      try {
-        var parsedConfig = JSON.parse(jsonConfig);
-        config = Object.assign(config, parsedConfig);
-      } catch (e) {
-        console.warn('Clobol Widget: Invalid JSON configuration', e);
-      }
-    }
-  }
-
-  // Merge with defaults
-  config = Object.assign({}, defaultConfig, config);
-
-  // Widget loader
-  function loadWidget() {
-    // Check if widget is already loaded
-    if (window.clobolWidget) {
-      return;
-    }
-
-    // Create widget iframe
-    var iframe = document.createElement('iframe');
-    var baseUrl = currentScript.src.replace('/embed.js', '');
+    console.log('🚀 Clobol Widget Loading...');
     
-    // Build URL with configuration parameters
-    var params = new URLSearchParams();
-    params.set('widget', 'true');
-    for (var key in config) {
-      if (config.hasOwnProperty(key) && config[key]) {
-        params.set(key, config[key]);
-      }
-    }
+    // Get current script and configuration
+    var currentScript = document.currentScript || (function() {
+        var scripts = document.getElementsByTagName('script');
+        for (var i = scripts.length - 1; i >= 0; i--) {
+            if (scripts[i].src && scripts[i].src.indexOf('embed.js') !== -1) {
+                return scripts[i];
+            }
+        }
+        return scripts[scripts.length - 1];
+    })();
     
-    iframe.src = baseUrl + '/?' + params.toString();
-    console.log('Clobol Widget: Loading iframe from:', iframe.src);
-    iframe.style.cssText = 'border: none; position: fixed; z-index: 999999; transition: all 0.3s ease;';
-    iframe.allow = 'clipboard-write';
-    iframe.title = 'Clobol Support Widget';
-    
-    // Set iframe size and position
-    var container = document.createElement('div');
-    container.id = 'clobol-widget-container';
-    container.style.cssText = 'position: fixed; z-index: 999999;';
-    
-    // Set position based on config
-    var positions = {
-      'bottom-right': { bottom: '20px', right: '20px' },
-      'bottom-left': { bottom: '20px', left: '20px' },
-      'top-right': { top: '20px', right: '20px' },
-      'top-left': { top: '20px', left: '20px' }
+    // Parse configuration
+    var config = {
+        mode: 'faq',
+        theme: 'light',
+        position: 'bottom-right',
+        primaryColor: '#007BFF',
+        title: 'Clobol Assistant',
+        subtitle: 'Hoe kan ik helpen?',
+        welcomeMessage: 'Hoi! Ik ben Bolt van Clobol. Waar kan ik je vandaag mee helpen?',
+        baseUrl: 'https://clobol-aigento.netlify.app'
     };
     
-    var pos = positions[config.position] || positions['bottom-right'];
-    Object.assign(container.style, pos);
+    // Override with script attributes
+    if (currentScript) {
+        config.mode = currentScript.getAttribute('data-mode') || config.mode;
+        config.theme = currentScript.getAttribute('data-theme') || config.theme;
+        config.position = currentScript.getAttribute('data-position') || config.position;
+        config.primaryColor = currentScript.getAttribute('data-primary-color') || config.primaryColor;
+        config.title = currentScript.getAttribute('data-title') || config.title;
+        config.subtitle = currentScript.getAttribute('data-subtitle') || config.subtitle;
+        config.welcomeMessage = currentScript.getAttribute('data-welcome-message') || config.welcomeMessage;
+    }
     
-    // Set iframe dimensions to match widget size
-    iframe.style.width = '80px';
-    iframe.style.height = '80px';
-    iframe.style.borderRadius = '50%';
-    iframe.style.overflow = 'hidden';
-    iframe.style.backgroundColor = config.primaryColor || '#007BFF';
-    iframe.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.15)';
-    console.log('Clobol Widget: Created iframe with dimensions:', iframe.style.width, 'x', iframe.style.height);
+    console.log('📋 Widget Config:', config);
     
-    // Add error handling
-    iframe.onerror = function() {
-      console.error('Clobol Widget: Failed to load widget iframe');
-    };
-    
-    container.appendChild(iframe);
-    document.body.appendChild(container);
-    
-    // Store references for API
-    window.clobolWidget = {
-      iframe: iframe,
-      container: container,
-      config: config,
-      isOpen: false
-    };
-  }
-
-  // Load when DOM is ready
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', loadWidget);
-  } else {
-    loadWidget();
-  }
-
-  // Expose configuration API
-  window.ClobolWidgetConfig = config;
-  
-  // Expose control API
-  window.ClobolWidgetAPI = {
-    open: function() {
-      if (window.clobolWidget && window.clobolWidget.iframe) {
-        window.clobolWidget.iframe.style.width = '400px';
-        window.clobolWidget.iframe.style.height = '600px';
-        window.clobolWidget.iframe.style.borderRadius = '12px';
-        window.clobolWidget.isOpen = true;
+    // Widget CSS
+    var cssText = `
+        .clobol-widget {
+            position: fixed;
+            z-index: 2147483647;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
         
-        // Send message to iframe to open widget
-        window.clobolWidget.iframe.contentWindow.postMessage({
-          type: 'clobol-widget-open'
-        }, '*');
-      }
-    },
-    close: function() {
-      if (window.clobolWidget && window.clobolWidget.iframe) {
-        window.clobolWidget.iframe.style.width = '80px';
-        window.clobolWidget.iframe.style.height = '80px';
-        window.clobolWidget.iframe.style.borderRadius = '50%';
-        window.clobolWidget.isOpen = false;
+        .clobol-widget-button {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: ${config.primaryColor};
+            background: linear-gradient(135deg, ${config.primaryColor} 0%, ${config.primaryColor}dd 100%);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
         
-        // Send message to iframe to close widget
-        window.clobolWidget.iframe.contentWindow.postMessage({
-          type: 'clobol-widget-close'
-        }, '*');
-      }
-    },
-    toggle: function() {
-      if (window.clobolWidget) {
-        if (window.clobolWidget.isOpen) {
-          this.close();
-        } else {
-          this.open();
+        .clobol-widget-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
         }
-      }
-    },
-    updateConfig: function(newConfig) {
-      if (window.clobolWidget) {
-        Object.assign(window.clobolWidget.config, newConfig);
-        // Reload iframe with new config
-        var params = new URLSearchParams();
-        params.set('widget', 'true');
-        for (var key in window.clobolWidget.config) {
-          if (window.clobolWidget.config.hasOwnProperty(key) && window.clobolWidget.config[key]) {
-            params.set(key, window.clobolWidget.config[key]);
-          }
+        
+        .clobol-widget-button:active {
+            transform: scale(0.95);
         }
-        var baseUrl = window.clobolWidget.iframe.src.split('?')[0];
-        window.clobolWidget.iframe.src = baseUrl + '?' + params.toString();
-      }
-    },
-    destroy: function() {
-      if (window.clobolWidget) {
-        if (window.clobolWidget.container && window.clobolWidget.container.parentNode) {
-          window.clobolWidget.container.parentNode.removeChild(window.clobolWidget.container);
+        
+        .clobol-widget-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            transform: scale(0);
+            transition: transform 0.3s ease;
         }
-        window.clobolWidget = null;
-      }
+        
+        .clobol-widget-button:hover::before {
+            transform: scale(1);
+        }
+        
+        .clobol-widget-chat {
+            width: 380px;
+            height: 520px;
+            border: none;
+            border-radius: 16px;
+            box-shadow: 0 12px 48px rgba(0,0,0,0.18);
+            background: white;
+            display: none;
+            position: absolute;
+            overflow: hidden;
+        }
+        
+        .clobol-widget-chat.clobol-show {
+            display: block;
+            animation: clobolSlideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .clobol-widget-chat.clobol-hide {
+            animation: clobolSlideDown 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        /* Position classes */
+        .clobol-position-bottom-right {
+            bottom: 20px;
+            right: 20px;
+        }
+        
+        .clobol-position-bottom-left {
+            bottom: 20px;
+            left: 20px;
+        }
+        
+        .clobol-position-top-right {
+            top: 20px;
+            right: 20px;
+        }
+        
+        .clobol-position-top-left {
+            top: 20px;
+            left: 20px;
+        }
+        
+        /* Chat positioning */
+        .clobol-widget-chat.clobol-position-bottom-right {
+            bottom: 90px;
+            right: 20px;
+        }
+        
+        .clobol-widget-chat.clobol-position-bottom-left {
+            bottom: 90px;
+            left: 20px;
+        }
+        
+        .clobol-widget-chat.clobol-position-top-right {
+            top: 90px;
+            right: 20px;
+        }
+        
+        .clobol-widget-chat.clobol-position-top-left {
+            top: 90px;
+            left: 20px;
+        }
+        
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+            .clobol-widget-chat {
+                width: calc(100vw - 40px);
+                height: calc(100vh - 140px);
+                max-width: 380px;
+                max-height: 520px;
+            }
+            
+            .clobol-widget-button {
+                width: 56px;
+                height: 56px;
+                font-size: 22px;
+            }
+            
+            .clobol-position-bottom-right,
+            .clobol-position-bottom-left {
+                bottom: 16px;
+            }
+            
+            .clobol-position-bottom-right {
+                right: 16px;
+            }
+            
+            .clobol-position-bottom-left {
+                left: 16px;
+            }
+            
+            .clobol-widget-chat.clobol-position-bottom-right,
+            .clobol-widget-chat.clobol-position-bottom-left {
+                bottom: 84px;
+            }
+            
+            .clobol-widget-chat.clobol-position-bottom-right {
+                right: 16px;
+            }
+            
+            .clobol-widget-chat.clobol-position-bottom-left {
+                left: 16px;
+            }
+        }
+        
+        /* Animations */
+        @keyframes clobolSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        
+        @keyframes clobolSlideDown {
+            from {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+            to {
+                opacity: 0;
+                transform: translateY(20px) scale(0.95);
+            }
+        }
+        
+        /* Loading state */
+        .clobol-widget-loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8f9fa;
+            color: #6c757d;
+            font-size: 14px;
+        }
+        
+        .clobol-widget-loading::before {
+            content: '';
+            width: 20px;
+            height: 20px;
+            border: 2px solid #e9ecef;
+            border-top: 2px solid ${config.primaryColor};
+            border-radius: 50%;
+            animation: clobolSpin 1s linear infinite;
+            margin-right: 10px;
+        }
+        
+        @keyframes clobolSpin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    `;
+    
+    // Add CSS to page
+    function addCSS() {
+        var style = document.createElement('style');
+        style.textContent = cssText;
+        document.head.appendChild(style);
+        console.log('✅ Widget styles added');
     }
-  };
-  
-  // Listen for messages from iframe to handle size changes
-  window.addEventListener('message', function(event) {
-    if (event.data && event.data.type === 'clobol-widget-resize' && window.clobolWidget) {
-      var iframe = window.clobolWidget.iframe;
-      if (event.data.isOpen) {
-        iframe.style.width = '400px';
-        iframe.style.height = '600px';
-        iframe.style.borderRadius = '12px';
-        window.clobolWidget.isOpen = true;
-      } else {
-        iframe.style.width = '80px';
-        iframe.style.height = '80px';
-        iframe.style.borderRadius = '50%';
-        window.clobolWidget.isOpen = false;
-      }
+    
+    // Create widget HTML
+    function createWidget() {
+        var container = document.createElement('div');
+        container.className = 'clobol-widget clobol-position-' + config.position;
+        container.id = 'clobol-widget-container';
+        
+        var isOpen = false;
+        
+        container.innerHTML = 
+            '<button class="clobol-widget-button" id="clobol-widget-button" aria-label="Open chat">' +
+                '💬' +
+            '</button>' +
+            '<div class="clobol-widget-chat clobol-position-' + config.position + '" id="clobol-widget-chat">' +
+                '<div class="clobol-widget-loading">Loading chat...</div>' +
+            '</div>';
+        
+        document.body.appendChild(container);
+        
+        var button = document.getElementById('clobol-widget-button');
+        var chat = document.getElementById('clobol-widget-chat');
+        
+        // Load iframe after a short delay
+        setTimeout(function() {
+            var iframe = document.createElement('iframe');
+            iframe.src = config.baseUrl + '?embedded=true&mode=' + config.mode + '&theme=' + config.theme;
+            iframe.style.cssText = 'width: 100%; height: 100%; border: none; background: white;';
+            iframe.allow = 'microphone; camera';
+            iframe.title = config.title;
+            iframe.loading = 'lazy';
+            
+            chat.innerHTML = '';
+            chat.appendChild(iframe);
+            console.log('✅ Chat iframe loaded');
+        }, 500);
+        
+        // Button click handler
+        button.addEventListener('click', function(e) {
+            e.stopPropagation();
+            toggleChat();
+        });
+        
+        // Close when clicking outside
+        document.addEventListener('click', function(e) {
+            if (isOpen && !container.contains(e.target)) {
+                closeChat();
+            }
+        });
+        
+        // Widget API functions
+        function openChat() {
+            if (!isOpen) {
+                isOpen = true;
+                chat.style.display = 'block';
+                chat.className = chat.className.replace('clobol-hide', '') + ' clobol-show';
+                button.innerHTML = '✕';
+                button.setAttribute('aria-label', 'Close chat');
+                console.log('📖 Chat opened');
+            }
+        }
+        
+        function closeChat() {
+            if (isOpen) {
+                isOpen = false;
+                chat.className = chat.className.replace('clobol-show', '') + ' clobol-hide';
+                button.innerHTML = '💬';
+                button.setAttribute('aria-label', 'Open chat');
+                
+                setTimeout(function() {
+                    if (!isOpen) {
+                        chat.style.display = 'none';
+                        chat.className = chat.className.replace('clobol-hide', '');
+                    }
+                }, 300);
+                console.log('📕 Chat closed');
+            }
+        }
+        
+        function toggleChat() {
+            if (isOpen) {
+                closeChat();
+            } else {
+                openChat();
+            }
+        }
+        
+        // Create API
+        window.ClobolWidgetAPI = {
+            open: openChat,
+            close: closeChat,
+            toggle: toggleChat,
+            isOpen: function() { return isOpen; },
+            config: config,
+            version: '1.0.0'
+        };
+        
+        console.log('✅ Widget API created');
+        
+        // Fire load event
+        window.dispatchEvent(new CustomEvent('clobolWidgetLoaded', { 
+            detail: { config: config, api: window.ClobolWidgetAPI }
+        }));
+        
+        return {
+            open: openChat,
+            close: closeChat,
+            toggle: toggleChat,
+            destroy: function() {
+                if (container && container.parentNode) {
+                    container.parentNode.removeChild(container);
+                }
+                window.ClobolWidgetAPI = null;
+                window.ClobolWidgetLoaded = false;
+                console.log('🗑️ Widget destroyed');
+            }
+        };
     }
-  });
+    
+    // Initialize widget
+    function init() {
+        try {
+            addCSS();
+            var widget = createWidget();
+            window.clobolWidget = widget;
+            
+            // Call onload if specified
+            if (currentScript && typeof currentScript.onload === 'function') {
+                currentScript.onload();
+            }
+            
+            console.log('🎉 Clobol Widget initialized successfully!');
+        } catch (error) {
+            console.error('❌ Clobol Widget initialization failed:', error);
+            
+            // Call onerror if specified
+            if (currentScript && typeof currentScript.onerror === 'function') {
+                currentScript.onerror(error);
+            }
+        }
+    }
+    
+    // Start initialization
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        // Small delay to ensure script attributes are parsed
+        setTimeout(init, 10);
+    }
+    
 })();
