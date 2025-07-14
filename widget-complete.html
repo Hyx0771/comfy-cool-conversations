@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clobol Widget</title>
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { 
+      margin: 0; 
+      padding: 0; 
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+      background: transparent;
+      height: 100vh;
+      overflow: hidden;
+    }
+    
+    .widget-container {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 999999;
+    }
+    
+    .widget-trigger {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: #007BFF;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      color: white;
+      font-size: 24px;
+    }
+    
+    .widget-trigger:hover {
+      transform: scale(1.1);
+    }
+    
+    .widget-chat-window {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 380px;
+      height: 600px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.3s ease;
+      max-height: 80vh;
+      border: 1px solid #e2e8f0;
+    }
+    
+    .widget-header {
+      background: #007BFF;
+      color: white;
+      padding: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      min-height: 60px;
+      box-sizing: border-box;
+    }
+    
+    .widget-header h3 {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 600;
+    }
+    
+    .widget-header p {
+      margin: 0;
+      font-size: 14px;
+      opacity: 0.9;
+    }
+    
+    .header-buttons {
+      display: flex;
+      gap: 8px;
+    }
+    
+    .header-button {
+      color: white;
+      background: transparent;
+      border: none;
+      padding: 4px;
+      cursor: pointer;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .header-button:hover {
+      background: rgba(255,255,255,0.1);
+    }
+    
+    .chat-content {
+      flex: 1;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      background: #f8fafc;
+    }
+    
+    .start-screen {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      background: linear-gradient(135deg, #f0f9ff 0%, #ffffff 100%);
+      padding: 24px;
+      gap: 24px;
+    }
+    
+    .welcome-message {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      border-bottom-left-radius: 4px;
+      padding: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      animation: fadeIn 0.3s ease-out;
+    }
+    
+    .mode-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      animation: fadeIn 0.3s ease-out 0.5s both;
+    }
+    
+    .mode-button {
+      display: flex;
+      align-items: center;
+      padding: 16px;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: left;
+      min-height: 80px;
+      font-family: inherit;
+    }
+    
+    .mode-button.primary {
+      background: linear-gradient(135deg, #007BFF 0%, #0056b3 100%);
+      color: white;
+      box-shadow: 0 4px 12px rgba(0,123,255,0.3);
+    }
+    
+    .mode-button.primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0,123,255,0.4);
+    }
+    
+    .mode-button.secondary {
+      background: white;
+      color: #374151;
+      border: 2px solid #e5e7eb;
+    }
+    
+    .mode-button.secondary:hover {
+      border-color: #007BFF;
+      background: #f8fafc;
+    }
+    
+    .mode-icon {
+      font-size: 24px;
+      margin-right: 12px;
+    }
+    
+    .mode-title {
+      font-weight: 600;
+      font-size: 16px;
+      margin-bottom: 4px;
+    }
+    
+    .mode-subtitle {
+      font-size: 14px;
+      opacity: 0.8;
+    }
+    
+    .info-box {
+      background: rgba(255,255,255,0.7);
+      border-radius: 8px;
+      padding: 16px;
+      text-align: center;
+      margin-top: auto;
+    }
+    
+    .info-box p {
+      margin: 0;
+      font-size: 14px;
+      color: #6b7280;
+    }
+    
+    .info-box .highlight {
+      color: #007BFF;
+      font-weight: 600;
+    }
+    
+    /* FAQ Interface */
+    .faq-container {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      background: #f8fafc;
+    }
+    
+    .messages-container {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      background: linear-gradient(to bottom, rgba(59, 130, 246, 0.05), #ffffff);
+    }
+    
+    .message {
+      margin-bottom: 16px;
+      display: flex;
+      animation: fadeIn 0.3s ease-out;
+    }
+    
+    .message.bot {
+      justify-content: flex-start;
+    }
+    
+    .message.user {
+      justify-content: flex-end;
+    }
+    
+    .message-bubble {
+      max-width: 280px;
+      padding: 12px 16px;
+      border-radius: 16px;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+    
+    .message-bubble.bot {
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-bottom-left-radius: 4px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      color: #374151;
+    }
+    
+    .message-bubble.user {
+      background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+      color: white;
+      border-bottom-right-radius: 4px;
+      box-shadow: 0 2px 8px rgba(30, 64, 175, 0.3);
+    }
+    
+    .message-time {
+      font-size: 12px;
+      margin-top: 4px;
+      opacity: 0.7;
+    }
+    
+    .faq-grid {
+      padding: 16px;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    
+    .faq-grid-header {
+      text-align: center;
+      margin-bottom: 16px;
+    }
+    
+    .faq-grid-header p {
+      margin: 0;
+      font-size: 14px;
+      color: #6b7280;
+    }
+    
+    .faq-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    
+    .faq-button {
+      display: flex;
+      align-items: center;
+      padding: 16px;
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: left;
+      font-family: inherit;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    
+    .faq-button:hover {
+      background: linear-gradient(135deg, #007BFF 0%, #0056b3 100%);
+      color: white;
+      border-color: #007BFF;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,123,255,0.3);
+    }
+    
+    .faq-number {
+      background: #eff6ff;
+      color: #007BFF;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-right: 12px;
+      min-width: 24px;
+      text-align: center;
+    }
+    
+    .faq-button:hover .faq-number {
+      background: rgba(255,255,255,0.2);
+      color: white;
+    }
+    
+    .faq-text {
+      font-size: 14px;
+      line-height: 1.4;
+    }
+    
+    .chat-input-container {
+      padding: 16px;
+      background: white;
+      border-top: 1px solid #e5e7eb;
+    }
+    
+    .chat-input-wrapper {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    
+    .chat-input {
+      flex: 1;
+      padding: 12px 16px;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+    
+    .chat-input:focus {
+      border-color: #007BFF;
+    }
+    
+    .send-button {
+      padding: 12px 16px;
+      background: linear-gradient(135deg, #007BFF 0%, #0056b3 100%);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 14px;
+      min-width: 60px;
+    }
+    
+    .send-button:hover {
+      background: linear-gradient(135deg, #0056b3 0%, #003d82 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,123,255,0.3);
+    }
+    
+    .send-button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+    
+    .typing-indicator {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 12px 16px;
+      background: #f3f4f6;
+      border-radius: 16px;
+      border-bottom-left-radius: 4px;
+      max-width: 80px;
+    }
+    
+    .typing-dot {
+      width: 8px;
+      height: 8px;
+      background: #9ca3af;
+      border-radius: 50%;
+      animation: typing 1.4s infinite;
+    }
+    
+    .typing-dot:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+    
+    .typing-dot:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes typing {
+      0%, 60%, 100% { opacity: 0.3; }
+      30% { opacity: 1; }
+    }
+    
+    @media (max-width: 400px) {
+      .widget-chat-window {
+        width: 100vw;
+        height: 100vh;
+        bottom: 0;
+        right: 0;
+        border-radius: 0;
+      }
+      
+      .widget-container {
+        bottom: 0;
+        right: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="widget-root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect, useRef } = React;
+
+    // FAQ Data
+    const faqData = [
+      {
+        id: 1,
+        question: "Wel of geen warmtepomp voor mijn woning?",
+        answer: "Een warmtepomp is ideaal om gas te besparen mits uw woning goed is geïsoleerd en er ruimte is voor een binnen- en buitenunit. Bij matige isolatie adviseren wij vaak een hybride oplossing. Clobol kijkt graag mee en geeft eerlijk advies op maat."
+      },
+      {
+        id: 2,
+        question: "Wat kost een airco gemiddeld?",
+        answer: "Een single-split airco voor één kamer kost doorgaans €1.500-€3.000 inclusief installatie. Een multi-split voor meerdere ruimtes begint rond €2.500 en kan oplopen tot €5.000 of meer, afhankelijk van aantal binnenunits en vermogen."
+      },
+      {
+        id: 3,
+        question: "Hoe snel kan ik geholpen worden?",
+        answer: "Na uw aanvraag via het intakeformulier nemen wij binnen één werkdag contact op. Advies en installatie kunnen meestal binnen enkele weken worden ingepland; bij spoed zoeken we sneller een oplossing."
+      },
+      {
+        id: 4,
+        question: "Heeft Clobol keurmerken of certificeringen?",
+        answer: "Ja. We beschikken onder andere over het F-gassencertificaat en werken uitsluitend met gediplomeerde monteurs en A-merken zoals Daikin en Mitsubishi."
+      },
+      {
+        id: 5,
+        question: "Hoe zit het met geluid en vergunningen bij buitenunits?",
+        answer: "Onze buitenunits zijn stil en worden op trillingsdempers geplaatst. 's Nachts blijft het geluid op de erfgrens onder circa 40 dB(A). In de meeste gevallen is geen vergunning nodig; wij adviseren en regelen dit indien vereist."
+      },
+      {
+        id: 6,
+        question: "Welke airco is geschikt voor mijn situatie?",
+        answer: "Dat hangt af van het aantal te koelen of verwarmen kamers, de grootte en of u ook wilt verwarmen. Via het intakeformulier bepalen we samen het optimale type en vermogen."
+      },
+      {
+        id: 7,
+        question: "Wat kost een warmtepomp ongeveer?",
+        answer: "Een hybride warmtepomp kost gemiddeld €4.000-€7.000, all-electric systemen €8.000-€15.000. ISDE-subsidie kan duizenden euro's schelen; wij berekenen dit in de offerte."
+      },
+      {
+        id: 8,
+        question: "Hoe vraag ik een offerte aan bij Clobol?",
+        answer: "Vul het online intakeformulier in (1 minuut). Wij bellen binnen één werkdag voor aanvullende vragen en sturen daarna een vrijblijvende offerte op maat."
+      }
+    ];
+
+    // Main Widget Component
+    const ClobolWidget = () => {
+      const [isOpen, setIsOpen] = useState(false);
+      const [currentMode, setCurrentMode] = useState(null);
+      const [messages, setMessages] = useState([]);
+      const [inputValue, setInputValue] = useState('');
+      const [isTyping, setIsTyping] = useState(false);
+      const [showWelcome, setShowWelcome] = useState(false);
+      const [showButtons, setShowButtons] = useState(false);
+      const messagesEndRef = useRef(null);
+
+      useEffect(() => {
+        if (isOpen && !currentMode) {
+          setTimeout(() => setShowWelcome(true), 300);
+          setTimeout(() => setShowButtons(true), 1500);
+        }
+      }, [isOpen, currentMode]);
+
+      useEffect(() => {
+        scrollToBottom();
+      }, [messages]);
+
+      const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+      };
+
+      const addMessage = (content, isBot = false) => {
+        const newMessage = {
+          id: Date.now(),
+          content,
+          isBot,
+          timestamp: new Date()
+        };
+        setMessages(prev => [...prev, newMessage]);
+      };
+
+      const handleModeSelect = (mode) => {
+        setCurrentMode(mode);
+        if (mode === 'faq') {
+          setMessages([]);
+          setTimeout(() => {
+            addMessage("Hoi! Waar kan ik je mee helpen? Stel gerust je vraag over onze diensten of prijzen. 😊", true);
+          }, 500);
+        } else if (mode === 'quote') {
+          // Handle quote mode
+          addMessage("Geweldig! Ik ga je helpen met een offerte. Dit duurt slechts 2 minuten.", true);
+        }
+      };
+
+      const handleFAQClick = (faq) => {
+        addMessage(faq.question, false);
+        setIsTyping(true);
+        setTimeout(() => {
+          setIsTyping(false);
+          addMessage(faq.answer, true);
+        }, 1500);
+      };
+
+      const handleSendMessage = () => {
+        if (!inputValue.trim()) return;
+        
+        addMessage(inputValue, false);
+        setInputValue('');
+        setIsTyping(true);
+        
+        setTimeout(() => {
+          setIsTyping(false);
+          addMessage("Bedankt voor uw vraag! Onze specialisten nemen binnen één werkdag contact met u op voor persoonlijk advies.", true);
+        }, 2000);
+      };
+
+      const handleKeyPress = (e) => {
+        if (e.key === 'Enter') {
+          handleSendMessage();
+        }
+      };
+
+      const resetWidget = () => {
+        setCurrentMode(null);
+        setMessages([]);
+        setInputValue('');
+        setIsTyping(false);
+        setShowWelcome(false);
+        setShowButtons(false);
+      };
+
+      return (
+        <div className="widget-container">
+          {!isOpen && (
+            <button 
+              className="widget-trigger"
+              onClick={() => setIsOpen(true)}
+            >
+              💬
+            </button>
+          )}
+
+          {isOpen && (
+            <div className="widget-chat-window">
+              <div className="widget-header">
+                <div>
+                  <h3>Clobol Support</h3>
+                  <p>Hoe kunnen we helpen?</p>
+                </div>
+                <div className="header-buttons">
+                  {currentMode && (
+                    <button 
+                      className="header-button"
+                      onClick={resetWidget}
+                      title="Terug naar start"
+                    >
+                      ←
+                    </button>
+                  )}
+                  <button 
+                    className="header-button"
+                    onClick={() => {
+                      setIsOpen(false);
+                      resetWidget();
+                    }}
+                  >
+                    ✕
+                  </button>
+                </div>
+              </div>
+
+              <div className="chat-content">
+                {!currentMode && (
+                  <div className="start-screen">
+                    {showWelcome && (
+                      <div className="welcome-message">
+                        <p style={{margin: 0, fontSize: '14px', lineHeight: '1.5'}}>
+                          Hoi! Ik ben Bolt van Clobol ❄️<br/>
+                          Waar kan ik je vandaag mee helpen?
+                        </p>
+                      </div>
+                    )}
+
+                    {showButtons && (
+                      <div className="mode-buttons">
+                        <button 
+                          className="mode-button primary"
+                          onClick={() => handleModeSelect('quote')}
+                        >
+                          <div className="mode-icon">❄️</div>
+                          <div>
+                            <div className="mode-title">🔥 Offerte</div>
+                            <div className="mode-subtitle">Installatie of reparatie</div>
+                          </div>
+                        </button>
+
+                        <button 
+                          className="mode-button secondary"
+                          onClick={() => handleModeSelect('faq')}
+                        >
+                          <div className="mode-icon">💬</div>
+                          <div>
+                            <div className="mode-title">Vraag stellen</div>
+                            <div className="mode-subtitle">Over prijzen of diensten</div>
+                          </div>
+                        </button>
+                      </div>
+                    )}
+
+                    <div className="info-box">
+                      <p>
+                        <span className="highlight">Geen zorgen!</span> Ik help je stap voor stap. 
+                        Binnen 2 minuten weet je waar je aan toe bent. 😊
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {currentMode === 'faq' && (
+                  <div className="faq-container">
+                    <div className="messages-container">
+                      {messages.map((message) => (
+                        <div key={message.id} className={`message ${message.isBot ? 'bot' : 'user'}`}>
+                          <div className={`message-bubble ${message.isBot ? 'bot' : 'user'}`}>
+                            <div>{message.content}</div>
+                            <div className="message-time">
+                              {message.timestamp.toLocaleTimeString('nl-NL', { 
+                                hour: '2-digit', 
+                                minute: '2-digit' 
+                              })}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                      
+                      {isTyping && (
+                        <div className="message bot">
+                          <div className="typing-indicator">
+                            <div className="typing-dot"></div>
+                            <div className="typing-dot"></div>
+                            <div className="typing-dot"></div>
+                          </div>
+                        </div>
+                      )}
+                      
+                      <div ref={messagesEndRef} />
+                    </div>
+
+                    {messages.length <= 1 && (
+                      <div className="faq-grid">
+                        <div className="faq-grid-header">
+                          <p>Kies een veelgestelde vraag:</p>
+                        </div>
+                        <div className="faq-buttons">
+                          {faqData.map((faq) => (
+                            <button
+                              key={faq.id}
+                              className="faq-button"
+                              onClick={() => handleFAQClick(faq)}
+                            >
+                              <div className="faq-number">
+                                {faq.id.toString().padStart(2, '0')}
+                              </div>
+                              <div className="faq-text">{faq.question}</div>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    <div className="chat-input-container">
+                      <div className="chat-input-wrapper">
+                        <input
+                          type="text"
+                          className="chat-input"
+                          placeholder="Stel hier je vraag..."
+                          value={inputValue}
+                          onChange={(e) => setInputValue(e.target.value)}
+                          onKeyPress={handleKeyPress}
+                        />
+                        <button
+                          className="send-button"
+                          onClick={handleSendMessage}
+                          disabled={!inputValue.trim()}
+                        >
+                          ➤
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {currentMode === 'quote' && (
+                  <div className="faq-container">
+                    <div className="messages-container">
+                      <div className="message bot">
+                        <div className="message-bubble bot">
+                          <div>Geweldig! Ik ga je helpen met een offerte. Dit duurt slechts 2 minuten.</div>
+                          <div className="message-time">
+                            {new Date().toLocaleTimeString('nl-NL', { 
+                              hour: '2-digit', 
+                              minute: '2-digit' 
+                            })}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="message bot">
+                        <div className="message-bubble bot">
+                          <div>Voor een volledig werkende quote flow, zou deze normaal doorverwijzen naar het uitgebreide formulier systeem.</div>
+                          <div className="message-time">
+                            {new Date().toLocaleTimeString('nl-NL', { 
+                              hour: '2-digit', 
+                              minute: '2-digit' 
+                            })}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    };
+
+    ReactDOM.render(<ClobolWidget />, document.getElementById('widget-root'));
+  </script>
+</body>
+</html>
