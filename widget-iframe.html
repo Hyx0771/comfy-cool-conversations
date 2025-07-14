@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clobol Widget - Iframe Version</title>
+  <style>
+    body { 
+      margin: 0; 
+      padding: 0; 
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+      background: #f8fafc;
+      height: 100vh;
+      overflow: hidden;
+    }
+    
+    .widget-container {
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    
+    .widget-frame {
+      width: 100%;
+      max-width: 400px;
+      height: 100%;
+      max-height: 600px;
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+      background: white;
+      overflow: hidden;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 480px) {
+      .widget-container {
+        padding: 10px;
+      }
+      
+      .widget-frame {
+        max-width: 100%;
+        max-height: 100%;
+        border-radius: 8px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="widget-container">
+    <iframe 
+      src="https://clobol-aigento.netlify.app/widget.html"
+      class="widget-frame"
+      title="Clobol Assistant"
+      allow="microphone; camera"
+      loading="lazy"
+    ></iframe>
+  </div>
+
+  <script>
+    // Optional: Listen for messages from the widget
+    window.addEventListener('message', function(event) {
+      if (event.origin !== 'https://clobol-aigento.netlify.app') return;
+      
+      console.log('Widget message:', event.data);
+      
+      // Handle any widget-specific messages here
+      if (event.data.type === 'widget-ready') {
+        console.log('Widget is ready');
+      }
+    });
+  </script>
+</body>
+</html>
