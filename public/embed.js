@@ -30,7 +30,9 @@
         title: 'Clobol Assistant',
         subtitle: 'Hoe kan ik helpen?',
         welcomeMessage: 'Hoi! Ik ben Bolt van Clobol. Waar kan ik je vandaag mee helpen?',
-        baseUrl: 'https://clobol-aigento.netlify.app'
+        baseUrl: 'https://clobol-aigento.netlify.app',
+        // NEW: Add widget-specific URL
+        widgetUrl: 'https://clobol-aigento.netlify.app/widget.html'
     };
     
     // Override with script attributes
@@ -42,6 +44,8 @@
         config.title = currentScript.getAttribute('data-title') || config.title;
         config.subtitle = currentScript.getAttribute('data-subtitle') || config.subtitle;
         config.welcomeMessage = currentScript.getAttribute('data-welcome-message') || config.welcomeMessage;
+        // Allow custom widget URL
+        config.widgetUrl = currentScript.getAttribute('data-widget-url') || config.widgetUrl;
     }
     
     console.log('📋 Widget Config:', config);
@@ -286,7 +290,8 @@
         // Load iframe after a short delay
         setTimeout(function() {
             var iframe = document.createElement('iframe');
-            iframe.src = config.baseUrl + '?embedded=true&mode=' + config.mode + '&theme=' + config.theme;
+            // FIXED: Load widget.html instead of main site
+            iframe.src = config.widgetUrl;
             iframe.style.cssText = 'width: 100%; height: 100%; border: none; background: white;';
             iframe.allow = 'microphone; camera';
             iframe.title = config.title;
@@ -354,7 +359,7 @@
             toggle: toggleChat,
             isOpen: function() { return isOpen; },
             config: config,
-            version: '1.0.0'
+            version: '2.0.0'
         };
         
         console.log('✅ Widget API created');
