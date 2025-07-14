@@ -1,8 +1,15 @@
-# Welcome to your Lovable project
+# Clobol Chat Widget Project
 
-## Project info
+## Project Overview
 
-**URL**: https://lovable.dev/projects/86f9b26b-89a7-43b1-8459-fdcf309dff5d
+This project contains both a full web application and an embeddable chat widget that can be deployed to any website.
+
+**Main App URL**: https://lovable.dev/projects/86f9b26b-89a7-43b1-8459-fdcf309dff5d
+
+## Components
+
+- **Main Application**: Full-featured chat application with FAQ, HVAC quotes, and support
+- **Embeddable Widget**: Standalone widget for embedding on external websites
 
 ## How can I edit this code?
 
@@ -60,14 +67,41 @@ This project is built with:
 - shadcn-ui
 - Tailwind CSS
 
-## How can I deploy this project?
+## Deployment Options
 
+### Main Application
 Simply open [Lovable](https://lovable.dev/projects/86f9b26b-89a7-43b1-8459-fdcf309dff5d) and click on Share -> Publish.
 
-## Can I connect a custom domain to my Lovable project?
+### Embeddable Widget
+The widget can be deployed separately for embedding on external websites:
 
-Yes, you can!
+```bash
+# Build the widget
+node build-widget.js
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+# Deploy to Netlify or any static hosting service
+# Upload contents of 'dist-widget' folder
+```
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+**Widget Deployment Guide**: See [WIDGET-DEPLOYMENT.md](./WIDGET-DEPLOYMENT.md) for detailed instructions.
+
+### Custom Domain
+
+**For Main App**: Navigate to Project > Settings > Domains and click Connect Domain in Lovable.
+
+**For Widget**: Configure custom domain in your hosting provider (e.g., Netlify).
+
+Read more: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+
+## Build Scripts
+
+```bash
+# Development
+npm run dev
+
+# Build main application
+npm run build
+
+# Build embeddable widget
+node build-widget.js
+```
