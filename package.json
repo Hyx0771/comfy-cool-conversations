@@ -82,3 +82,9 @@
     "vite": "^5.4.1"
   }
 }
+{
+  "scripts": {
+    "build:widget": "node build-widget.js"
+  }
+}
+
