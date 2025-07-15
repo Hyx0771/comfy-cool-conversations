@@ -77,8 +77,7 @@ Vraag of offerte? Klik. Klaar."
 
             <div className="text-center mt-6 p-4 bg-white/90 rounded-lg border border-transparent">
               <p className="text-sm text-gray-600 leading-relaxed">
-                <span className="font-medium text-blue-700">Geen zorgen!</span> Ik help je stap voor stap. 
-                Binnen 2 minuten weet je waar je aan toe bent. 😊
+                Alleen klikken – geen getyp. Je aanvraag? Klaar in 60 seconden. Probeer maar.
               </p>
             </div>
           </div>
