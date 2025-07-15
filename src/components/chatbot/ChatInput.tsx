@@ -17,7 +17,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({
   placeholder = "Stel hier uw vraag..." 
 }) => {
   return (
-    <div className="border-t border-white/20 bg-transparent p-4 flex-shrink-0">
+    <div className="border-t border-gray-200 bg-white p-4 flex-shrink-0">
       <div className="flex gap-3">
         <Input
           value={value}
