@@ -19,11 +19,21 @@ interface EmbeddableHVACWidgetProps {
     title?: string;
     subtitle?: string;
   };
+  isOpen?: boolean;
+  onToggle?: () => void;
 }
 
-const EmbeddableHVACWidget: React.FC<EmbeddableHVACWidgetProps> = ({ config = {} }) => {
-  const [isOpen, setIsOpen] = useState(false);
+const EmbeddableHVACWidget: React.FC<EmbeddableHVACWidgetProps> = ({ 
+  config = {}, 
+  isOpen: controlledIsOpen, 
+  onToggle 
+}) => {
+  const [internalIsOpen, setInternalIsOpen] = useState(false);
   const [currentMode, setCurrentMode] = useState<ChatMode>(config.mode || 'welcome');
+  
+  // Use controlled state if provided, otherwise use internal state
+  const isOpen = controlledIsOpen !== undefined ? controlledIsOpen : internalIsOpen;
+  const setIsOpen = controlledIsOpen !== undefined ? () => onToggle?.() : setInternalIsOpen;
 
   useEffect(() => {
     // Listen for messages from parent window

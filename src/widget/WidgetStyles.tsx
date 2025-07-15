@@ -1,19 +1,41 @@
 // Self-contained styles for the widget to avoid conflicts with host site
 export const widgetStyles = `
+  /* Reset and base styles */
   .clobol-widget-container {
     position: fixed !important;
     z-index: 999999 !important;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
     font-size: 14px !important;
     line-height: 1.5 !important;
-    color: #333 !important;
+    color: #0f172a !important;
     box-sizing: border-box !important;
+    --primary: 220 14% 50% !important;
+    --primary-foreground: 210 40% 98% !important;
+    --background: 0 0% 100% !important;
+    --foreground: 222.2 84% 4.9% !important;
+    --card: 0 0% 100% !important;
+    --card-foreground: 222.2 84% 4.9% !important;
+    --popover: 0 0% 100% !important;
+    --popover-foreground: 222.2 84% 4.9% !important;
+    --secondary: 210 40% 96% !important;
+    --secondary-foreground: 222.2 47.4% 11.2% !important;
+    --muted: 210 40% 96% !important;
+    --muted-foreground: 215.4 16.3% 46.9% !important;
+    --accent: 210 40% 96% !important;
+    --accent-foreground: 222.2 47.4% 11.2% !important;
+    --destructive: 0 84.2% 60.2% !important;
+    --destructive-foreground: 210 40% 98% !important;
+    --border: 214.3 31.8% 91.4% !important;
+    --input: 214.3 31.8% 91.4% !important;
+    --ring: 221.2 83.2% 53.3% !important;
+    --radius: 0.5rem !important;
   }
   
   .clobol-widget-container * {
     box-sizing: border-box !important;
   }
   
+  /* Trigger button */
   .clobol-widget-trigger {
     position: fixed !important;
     bottom: 20px !important;
@@ -21,8 +43,8 @@ export const widgetStyles = `
     width: 60px !important;
     height: 60px !important;
     border-radius: 50% !important;
-    background: #007BFF !important;
-    color: white !important;
+    background: hsl(var(--primary)) !important;
+    color: hsl(var(--primary-foreground)) !important;
     border: none !important;
     cursor: pointer !important;
     display: flex !important;
@@ -44,6 +66,7 @@ export const widgetStyles = `
     fill: currentColor !important;
   }
   
+  /* Chat window */
   .clobol-widget-chat {
     position: fixed !important;
     bottom: 90px !important;
@@ -51,10 +74,10 @@ export const widgetStyles = `
     width: 380px !important;
     height: 600px !important;
     max-height: 80vh !important;
-    background: white !important;
+    background: hsl(var(--background)) !important;
     border-radius: 12px !important;
     box-shadow: 0 8px 32px rgba(0,0,0,0.2) !important;
-    border: 1px solid #e2e8f0 !important;
+    border: 1px solid hsl(var(--border)) !important;
     overflow: hidden !important;
     display: flex !important;
     flex-direction: column !important;
@@ -192,12 +215,128 @@ export const widgetStyles = `
     cursor: not-allowed !important;
   }
   
+  /* Button styles */
+  .clobol-widget-container button {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    white-space: nowrap !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    transition: all 0.2s !important;
+    border: none !important;
+    cursor: pointer !important;
+    border-radius: var(--radius) !important;
+    padding: 8px 16px !important;
+    text-decoration: none !important;
+  }
+  
+  .clobol-widget-container button:disabled {
+    pointer-events: none !important;
+    opacity: 0.5 !important;
+  }
+  
+  .clobol-widget-container button:hover {
+    opacity: 0.9 !important;
+  }
+  
+  /* Primary button */
+  .clobol-widget-container .inline-flex.items-center.justify-center.rounded-md.font-medium.transition-colors.focus-visible\\:outline-none.focus-visible\\:ring-2.focus-visible\\:ring-ring.focus-visible\\:ring-offset-2.disabled\\:opacity-50.disabled\\:pointer-events-none.ring-offset-background.bg-primary.text-primary-foreground.hover\\:bg-primary\\/90 {
+    background: hsl(var(--primary)) !important;
+    color: hsl(var(--primary-foreground)) !important;
+    padding: 8px 16px !important;
+    border-radius: var(--radius) !important;
+  }
+  
+  /* Secondary button */
+  .clobol-widget-container .inline-flex.items-center.justify-center.rounded-md.font-medium.transition-colors.focus-visible\\:outline-none.focus-visible\\:ring-2.focus-visible\\:ring-ring.focus-visible\\:ring-offset-2.disabled\\:opacity-50.disabled\\:pointer-events-none.ring-offset-background.border.border-input.bg-background.hover\\:bg-accent.hover\\:text-accent-foreground {
+    background: hsl(var(--background)) !important;
+    color: hsl(var(--foreground)) !important;
+    border: 1px solid hsl(var(--border)) !important;
+    padding: 8px 16px !important;
+    border-radius: var(--radius) !important;
+  }
+  
+  /* Card styles */
+  .clobol-widget-container .rounded-lg.border.bg-card.text-card-foreground.shadow-sm {
+    border-radius: var(--radius) !important;
+    border: 1px solid hsl(var(--border)) !important;
+    background: hsl(var(--card)) !important;
+    color: hsl(var(--card-foreground)) !important;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06) !important;
+  }
+  
+  /* Input styles */
+  .clobol-widget-container input[type="text"], 
+  .clobol-widget-container input[type="email"], 
+  .clobol-widget-container input[type="tel"], 
+  .clobol-widget-container textarea {
+    flex: 1 !important;
+    background: hsl(var(--background)) !important;
+    border: 1px solid hsl(var(--border)) !important;
+    border-radius: var(--radius) !important;
+    padding: 8px 12px !important;
+    font-size: 14px !important;
+    color: hsl(var(--foreground)) !important;
+    outline: none !important;
+    transition: border-color 0.2s !important;
+  }
+  
+  .clobol-widget-container input:focus, 
+  .clobol-widget-container textarea:focus {
+    border-color: hsl(var(--ring)) !important;
+    outline: 2px solid transparent !important;
+    outline-offset: 2px !important;
+  }
+  
+  /* Avatar styles */
+  .clobol-widget-container .relative.flex.shrink-0.overflow-hidden.rounded-full {
+    position: relative !important;
+    display: flex !important;
+    flex-shrink: 0 !important;
+    overflow: hidden !important;
+    border-radius: 9999px !important;
+    width: 40px !important;
+    height: 40px !important;
+  }
+  
+  /* Scrollbar styles */
+  .clobol-widget-container ::-webkit-scrollbar {
+    width: 6px !important;
+  }
+  
+  .clobol-widget-container ::-webkit-scrollbar-track {
+    background: hsl(var(--muted)) !important;
+  }
+  
+  .clobol-widget-container ::-webkit-scrollbar-thumb {
+    background: hsl(var(--muted-foreground)) !important;
+    border-radius: 3px !important;
+  }
+  
+  .clobol-widget-container ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--foreground)) !important;
+  }
+  
+  /* Mobile responsiveness */
   @media (max-width: 480px) {
     .clobol-widget-chat {
-      width: calc(100vw - 40px) !important;
-      height: calc(100vh - 120px) !important;
-      right: 20px !important;
-      bottom: 90px !important;
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
+      max-height: none !important;
+      border-radius: 0 !important;
+      transform: none !important;
+      opacity: 1 !important;
+    }
+    
+    .clobol-widget-chat.open {
+      transform: none !important;
+      opacity: 1 !important;
     }
   }
 `;

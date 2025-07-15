@@ -1,6 +1,7 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import { StandaloneWidget } from './StandaloneWidget';
+import EmbeddableHVACWidget from '../components/EmbeddableHVACWidget';
+import { injectStyles } from './WidgetStyles';
 
 interface WidgetConfig {
   title?: string;
@@ -34,9 +35,13 @@ const initChatbot = (config: WidgetConfig = {}) => {
     return;
   }
 
+  // Inject styles
+  injectStyles();
+
   // Create container
   widgetContainer = document.createElement('div');
   widgetContainer.id = 'clobol-widget-root';
+  widgetContainer.className = 'clobol-widget-container';
   widgetContainer.style.cssText = `
     position: fixed !important;
     top: 0 !important;
@@ -64,9 +69,17 @@ const initChatbot = (config: WidgetConfig = {}) => {
       };
     }, [isOpen]);
 
+    const toggleWidget = () => {
+      setIsOpen(!isOpen);
+    };
+
     return (
       <div style={{ pointerEvents: 'auto' }}>
-        <StandaloneWidget config={config} />
+        <EmbeddableHVACWidget 
+          config={config} 
+          isOpen={isOpen} 
+          onToggle={toggleWidget} 
+        />
       </div>
     );
   };
