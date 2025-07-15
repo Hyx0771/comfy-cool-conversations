@@ -24,7 +24,7 @@
 
     // Create iframe
     const iframe = document.createElement('iframe');
-    iframe.src = config.baseUrl + '/assistant';
+    iframe.src = config.baseUrl + '/widget';
     iframe.style.cssText = `
       width: 380px;
       height: 600px;
