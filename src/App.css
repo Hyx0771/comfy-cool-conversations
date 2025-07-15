@@ -5,53 +5,17 @@
   text-align: center;
   background: transparent !important;
   background-color: transparent !important;
-  height: 100vh;
-  overflow: hidden;
 }
 
-/* Root HTML en Body transparant maken */
-html, body {
-  background: transparent !important;
-  background-color: transparent !important;
-  margin: 0;
-  padding: 0;
-  overflow: hidden; /* Voorkom scrollbars */
-}
-
-/* Main app container transparant */
-.app, .main-container, .assistant-container {
-  background: transparent !important;
-  background-color: transparent !important;
-  height: 100vh;
-  overflow: hidden;
-}
-
-/* Zorg dat alleen de chatbot card zichtbaar is */
-.chatbot-widget {
-  background: transparent !important;
-  height: 100vh;
-  display: flex;
-  align-items: flex-end;
-  justify-content: flex-end;
-  padding: 0;
-  margin: 0;
-  overflow: hidden;
-}
-
-/* Chatbot internal scrolling */
-.chat-messages {
-  overflow-y: auto;
-  max-height: 400px;
-  scroll-behavior: smooth;
-}
-
-/* Verberg scrollbars van de pagina zelf */
-html {
-  overflow: hidden;
-}
-
+/* Transparent background for embedding */
 body {
-  overflow: hidden;
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+html {
+  background: transparent !important;
+  background-color: transparent !important;
 }
 
 .logo {
