@@ -1,4 +1,4 @@
-// Bolt Chat Widget Embed Script - Minimal Version
+// Bolt Chat Widget Embed Script - Transparent Background
 (function() {
   // Prevent multiple initializations
   if (window.BoltChatWidget) return;
@@ -20,18 +20,25 @@
       right: 0;
       z-index: 999999;
       font-family: system-ui, -apple-system, sans-serif;
+      pointer-events: none;
     `;
 
-    // Create iframe - direct visible, no toggle
+    // Create iframe - volledig transparant
     const iframe = document.createElement('iframe');
-    iframe.src = config.baseUrl + '/assistant'; // Keep using /assistant
+    iframe.src = config.baseUrl + '/assistant';
     iframe.style.cssText = `
       width: 400px;
       height: 650px;
       border: none;
       background: transparent;
       display: block;
+      pointer-events: auto;
     `;
+
+    // Maak iframe volledig transparant
+    iframe.setAttribute('allowtransparency', 'true');
+    iframe.setAttribute('frameborder', '0');
+    iframe.setAttribute('scrolling', 'no');
 
     // Mobile responsiveness
     function adjustForMobile() {
@@ -48,6 +55,7 @@
           right: 0;
           left: 0;
           top: 0;
+          pointer-events: auto;
         `;
       } else {
         iframe.style.cssText = `
@@ -56,8 +64,14 @@
           border: none;
           background: transparent;
           display: block;
+          pointer-events: auto;
         `;
       }
+      
+      // Hernieuw transparantie attributen
+      iframe.setAttribute('allowtransparency', 'true');
+      iframe.setAttribute('frameborder', '0');
+      iframe.setAttribute('scrolling', 'no');
     }
 
     // Listen for resize events

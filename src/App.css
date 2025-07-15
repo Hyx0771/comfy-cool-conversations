@@ -3,6 +3,19 @@
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+/* Transparent background for embedding */
+body {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+html {
+  background: transparent !important;
+  background-color: transparent !important;
 }
 
 .logo {
