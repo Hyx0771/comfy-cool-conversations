@@ -63,7 +63,7 @@ const BoltStartScreen: React.FC<BoltStartScreenProps> = ({
       </div>
       
       <div className="p-4 text-center">
-        <p className="text-xs text-gray-400">🔰 Powered by Aigento</p>
+        <p className="text-xs text-gray-400">Powered by Aigento</p>
       </div>
     </div>;
 };
