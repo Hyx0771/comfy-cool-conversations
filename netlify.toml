@@ -1,5 +1,5 @@
 [build]
-  command = "npm run build:widget"
+  command = "npm install && npm run build:widget"
   publish = "dist-widget"
 
 [build.environment]
