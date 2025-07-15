@@ -1,119 +1,191 @@
-# Clobol Widget - Complete Package
+# Clobol HVAC Widget - Integration Guide
 
-## 📦 **Bestanden overzicht:**
+## Overview
 
-### **Hoofdbestanden:**
-- `widget-complete.html` - Volledig werkende widget
-- `widget-api.js` - API voor integratie
-- `widget-types.js` - TypeScript definities
-- `widget-data.js` - FAQ data
-- `widget-utils.js` - Utility functies
-- `build-widget-standalone.js` - Build script
+The Clobol HVAC Widget provides an embeddable chat assistant that replicates the exact appearance and behavior of the main Clobol assistant, including:
+- Floating button with fold/unfold behavior
+- Full mobile and desktop responsiveness
+- Multiple chat modes (quote, support, FAQ)
+- Seamless iframe integration
+- Customizable branding and positioning
 
-### **Implementatie opties:**
+## Quick Start
 
-#### **1. Direct iframe embedden:**
-```html
-<iframe 
-  src="https://clobol-aigento.netlify.app/widget-complete.html"
-  width="100%"
-  height="100%"
-  style="border: none; background: transparent;"
-  title="Clobol Widget"
-  allow="microphone; camera"
-></iframe>
-```
+Add this single script tag to your website:
 
-#### **2. Script tag (met API):**
-```html
-<script src="https://clobol-aigento.netlify.app/widget-api.js"></script>
-<script>
-  const widget = new ClobolWidgetAPI();
-  widget.init({
-    theme: 'light',
-    primaryColor: '#007BFF',
-    title: 'Clobol Support'
-  });
-</script>
-```
-
-#### **3. Automatische initialisatie:**
 ```html
 <script 
-  src="https://clobol-aigento.netlify.app/widget-api.js"
+  src="https://your-domain.com/embed.js"
+  data-mode="quote"
   data-theme="light"
   data-position="bottom-right"
   data-primary-color="#007BFF"
-  data-title="Clobol Support"
+  data-title="HVAC Support"
+  data-subtitle="How can we help you?"
 ></script>
 ```
 
-## 🎯 **Functionaliteiten:**
+## Configuration Options
 
-### **✅ Startscherm:**
-- Welkomstbericht van Bolt
-- Keuze tussen "Offerte" en "Vraag stellen"
-- Motiverende tekst
+### Data Attributes
 
-### **✅ FAQ Flow:**
-- 10 veelgestelde vragen
-- Interactieve chat interface
-- Typing indicator
-- Tijdstempels
-- Aangepaste input voor eigen vragen
+| Attribute | Options | Default | Description |
+|-----------|---------|---------|-------------|
+| `data-mode` | `welcome`, `quote`, `support`, `faq` | `welcome` | Initial chat mode |
+| `data-theme` | `light`, `dark` | `light` | Widget theme |
+| `data-position` | `bottom-right`, `bottom-left`, `top-right`, `top-left` | `bottom-right` | Button position |
+| `data-primary-color` | Any hex color | `#007BFF` | Primary brand color |
+| `data-title` | Any string | `Bolt` | Widget header title |
+| `data-subtitle` | Any string | `Clobol assistent` | Widget header subtitle |
 
-### **✅ Quote Flow:**
-- Placeholder voor quote functionaliteit
-- Terug naar start optie
+### Examples
 
-### **✅ Responsive Design:**
-- Desktop: 380x600px
-- Mobile: Fullscreen
-- Hover effecten
-- Smooth animaties
-
-### **✅ Configureerbaar:**
-- Thema (light/dark)
-- Positie (4 opties)
-- Kleuren aanpasbaar
-- Titel en subtitel
-- Welkomstbericht
-
-## 🔧 **API Methods:**
-
-```javascript
-// Initialiseren
-widget.init(config);
-
-// Openen/sluiten
-widget.open();
-widget.close();
-widget.toggle();
-
-// Configuratie updaten
-widget.updateConfig({ primaryColor: '#FF0000' });
-
-// Vernietigen
-widget.destroy();
-
-// Event handlers
-widget.onOpen = function() { console.log('Widget opened'); };
-widget.onClose = function() { console.log('Widget closed'); };
-widget.onMessage = function(msg) { console.log('Message:', msg); };
+#### Basic Integration
+```html
+<script src="https://your-domain.com/embed.js"></script>
 ```
 
-## 🎨 **Styling:**
+#### Quote Mode with Custom Branding
+```html
+<script 
+  src="https://your-domain.com/embed.js"
+  data-mode="quote"
+  data-primary-color="#FF6600"
+  data-title="Get Your Quote"
+  data-subtitle="HVAC Solutions"
+></script>
+```
 
-- **Hoofdkleur:** #007BFF (configureerbaar)
-- **Animaties:** Fade in, hover effects, typing dots
-- **Fonts:** System fonts (-apple-system, etc.)
-- **Gradients:** Subtiele blue gradients
-- **Shadows:** Moderne dropshadows
+#### Support Mode in Top Left
+```html
+<script 
+  src="https://your-domain.com/embed.js"
+  data-mode="support"
+  data-position="top-left"
+  data-primary-color="#28A745"
+  data-title="Need Help?"
+  data-subtitle="Support Team"
+></script>
+```
 
-## 📱 **Responsive breakpoints:**
+## JavaScript API
 
-- **Desktop:** 380px width, 600px height
-- **Mobile:** Full viewport coverage
-- **Tablet:** Aangepaste sizing
+After the widget loads, you can control it programmatically:
 
-Dit is een complete, werkende widget met alle ondersteunende bestanden! 🚀
+```javascript
+// Open the widget
+window.ClobolWidgetAPI.open();
+
+// Close the widget
+window.ClobolWidgetAPI.close();
+
+// Toggle the widget
+window.ClobolWidgetAPI.toggle();
+```
+
+## Chat Modes
+
+### Welcome Mode (`data-mode="welcome"`)
+- Shows mode selection screen
+- Users can choose between quote, support, or FAQ
+- Ideal for general-purpose integration
+
+### Quote Mode (`data-mode="quote"`)
+- Direct access to HVAC quote flow
+- Includes service selection, file uploads, and contact collection
+- Perfect for sales-focused pages
+
+### Support Mode (`data-mode="support"`)
+- Customer support interface
+- Handles tickets and support requests
+- Best for help/support pages
+
+### FAQ Mode (`data-mode="faq"`)
+- Interactive FAQ chatbot
+- Answers common questions
+- Great for reducing support load
+
+## Styling and Positioning
+
+### Position Options
+
+- **bottom-right** (default): Standard position, doesn't interfere with content
+- **bottom-left**: Alternative for right-heavy layouts
+- **top-right**: Good for pages with bottom CTAs
+- **top-left**: Minimal interference position
+
+### Custom Colors
+
+Use `data-primary-color` to match your brand:
+```html
+data-primary-color="#YOUR_HEX_COLOR"
+```
+
+The widget automatically applies your color to:
+- Floating button background
+- Header background
+- Interactive elements
+
+## Mobile Responsiveness
+
+The widget automatically adapts to mobile devices:
+- Touch-friendly button sizing
+- Responsive chat window
+- Optimized for mobile interactions
+- Proper viewport handling
+
+## Browser Compatibility
+
+- Chrome 80+
+- Firefox 75+
+- Safari 13+
+- Edge 80+
+- Mobile browsers (iOS Safari, Chrome Mobile)
+
+## Security
+
+- HTTPS required for production
+- CSP-friendly implementation
+- No external dependencies
+- Sandboxed iframe execution
+
+## Performance
+
+- Lazy loading iframe
+- Minimal initial payload
+- Efficient message passing
+- No impact on page load speed
+
+## Troubleshooting
+
+### Widget Not Appearing
+1. Check browser console for errors
+2. Verify script URL is accessible
+3. Ensure HTTPS for production sites
+4. Check for Content Security Policy restrictions
+
+### Widget Not Responding
+1. Verify `window.ClobolWidgetAPI` exists
+2. Check iframe loading in Network tab
+3. Test with different browsers
+4. Verify configuration parameters
+
+### Styling Issues
+1. Check for CSS conflicts
+2. Verify z-index values
+3. Test on different screen sizes
+4. Check for iframe restrictions
+
+## Support
+
+For integration support or questions:
+- Check browser console for error messages
+- Test with minimal configuration first
+- Verify all configuration parameters
+- Contact support with specific error details
+
+## Version History
+
+- **v1.0**: Initial release with basic embed functionality
+- **v2.0**: Added HVAC-specific features and improved mobile support
+- **v3.0**: Complete rewrite with exact ChatBotWidget behavior replication
