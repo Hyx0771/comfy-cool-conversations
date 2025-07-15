@@ -52,17 +52,17 @@
     iframe.src = `${domain}/embed?config=${encodeURIComponent(JSON.stringify(config))}`;
     iframe.style.cssText = `
       position: fixed !important;
-      width: 100px !important;
-      height: 100px !important;
+      width: 60px !important;
+      height: 60px !important;
       bottom: 20px !important;
       right: 20px !important;
       border: none !important;
-      z-index: 2147483647 !important;
+      border-radius: 12px !important;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.1) !important;
+      z-index: 999999 !important;
       background: transparent !important;
       pointer-events: auto !important;
       transition: all 0.3s ease !important;
-      isolation: isolate !important;
-      will-change: transform !important;
     `;
     
     // Handle position
@@ -89,21 +89,26 @@
   // Handle iframe resizing based on widget state
   function handleIframeResize(iframe, isOpen) {
     if (isOpen) {
-      // Widget is open - expand iframe
-      iframe.style.width = '100vw !important';
-      iframe.style.height = '100vh !important';
-      iframe.style.top = '0 !important';
-      iframe.style.left = '0 !important';
-      iframe.style.right = 'auto !important';
-      iframe.style.bottom = 'auto !important';
-      iframe.style.maxWidth = 'none !important';
-      iframe.style.maxHeight = 'none !important';
-      iframe.style.zIndex = '2147483647 !important';
+      // Widget is open - show chat window
+      iframe.style.width = '380px !important';
+      iframe.style.height = '600px !important';
+      iframe.style.maxHeight = '80vh !important';
+      iframe.style.maxWidth = 'calc(100vw - 40px) !important';
+      
+      // Mobile responsive
+      if (window.innerWidth <= 480) {
+        iframe.style.width = 'calc(100vw - 20px) !important';
+        iframe.style.height = '70vh !important';
+        iframe.style.left = '10px !important';
+        iframe.style.right = '10px !important';
+        iframe.style.bottom = '10px !important';
+      }
     } else {
-      // Widget is closed - collapse to button size
-      iframe.style.width = '100px !important';
-      iframe.style.height = '100px !important';
-      iframe.style.zIndex = '2147483647 !important';
+      // Widget is closed - show only button
+      iframe.style.width = '60px !important';
+      iframe.style.height = '60px !important';
+      iframe.style.maxHeight = 'none !important';
+      iframe.style.maxWidth = 'none !important';
       
       // Restore position
       const config = getConfig();
@@ -142,18 +147,8 @@
     const config = getConfig();
     const iframe = createIframe(config);
     
-    // Add a wrapper div to ensure proper stacking
-    const wrapper = document.createElement('div');
-    wrapper.style.cssText = `
-      position: fixed !important;
-      z-index: 2147483647 !important;
-      pointer-events: none !important;
-      top: 0 !important;
-      left: 0 !important;
-      width: 100% !important;
-      height: 100% !important;
-    `;
-    wrapper.appendChild(iframe);
+    // Add iframe directly to body
+    document.body.appendChild(iframe);
     
     // Wait for iframe to load before setting up communication
     iframe.addEventListener('load', function() {
@@ -174,8 +169,7 @@
       }, '*');
     });
     
-    // Append wrapper to body
-    document.body.appendChild(wrapper);
+    // Widget is now ready
     
     // Create public API
     window.ClobolWidgetAPI = {
