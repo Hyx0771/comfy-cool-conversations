@@ -1,4 +1,4 @@
-// Bolt Chat Widget Embed Script
+// Bolt Chat Widget Embed Script - Minimal Version
 (function() {
   // Prevent multiple initializations
   if (window.BoltChatWidget) return;
@@ -16,80 +16,22 @@
     container.id = config.containerId;
     container.style.cssText = `
       position: fixed;
-      bottom: 20px;
-      right: 20px;
+      bottom: 0;
+      right: 0;
       z-index: 999999;
       font-family: system-ui, -apple-system, sans-serif;
     `;
 
-    // Create iframe
+    // Create iframe - direct visible, no toggle
     const iframe = document.createElement('iframe');
-    iframe.src = config.baseUrl + '/widget';
+    iframe.src = config.baseUrl + '/assistant'; // Keep using /assistant
     iframe.style.cssText = `
-      width: 380px;
-      height: 600px;
+      width: 400px;
+      height: 650px;
       border: none;
-      border-radius: 20px;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.12);
-      background: white;
-      display: none;
-      position: absolute;
-      bottom: 80px;
-      right: 0;
+      background: transparent;
+      display: block;
     `;
-
-    // Create button
-    const button = document.createElement('button');
-    button.innerHTML = `
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-      </svg>
-    `;
-    button.style.cssText = `
-      width: 64px;
-      height: 64px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #1E88E5, #1976D2);
-      border: none;
-      color: white;
-      cursor: pointer;
-      box-shadow: 0 4px 16px rgba(30, 136, 229, 0.3);
-      transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-    `;
-
-    // Toggle functionality
-    let isOpen = false;
-    button.addEventListener('click', function() {
-      isOpen = !isOpen;
-      if (isOpen) {
-        iframe.style.display = 'block';
-        button.innerHTML = `
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M18 6L6 18M6 6l12 12"/>
-          </svg>
-        `;
-      } else {
-        iframe.style.display = 'none';
-        button.innerHTML = `
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-          </svg>
-        `;
-      }
-      adjustForMobile(); // Update mobile layout after toggle
-    });
-
-    // Add hover effect
-    button.addEventListener('mouseenter', () => {
-      button.style.transform = 'scale(1.05)';
-    });
-    button.addEventListener('mouseleave', () => {
-      button.style.transform = 'scale(1)';
-    });
 
     // Mobile responsiveness
     function adjustForMobile() {
@@ -99,29 +41,21 @@
           width: 100vw;
           height: 100vh;
           border: none;
-          border-radius: 0;
-          box-shadow: none;
-          background: white;
-          display: ${isOpen ? 'block' : 'none'};
+          background: transparent;
+          display: block;
           position: fixed;
           bottom: 0;
           right: 0;
           left: 0;
           top: 0;
-          z-index: 999999;
         `;
       } else {
         iframe.style.cssText = `
-          width: 380px;
-          height: 600px;
+          width: 400px;
+          height: 650px;
           border: none;
-          border-radius: 20px;
-          box-shadow: 0 8px 32px rgba(0,0,0,0.12);
-          background: white;
-          display: ${isOpen ? 'block' : 'none'};
-          position: absolute;
-          bottom: 80px;
-          right: 0;
+          background: transparent;
+          display: block;
         `;
       }
     }
@@ -130,9 +64,8 @@
     window.addEventListener('resize', adjustForMobile);
     adjustForMobile(); // Initial check
 
-    // Assemble widget
+    // Add iframe to container
     container.appendChild(iframe);
-    container.appendChild(button);
     document.body.appendChild(container);
   }
 
