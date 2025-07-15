@@ -85,7 +85,7 @@ Waar kan ik je vandaag mee helpen?"
       </div>
       
       <div className="p-4 text-center">
-        <p className="text-xs text-gray-400">⚡ Slim. Snel. Aigento.</p>
+        <p className="text-xs text-gray-400">⚡ Powered by Aigento</p>
       </div>
     </div>
   );
