@@ -86,7 +86,7 @@ const ChatBotWidget = () => {
 
       {isOpen && (
         <div className="fixed inset-x-4 bottom-20 sm:bottom-24 sm:right-6 sm:left-auto z-50 sm:w-96 sm:max-w-[calc(100vw-3rem)]">
-          <Card className="shadow-2xl border-2 border-blue-200 rounded-2xl overflow-hidden animate-fade-in bg-white w-full">
+          <Card className="shadow-none border-none rounded-2xl overflow-hidden animate-fade-in bg-transparent w-full">
             <div className="bg-gradient-to-r from-[#007BFF] to-blue-600 text-white p-4 sm:p-5 flex items-center justify-between">
                 <div className="flex items-center space-x-3">
                   <Avatar className="w-10 h-10 sm:w-12 sm:h-12 relative border-2 border-white/20">

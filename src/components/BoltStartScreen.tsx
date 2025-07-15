@@ -59,7 +59,7 @@ Waar kan ik je vandaag mee helpen?"
 
               <Button
                 variant="outline"
-                className="h-auto p-4 sm:p-5 justify-start text-left min-h-[70px] sm:min-h-[75px] flex items-center border-2 border-blue-200 hover:border-blue-300 hover:bg-blue-50 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 hover:scale-102 touch-manipulation w-full group bg-white/20 backdrop-blur-sm"
+                className="h-auto p-4 sm:p-5 justify-start text-left min-h-[70px] sm:min-h-[75px] flex items-center border-2 border-blue-200 hover:border-blue-300 hover:bg-blue-50 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 hover:scale-102 touch-manipulation w-full group bg-transparent"
                 onClick={handleSupportClick}
               >
                 <div className="mr-3 text-xl sm:text-2xl">💬</div>
@@ -74,7 +74,7 @@ Waar kan ik je vandaag mee helpen?"
               </Button>
             </div>
 
-            <div className="text-center mt-6 p-4 bg-white/10 backdrop-blur-sm rounded-lg border border-white/20">
+            <div className="text-center mt-6 p-4 bg-transparent rounded-lg border border-transparent">
               <p className="text-sm text-gray-600 leading-relaxed">
                 <span className="font-medium text-blue-700">Geen zorgen!</span> Ik help je stap voor stap. 
                 Binnen 2 minuten weet je waar je aan toe bent. 😊
