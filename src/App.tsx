@@ -9,6 +9,7 @@ import NotFound from "./pages/NotFound";
 import Assistant from "./pages/Assistant";
 import EmbedWidget from "./pages/EmbedWidget";
 import WidgetDemo from "./pages/WidgetDemo";
+import EmbedPage from "./pages/EmbedPage";
 
 const queryClient = new QueryClient();
 
@@ -24,6 +25,7 @@ const App = () => {
             <Route path="/assistant" element={<Assistant />} />
             <Route path="/embed-widget" element={<EmbedWidget />} />
             <Route path="/widget-demo" element={<WidgetDemo />} />
+            <Route path="/embed" element={<EmbedPage />} />
             <Route path="/gallery/:galleryId" element={<Gallery />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />

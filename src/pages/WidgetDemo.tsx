@@ -9,14 +9,16 @@ const WidgetDemo = () => {
         
         <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
           <h2 className="text-xl font-semibold mb-4">Embed Code</h2>
-          <div className="bg-gray-100 p-4 rounded-md">
-            <code className="text-sm">
-              {`<script src="https://your-domain.com/bot.js" 
-        data-title="Bolt" 
-        data-subtitle="Clobol assistent"
-        data-primary-color="#007BFF"
-        data-auto-init="true">
-</script>`}
+          <p className="text-gray-600 mb-4">Use this iframe to embed the widget with full HVAC functionality:</p>
+          <div className="bg-gray-100 p-4 rounded-md overflow-x-auto">
+            <code className="text-sm whitespace-pre">
+              {`<iframe 
+  src="https://your-app-name.lovable.app/embed" 
+  width="400" 
+  height="600" 
+  frameborder="0"
+  style="position: fixed; bottom: 20px; right: 20px; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.2);">
+</iframe>`}
             </code>
           </div>
         </div>
