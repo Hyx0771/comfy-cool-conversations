@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bolt Chat Widget - Embed Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .code-block {
+            background: #f4f4f4;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            font-family: monospace;
+            font-size: 14px;
+            overflow-x: auto;
+        }
+        .highlight {
+            background: #e8f4f8;
+            padding: 15px;
+            border-left: 4px solid #007BFF;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Bolt Chat Widget - Embed Instructions</h1>
+    
+    <div class="highlight">
+        <h2>🚀 Quick Start</h2>
+        <p>To embed the Bolt chat widget on your website, simply add this script tag before the closing <code>&lt;/body&gt;</code> tag:</p>
+    </div>
+
+    <div class="code-block">
+&lt;script src="https://your-domain.com/embed.js"&gt;&lt;/script&gt;
+    </div>
+
+    <h2>📋 Complete Example</h2>
+    <p>Here's a complete HTML example:</p>
+
+    <div class="code-block">
+&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;My Website&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;Welcome to My Website&lt;/h1&gt;
+    &lt;p&gt;This is my website content...&lt;/p&gt;
+    
+    &lt;!-- Bolt Chat Widget --&gt;
+    &lt;script src="https://your-domain.com/embed.js"&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+    </div>
+
+    <h2>⚙️ Configuration</h2>
+    <p>The widget is automatically configured, but you can customize it if needed:</p>
+
+    <div class="code-block">
+&lt;script&gt;
+// Optional: Configure before loading
+window.BoltChatConfig = {
+    baseUrl: 'https://your-domain.com',
+    position: 'bottom-right', // bottom-left, bottom-right, top-left, top-right
+    theme: 'light' // light, dark
+};
+&lt;/script&gt;
+&lt;script src="https://your-domain.com/embed.js"&gt;&lt;/script&gt;
+    </div>
+
+    <h2>🎨 Features</h2>
+    <ul>
+        <li>✅ Responsive design</li>
+        <li>✅ Mobile-friendly</li>
+        <li>✅ Easy to install</li>
+        <li>✅ Customizable appearance</li>
+        <li>✅ No dependencies</li>
+        <li>✅ Lightweight</li>
+    </ul>
+
+    <h2>🔧 Deployment Steps</h2>
+    <ol>
+        <li>Deploy your Lovable app to a domain (e.g., https://your-app.lovable.app)</li>
+        <li>The <code>embed.js</code> file will be available at <code>https://your-app.lovable.app/embed.js</code></li>
+        <li>Include the script on any website where you want the chat widget</li>
+        <li>The widget will automatically appear in the bottom-right corner</li>
+    </ol>
+
+    <div class="highlight">
+        <h2>📝 Note</h2>
+        <p>Replace <code>https://your-domain.com</code> with your actual deployed domain. The widget will automatically load the chat interface from your deployed app.</p>
+    </div>
+
+    <h2>🌐 Cross-Origin Considerations</h2>
+    <p>The widget uses an iframe to load the chat interface. Make sure your domain allows iframe embedding if you're using additional security headers.</p>
+
+    <!-- Demo: The actual widget will appear here -->
+    <script>
+        // This is just for demonstration - replace with your actual domain
+        console.log('To see the widget in action, deploy your app and use the embed.js from your domain');
+    </script>
+</body>
+</html>
