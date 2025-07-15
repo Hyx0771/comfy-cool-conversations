@@ -75,7 +75,7 @@ const BoltStartScreen: React.FC<BoltStartScreenProps> = ({ onModeSelect }) => {
 
             <div className="text-center mt-6 p-4 bg-white/90 rounded-lg border border-transparent">
               <p className="text-sm text-gray-600 leading-relaxed">
-                Alleen klikken – geen getyp. Je aanvraag? Klaar in 60 seconden. Probeer maar.
+                ⏱️ 60 sec werk. Jij klikt – ik regel het.
               </p>
             </div>
           </div>
