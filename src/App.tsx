@@ -7,7 +7,6 @@ import Index from "./pages/Index";
 import Gallery from "./pages/Gallery";
 import NotFound from "./pages/NotFound";
 import Assistant from "./pages/Assistant";
-import EmbedPage from "./pages/EmbedPage";
 
 const queryClient = new QueryClient();
 
@@ -21,7 +20,6 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/assistant" element={<Assistant />} />
-            <Route path="/embed" element={<EmbedPage />} />
             <Route path="/gallery/:galleryId" element={<Gallery />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
