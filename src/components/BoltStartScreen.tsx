@@ -22,7 +22,7 @@ const BoltStartScreen: React.FC<BoltStartScreenProps> = ({
   };
   return <div className="h-full flex flex-col bg-white">
       <div className="flex-1 p-4 sm:p-6 space-y-4 sm:space-y-6 overflow-y-auto">
-        {showWelcomeMessage && <AgentFixMessage content="👋 Hoi, Bolt hier van Clobol ❄️ Offerte of vraag? Komt goed – ik fix het in 1 minuut." onComplete={handleWelcomeComplete} delay={1200} />}
+        {showWelcomeMessage && <AgentFixMessage content="👋 Hoi, Bolt hier van Clobol\nOfferte of vraag? Komt goed – ik fix het in 1 minuut." onComplete={handleWelcomeComplete} delay={1200} />}
 
         {showModeSelection && <div className="animate-fade-in space-y-4">
             <div className="grid grid-cols-1 gap-4">
