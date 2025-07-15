@@ -111,7 +111,7 @@ const SupportAssistant: React.FC<SupportAssistantProps> = ({ initialMode }) => {
             <div
               className={`max-w-[85%] p-3 rounded-2xl ${
                 message.isBot
-                  ? 'bg-gray-100 text-gray-800 rounded-tl-md'
+                  ? 'bg-white/10 backdrop-blur-sm border border-white/20 text-gray-800 rounded-tl-md'
                   : 'bg-blue-500 text-white rounded-tr-md'
               }`}
             >
@@ -129,7 +129,7 @@ const SupportAssistant: React.FC<SupportAssistantProps> = ({ initialMode }) => {
               <AvatarImage src={professionalAvatar} alt="HVAC Professional" className="object-cover w-full h-full" />
               <AvatarFallback className="bg-blue-500 text-white text-xs">N</AvatarFallback>
             </Avatar>
-            <div className="bg-gray-100 p-3 rounded-2xl rounded-tl-md">
+            <div className="bg-white/10 backdrop-blur-sm border border-white/20 p-3 rounded-2xl rounded-tl-md">
               <div className="flex space-x-1">
                 <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
                 <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
@@ -140,7 +140,7 @@ const SupportAssistant: React.FC<SupportAssistantProps> = ({ initialMode }) => {
         )}
       </div>
 
-      <div className="border-t p-4 bg-transparent">
+      <div className="border-t border-white/20 p-4 bg-transparent">
         <div className="flex space-x-2">
           <Textarea
             value={inputValue}
