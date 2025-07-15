@@ -14,7 +14,7 @@ export const MessagesList: React.FC<MessagesListProps> = ({
   messagesEndRef 
 }) => {
   return (
-    <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gradient-to-b from-blue-50/30 to-white">
+    <div className="flex-1 chat-scroll p-4 space-y-4 bg-gradient-to-b from-blue-50/30 to-white">
       {messages.map((message) => (
         <ChatMessage key={message.id} message={message} />
       ))}

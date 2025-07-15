@@ -23,7 +23,7 @@
       pointer-events: none;
     `;
 
-    // Create iframe - volledig transparant
+    // Create iframe - met correcte scroll instellingen
     const iframe = document.createElement('iframe');
     iframe.src = config.baseUrl + '/assistant';
     iframe.style.cssText = `
@@ -33,12 +33,14 @@
       background: transparent;
       display: block;
       pointer-events: auto;
+      overflow: hidden;
     `;
 
-    // Maak iframe volledig transparant
+    // Belangrijke iframe attributen voor transparantie en scrolling
     iframe.setAttribute('allowtransparency', 'true');
     iframe.setAttribute('frameborder', '0');
     iframe.setAttribute('scrolling', 'no');
+    iframe.setAttribute('seamless', 'seamless');
 
     // Mobile responsiveness
     function adjustForMobile() {
@@ -56,6 +58,7 @@
           left: 0;
           top: 0;
           pointer-events: auto;
+          overflow: hidden;
         `;
       } else {
         iframe.style.cssText = `
@@ -65,13 +68,15 @@
           background: transparent;
           display: block;
           pointer-events: auto;
+          overflow: hidden;
         `;
       }
       
-      // Hernieuw transparantie attributen
+      // Hernieuw alle attributen
       iframe.setAttribute('allowtransparency', 'true');
       iframe.setAttribute('frameborder', '0');
       iframe.setAttribute('scrolling', 'no');
+      iframe.setAttribute('seamless', 'seamless');
     }
 
     // Listen for resize events
