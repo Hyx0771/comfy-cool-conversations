@@ -31,7 +31,7 @@ const BoltStartScreen: React.FC<BoltStartScreenProps> = ({ onModeSelect }) => {
           <AgentFixMessage
             content="Hoi! Ik ben Bolt van Clobol ❄️
 
-Vraag of offerte? Klik – en je bent klaar."
+Vraag of offerte? Klik. Klaar."
             onComplete={handleWelcomeComplete}
             delay={1200}
           />
