@@ -84,9 +84,9 @@ Waar kan ik je vandaag mee helpen?"
         )}
       </div>
       
-      <div className="p-4 text-center space-y-1">
-        <p className="text-xs text-gray-400 font-medium">⚡ Powered by Aigento</p>
-        <p className="text-xs text-gray-500 leading-relaxed">Begrijpt. Vraagt. Regelt.</p>
+      <div className="text-center text-[11px] text-gray-500 leading-relaxed mt-3 font-sans">
+        <strong>⚡ Aigento</strong><br />
+        <span className="text-[10px] text-gray-600"><em>Begrijpt. Vraagt. Regelt.</em></span>
       </div>
     </div>
   );
