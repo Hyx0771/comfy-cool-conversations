@@ -19,7 +19,7 @@ const PersonalDetailsForm: React.FC<PersonalDetailsFormProps> = ({ onPersonalDet
   };
 
   return (
-    <div className="p-4">
+    <div className="p-4 max-h-96 overflow-y-auto chat-scroll">
       <h3 className="text-lg font-semibold text-gray-800 text-center mb-4">
         Persoonlijke gegevens 👤
       </h3>
