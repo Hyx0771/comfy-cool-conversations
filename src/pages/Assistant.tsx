@@ -1,10 +1,12 @@
 import React from 'react';
-import ChatBotWidget from '@/components/ChatBotWidget';
+import HVACQuoteAssistant from '@/components/HVACQuoteAssistant';
 
 const Assistant: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50">
-      <ChatBotWidget />
+      <div className="max-w-md mx-auto h-screen">
+        <HVACQuoteAssistant />
+      </div>
     </div>
   );
 };
