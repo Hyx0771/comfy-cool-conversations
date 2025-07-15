@@ -52,7 +52,7 @@ export const ClobotFAQChatbot: React.FC<ClobotFAQChatbotProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="h-full flex flex-col bg-transparent">
+    <div className="h-full flex flex-col bg-white">
       <MessagesList 
         messages={context.conversationHistory}
         isTyping={isTyping}
