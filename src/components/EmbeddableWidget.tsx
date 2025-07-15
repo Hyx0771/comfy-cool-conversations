@@ -35,12 +35,21 @@ export const EmbeddableWidget: React.FC<EmbeddableWidgetProps> = ({ config }) =>
   // Listen for messages from parent window (embed.js)
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
+      console.log('EmbeddableWidget: Received message:', event.data);
       if (event.data?.type === 'clobol-widget-open') {
+        console.log('EmbeddableWidget: Opening widget');
         setIsOpen(true);
         setIsMinimized(false);
       } else if (event.data?.type === 'clobol-widget-close') {
+        console.log('EmbeddableWidget: Closing widget');
         setIsOpen(false);
         setIsMinimized(false);
+      } else if (event.data?.type === 'clobol-widget-toggle') {
+        console.log('EmbeddableWidget: Toggling widget');
+        setIsOpen(prev => !prev);
+        setIsMinimized(false);
+      } else if (event.data?.type === 'clobol-widget-config') {
+        console.log('EmbeddableWidget: Received config:', event.data.config);
       }
     };
 

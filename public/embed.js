@@ -134,6 +134,11 @@
 
   // Initialize widget
   function initWidget() {
+    // Check if widget is already initialized
+    if (window.ClobolWidgetAPI) {
+      return;
+    }
+    
     const config = getConfig();
     const iframe = createIframe(config);
     
@@ -150,11 +155,23 @@
     `;
     wrapper.appendChild(iframe);
     
-    // Listen for resize messages from iframe
-    window.addEventListener('message', function(event) {
-      if (event.data?.type === 'clobol-widget-resize') {
-        handleIframeResize(iframe, event.data.isOpen);
-      }
+    // Wait for iframe to load before setting up communication
+    iframe.addEventListener('load', function() {
+      // Listen for resize messages from iframe
+      window.addEventListener('message', function(event) {
+        // Ensure the message is from our iframe
+        if (event.source === iframe.contentWindow) {
+          if (event.data?.type === 'clobol-widget-resize') {
+            handleIframeResize(iframe, event.data.isOpen);
+          }
+        }
+      });
+      
+      // Send initial config to iframe
+      iframe.contentWindow.postMessage({ 
+        type: 'clobol-widget-config', 
+        config: config 
+      }, '*');
     });
     
     // Append wrapper to body
