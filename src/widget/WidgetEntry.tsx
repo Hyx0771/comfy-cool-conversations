@@ -1,7 +1,7 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import EmbeddableHVACWidget from '../components/EmbeddableHVACWidget';
-import { injectStyles } from './WidgetStyles';
+import '../index.css';
 
 interface WidgetConfig {
   title?: string;
@@ -27,6 +27,61 @@ declare global {
 let widgetRoot: any = null;
 let widgetContainer: HTMLDivElement | null = null;
 let widgetInstance: any = null;
+
+// Inject widget styles
+const injectStyles = () => {
+  const styleId = 'clobol-widget-styles';
+  if (!document.getElementById(styleId)) {
+    const style = document.createElement('style');
+    style.id = styleId;
+    style.textContent = `
+      .clobol-widget-container {
+        position: fixed !important;
+        z-index: 999999 !important;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+        font-size: 14px !important;
+        line-height: 1.5 !important;
+        color: #0f172a !important;
+        box-sizing: border-box !important;
+        --primary: 220 14% 50% !important;
+        --primary-foreground: 210 40% 98% !important;
+        --background: 0 0% 100% !important;
+        --foreground: 222.2 84% 4.9% !important;
+        --card: 0 0% 100% !important;
+        --card-foreground: 222.2 84% 4.9% !important;
+        --secondary: 210 40% 96% !important;
+        --secondary-foreground: 222.2 47.4% 11.2% !important;
+        --muted: 210 40% 96% !important;
+        --muted-foreground: 215.4 16.3% 46.9% !important;
+        --accent: 210 40% 96% !important;
+        --accent-foreground: 222.2 47.4% 11.2% !important;
+        --border: 214.3 31.8% 91.4% !important;
+        --input: 214.3 31.8% 91.4% !important;
+        --ring: 221.2 83.2% 53.3% !important;
+        --radius: 0.5rem !important;
+      }
+      
+      .clobol-widget-container * {
+        box-sizing: border-box !important;
+      }
+      
+      /* Mobile responsive */
+      @media (max-width: 480px) {
+        .clobol-widget-container > div > div {
+          position: fixed !important;
+          top: 0 !important;
+          left: 0 !important;
+          right: 0 !important;
+          bottom: 0 !important;
+          width: 100% !important;
+          height: 100% !important;
+          border-radius: 0 !important;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+};
 
 const initChatbot = (config: WidgetConfig = {}) => {
   // Prevent multiple initializations
@@ -76,7 +131,12 @@ const initChatbot = (config: WidgetConfig = {}) => {
     return (
       <div style={{ pointerEvents: 'auto' }}>
         <EmbeddableHVACWidget 
-          config={config} 
+          config={{
+            title: config.title || 'Bolt',
+            subtitle: config.subtitle || 'Clobol assistent',
+            primaryColor: config.primaryColor || '#007BFF',
+            mode: 'welcome'
+          }}
           isOpen={isOpen} 
           onToggle={toggleWidget} 
         />
