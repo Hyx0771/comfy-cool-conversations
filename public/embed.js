@@ -61,6 +61,8 @@
       background: transparent !important;
       pointer-events: auto !important;
       transition: all 0.3s ease !important;
+      isolation: isolate !important;
+      will-change: transform !important;
     `;
     
     // Handle position
@@ -96,10 +98,12 @@
       iframe.style.bottom = 'auto !important';
       iframe.style.maxWidth = 'none !important';
       iframe.style.maxHeight = 'none !important';
+      iframe.style.zIndex = '2147483647 !important';
     } else {
       // Widget is closed - collapse to button size
       iframe.style.width = '100px !important';
       iframe.style.height = '100px !important';
+      iframe.style.zIndex = '2147483647 !important';
       
       // Restore position
       const config = getConfig();
@@ -133,6 +137,19 @@
     const config = getConfig();
     const iframe = createIframe(config);
     
+    // Add a wrapper div to ensure proper stacking
+    const wrapper = document.createElement('div');
+    wrapper.style.cssText = `
+      position: fixed !important;
+      z-index: 2147483647 !important;
+      pointer-events: none !important;
+      top: 0 !important;
+      left: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
+    `;
+    wrapper.appendChild(iframe);
+    
     // Listen for resize messages from iframe
     window.addEventListener('message', function(event) {
       if (event.data?.type === 'clobol-widget-resize') {
@@ -140,8 +157,8 @@
       }
     });
     
-    // Append iframe to body
-    document.body.appendChild(iframe);
+    // Append wrapper to body
+    document.body.appendChild(wrapper);
     
     // Create public API
     window.ClobolWidgetAPI = {
