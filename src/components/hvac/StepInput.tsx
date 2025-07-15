@@ -11,6 +11,7 @@ interface StepInputProps {
   selectedFiles: File[];
   setSelectedFiles: (files: File[]) => void;
   onStepResponse: (value: any, files?: File[]) => void;
+  conversationData?: any;
 }
 
 const StepInput: React.FC<StepInputProps> = ({ 
@@ -19,17 +20,29 @@ const StepInput: React.FC<StepInputProps> = ({
   setInputValue, 
   selectedFiles,
   setSelectedFiles,
-  onStepResponse 
+  onStepResponse,
+  conversationData
 }) => {
   const handleSkip = () => {
     onStepResponse(''); // Submit empty response to skip
   };
 
   if (step.type === 'choice' && step.options) {
+    // Check if we need to use conditional options based on previous answers
+    let optionsToShow = step.options;
+    
+    if (step.conditionalOptions && conversationData) {
+      // Check if customerType is set to business/institution
+      const customerType = conversationData.customerType;
+      if (customerType && step.conditionalOptions[customerType]) {
+        optionsToShow = step.conditionalOptions[customerType];
+      }
+    }
+    
     return (
       <div className="p-4 space-y-3">
         <div className="grid gap-2">
-          {step.options.map((option, index) => (
+          {optionsToShow.map((option, index) => (
             <Button
               key={index}
               onClick={() => onStepResponse(option)}
@@ -40,6 +53,11 @@ const StepInput: React.FC<StepInputProps> = ({
             </Button>
           ))}
         </div>
+        {step.explanation && (
+          <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+            <p className="text-sm text-blue-800 font-medium">{step.explanation}</p>
+          </div>
+        )}
       </div>
     );
   }

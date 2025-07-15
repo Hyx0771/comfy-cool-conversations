@@ -39,6 +39,7 @@ const HVACQuoteFlow: React.FC<HVACQuoteFlowProps> = ({
   showContactForm,
   showPersonalDetailsForm,
   contactMethods,
+  conversationData,
   inputValue,
   setInputValue,
   selectedFiles,
@@ -85,6 +86,7 @@ const HVACQuoteFlow: React.FC<HVACQuoteFlowProps> = ({
         selectedFiles={selectedFiles}
         setSelectedFiles={setSelectedFiles}
         onStepResponse={onStepResponse}
+        conversationData={conversationData}
       />
     );
   }

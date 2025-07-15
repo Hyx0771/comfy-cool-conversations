@@ -4,6 +4,8 @@ export interface ConversationStep {
   type?: string;
   field?: string;
   options?: string[];
+  conditionalOptions?: Record<string, string[]>;
+  explanation?: string;
 }
 
 export interface ContactMethod {
