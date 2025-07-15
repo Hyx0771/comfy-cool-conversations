@@ -29,7 +29,9 @@ const BoltStartScreen: React.FC<BoltStartScreenProps> = ({ onModeSelect }) => {
       <div className="flex-1 p-4 sm:p-6 space-y-4 sm:space-y-6 overflow-y-auto">
         {showWelcomeMessage && (
           <AgentFixMessage
-            content="Hoi! Ik ben Bolt van Clobol ❄️. Vraag of offerte? Klik – en je bent klaar."
+            content="Hoi! Ik ben Bolt van Clobol ❄️. 
+
+Vraag of offerte? Klik – en je bent klaar."
             onComplete={handleWelcomeComplete}
             delay={1200}
           />
