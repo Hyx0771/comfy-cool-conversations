@@ -151,16 +151,15 @@ export const EmbeddableWidget: React.FC<EmbeddableWidgetProps> = ({ config }) =>
           style={{
             width: isMinimized ? '300px' : '380px',
             height: isMinimized ? '60px' : '600px',
-            backgroundColor: 'rgba(255, 255, 255, 0.95)',
-            backdropFilter: 'blur(10px)',
+            background: 'transparent',
             borderRadius: '12px',
-            boxShadow: '0 8px 32px rgba(0,0,0,0.2)',
+            boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
             overflow: 'hidden',
             display: 'flex',
             flexDirection: 'column',
             transition: 'all 0.3s ease',
             maxHeight: '80vh',
-            border: '1px solid rgba(226, 232, 240, 0.3)'
+            border: '1px solid rgba(255, 255, 255, 0.2)'
           }}
         >
           {/* Header */}
