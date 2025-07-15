@@ -95,7 +95,7 @@ const SupportAssistant: React.FC<SupportAssistantProps> = ({ initialMode }) => {
   };
 
   return (
-    <div className="h-full flex flex-col bg-white">
+    <div className="h-full flex flex-col bg-transparent">
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {messages.map((message) => (
           <div
@@ -140,7 +140,7 @@ const SupportAssistant: React.FC<SupportAssistantProps> = ({ initialMode }) => {
         )}
       </div>
 
-      <div className="border-t p-4 bg-gray-50">
+      <div className="border-t p-4 bg-transparent">
         <div className="flex space-x-2">
           <Textarea
             value={inputValue}

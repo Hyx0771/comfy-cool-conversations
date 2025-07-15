@@ -44,7 +44,7 @@ const HVACQuoteAssistant = () => {
   } = useHVACQuoteAssistant();
 
   return (
-    <div className="h-full flex flex-col bg-white">
+    <div className="h-full flex flex-col bg-transparent">
       <SupportHeader
         progress={progress}
         encouragingMessage={getEncouragingMessage()}
