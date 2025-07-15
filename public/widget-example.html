@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clobol Widget Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+        }
+        
+        .example-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+        
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+        
+        .demo-controls {
+            margin: 20px 0;
+        }
+        
+        .demo-button {
+            background: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .demo-button:hover {
+            background: #0056b3;
+        }
+        
+        .high-z-element {
+            position: fixed;
+            top: 100px;
+            left: 20px;
+            background: red;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            z-index: 999998;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Clobol Widget Integration Example</h1>
+        
+        <div class="example-section">
+            <h2>Basic Integration</h2>
+            <p>Add this code to your website for automatic initialization:</p>
+            <div class="code-block">
+&lt;script src="https://clobol-aigento.com/bot.js"&gt;&lt;/script&gt;
+            </div>
+        </div>
+        
+        <div class="example-section">
+            <h2>With Custom Configuration</h2>
+            <p>Customize the widget with data attributes:</p>
+            <div class="code-block">
+&lt;script 
+  src="https://clobol-aigento.com/bot.js"
+  data-title="Uw Bedrijf"
+  data-subtitle="Hoe kunnen we helpen?"
+  data-primary-color="#28a745"
+  data-position="bottom-left"
+  data-welcome-message="Welkom bij ons support systeem!"
+&gt;&lt;/script&gt;
+            </div>
+        </div>
+        
+        <div class="example-section">
+            <h2>Manual Initialization</h2>
+            <p>For more control, initialize manually:</p>
+            <div class="code-block">
+&lt;script src="https://clobol-aigento.com/bot.js" data-auto-init="false"&gt;&lt;/script&gt;
+&lt;script&gt;
+  // Initialize with custom config
+  const widget = ClobolChatbot.init({
+    title: 'Custom Support',
+    subtitle: 'We are here to help!',
+    primaryColor: '#dc3545',
+    position: 'top-right',
+    welcomeMessage: 'Hello! How can I assist you today?'
+  });
+&lt;/script&gt;
+            </div>
+        </div>
+        
+        <div class="example-section">
+            <h2>Available Configuration Options</h2>
+            <ul>
+                <li><strong>title</strong>: Widget header title (default: "Clobol Support")</li>
+                <li><strong>subtitle</strong>: Widget header subtitle (default: "Hoe kunnen we helpen?")</li>
+                <li><strong>primaryColor</strong>: Main color for the widget (default: "#007BFF")</li>
+                <li><strong>position</strong>: Widget position - "bottom-right", "bottom-left", "top-right", "top-left" (default: "bottom-right")</li>
+                <li><strong>welcomeMessage</strong>: First message shown to users (default: "Hallo! Hoe kan ik je helpen?")</li>
+            </ul>
+        </div>
+        
+        <div class="example-section">
+            <h2>API Methods</h2>
+            <div class="demo-controls">
+                <button class="demo-button" onclick="testOpen()">Open Widget</button>
+                <button class="demo-button" onclick="testClose()">Close Widget</button>
+                <button class="demo-button" onclick="testToggle()">Toggle Widget</button>
+                <button class="demo-button" onclick="testDestroy()">Destroy Widget</button>
+                <button class="demo-button" onclick="testRecreate()">Recreate Widget</button>
+            </div>
+            
+            <div class="code-block">
+// Available API methods
+ClobolChatbot.init(config);  // Initialize widget
+widget.open();               // Open chat window
+widget.close();              // Close chat window
+widget.toggle();             // Toggle chat window
+widget.destroy();            // Remove widget completely
+            </div>
+        </div>
+        
+        <div class="example-section">
+            <h2>Features</h2>
+            <ul>
+                <li>✅ Self-contained with no external dependencies</li>
+                <li>✅ Responsive design that works on all screen sizes</li>
+                <li>✅ High z-index to appear above other content</li>
+                <li>✅ Isolated styles to prevent conflicts</li>
+                <li>✅ Smooth animations and transitions</li>
+                <li>✅ Customizable colors and positioning</li>
+                <li>✅ Simple conversation flow</li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="high-z-element">
+        High Z-Index Element<br>
+        (z-index: 999998)<br>
+        Widget should appear above this!
+    </div>
+    
+    <script>
+        let currentWidget = null;
+        
+        function testOpen() {
+            if (currentWidget) currentWidget.open();
+        }
+        
+        function testClose() {
+            if (currentWidget) currentWidget.close();
+        }
+        
+        function testToggle() {
+            if (currentWidget) currentWidget.toggle();
+        }
+        
+        function testDestroy() {
+            if (currentWidget) {
+                currentWidget.destroy();
+                currentWidget = null;
+            }
+        }
+        
+        function testRecreate() {
+            if (currentWidget) currentWidget.destroy();
+            currentWidget = ClobolChatbot.init({
+                title: 'Recreated Widget',
+                subtitle: 'This widget was recreated!',
+                primaryColor: '#28a745'
+            });
+        }
+    </script>
+    
+    <!-- Load the widget -->
+    <script src="/bot.js"></script>
+    <script>
+        // Store reference to the widget
+        document.addEventListener('DOMContentLoaded', () => {
+            // The widget auto-initializes, but we can get a reference
+            // by creating a new one with the same config
+            currentWidget = {
+                open: () => {
+                    // Custom implementation to open existing widget
+                    const trigger = document.querySelector('.clobol-widget-trigger');
+                    if (trigger) trigger.click();
+                },
+                close: () => {
+                    const closeBtn = document.querySelector('.clobol-widget-close');
+                    if (closeBtn) closeBtn.click();
+                },
+                toggle: () => {
+                    const trigger = document.querySelector('.clobol-widget-trigger');
+                    if (trigger) trigger.click();
+                },
+                destroy: () => {
+                    const container = document.querySelector('.clobol-widget-container');
+                    if (container) container.remove();
+                    const styles = document.getElementById('clobol-widget-styles');
+                    if (styles) styles.remove();
+                }
+            };
+        });
+    </script>
+</body>
+</html>
