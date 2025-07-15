@@ -114,7 +114,7 @@ export const EmbeddableWidget: React.FC<EmbeddableWidgetProps> = ({ config }) =>
   };
 
   return (
-    <div className={`widget-container ${config.theme || 'light'}`}>
+    <div className={`widget-container ${config.theme || 'light'} w-full h-full flex items-end justify-end`}>
       {/* Floating Button */}
       {!isOpen && (
         <Button
@@ -147,18 +147,14 @@ export const EmbeddableWidget: React.FC<EmbeddableWidgetProps> = ({ config }) =>
       {/* Chat Window */}
       {isOpen && (
         <div 
-          className="widget-chat-window"
+          className="widget-chat-window w-full h-full"
           style={{
-            width: isMinimized ? '300px' : '380px',
-            height: isMinimized ? '60px' : '600px',
             background: 'transparent',
             borderRadius: '12px',
             boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
             overflow: 'hidden',
             display: 'flex',
             flexDirection: 'column',
-            transition: 'all 0.3s ease',
-            maxHeight: '80vh',
             border: '1px solid rgba(255, 255, 255, 0.2)'
           }}
         >
