@@ -13,7 +13,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
       <div
         className={`max-w-xs lg:max-w-md px-4 py-3 rounded-2xl ${
           isBot
-            ? 'bg-white/10 backdrop-blur-sm border border-white/20 rounded-bl-md text-gray-800'
+            ? 'bg-white border border-gray-100 rounded-bl-md shadow-sm text-gray-800'
             : 'bg-gradient-to-r from-[#1E88E5] to-[#64B5F6] text-white rounded-br-md shadow-md'
         }`}
       >
