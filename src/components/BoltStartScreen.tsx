@@ -65,7 +65,7 @@ Waar kan ik je vandaag mee helpen?" onComplete={handleWelcomeComplete} delay={12
       </div>
       
       <div className="p-4 text-center space-y-1">
-        <p className="text-gray-400 text-base font-bold">⚡ Aigento</p>
+        <p className="text-gray-400 font-bold text-sm">⚡ Aigento</p>
         <p className="text-xs text-gray-500 leading-relaxed">Begrijpt. Vraagt. Regelt.</p>
       </div>
     </div>;
