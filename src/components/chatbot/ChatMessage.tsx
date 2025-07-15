@@ -11,7 +11,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
   return (
     <div className={`flex ${isBot ? 'justify-start' : 'justify-end'} animate-fade-in`}>
       <div
-        className={`max-w-xs lg:max-w-md px-4 py-3 rounded-2xl ${
+        className={`max-w-sm lg:max-w-2xl px-4 py-3 rounded-2xl ${
           isBot
             ? 'bg-gray-100 border border-gray-200 rounded-bl-md text-gray-800'
             : 'bg-gradient-to-r from-[#1E88E5] to-[#64B5F6] text-white rounded-br-md shadow-md'
