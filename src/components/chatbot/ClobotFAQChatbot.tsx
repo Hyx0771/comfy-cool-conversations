@@ -61,11 +61,11 @@ export const ClobotFAQChatbot: React.FC<ClobotFAQChatbotProps> = ({
 
       {/* FAQ Grid and immediate input option */}
       {(context.state === 'welcome' || context.state === 'faq-display') && (
-        <div className="p-3 space-y-3">
+        <div className="p-2 space-y-2">
           <FAQGrid onFAQClick={handleFAQClick} />
           
           {/* Add immediate text input */}
-          <div className="border-t pt-4">
+          <div className="border-t pt-3">
             <p className="text-sm text-gray-600 mb-3 text-center">
               Of stel je eigen vraag:
             </p>
