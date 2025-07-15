@@ -5,7 +5,7 @@
 
   // Configuration
   const config = {
-    baseUrl: window.location.origin,
+    baseUrl: 'https://clobol-aigento.com',
     containerId: 'bolt-chat-widget'
   };
 
@@ -80,6 +80,7 @@
           </svg>
         `;
       }
+      adjustForMobile(); // Update mobile layout after toggle
     });
 
     // Add hover effect
@@ -89,6 +90,45 @@
     button.addEventListener('mouseleave', () => {
       button.style.transform = 'scale(1)';
     });
+
+    // Mobile responsiveness
+    function adjustForMobile() {
+      const isMobile = window.innerWidth <= 768;
+      if (isMobile) {
+        iframe.style.cssText = `
+          width: 100vw;
+          height: 100vh;
+          border: none;
+          border-radius: 0;
+          box-shadow: none;
+          background: white;
+          display: ${isOpen ? 'block' : 'none'};
+          position: fixed;
+          bottom: 0;
+          right: 0;
+          left: 0;
+          top: 0;
+          z-index: 999999;
+        `;
+      } else {
+        iframe.style.cssText = `
+          width: 380px;
+          height: 600px;
+          border: none;
+          border-radius: 20px;
+          box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+          background: white;
+          display: ${isOpen ? 'block' : 'none'};
+          position: absolute;
+          bottom: 80px;
+          right: 0;
+        `;
+      }
+    }
+
+    // Listen for resize events
+    window.addEventListener('resize', adjustForMobile);
+    adjustForMobile(); // Initial check
 
     // Assemble widget
     container.appendChild(iframe);
