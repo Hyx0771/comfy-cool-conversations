@@ -49,7 +49,7 @@
     const domain = getScriptDomain();
     
     // Configure iframe
-    iframe.src = `${domain}/embed-widget?config=${encodeURIComponent(JSON.stringify(config))}`;
+    iframe.src = `${domain}/embed?config=${encodeURIComponent(JSON.stringify(config))}`;
     iframe.style.cssText = `
       position: fixed !important;
       width: 100px !important;
