@@ -18,7 +18,7 @@
       position: fixed;
       bottom: 0;
       right: 0;
-      z-index: 999999;
+      z-index: 1000;
       font-family: system-ui, -apple-system, sans-serif;
       pointer-events: none;
     `;
