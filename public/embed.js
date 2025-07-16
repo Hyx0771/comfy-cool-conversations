@@ -45,16 +45,15 @@
       const isMobile = window.innerWidth <= 768;
       if (isMobile) {
         iframe.style.cssText = `
-          width: 100vw;
-          height: 100vh;
+          width: calc(100vw - 2rem);
+          height: 80vh;
+          max-height: 600px;
           border: none;
           background: transparent;
           display: block;
           position: fixed;
-          bottom: 0;
-          right: 0;
-          left: 0;
-          top: 0;
+          bottom: 1rem;
+          right: 1rem;
           pointer-events: auto;
         `;
       } else {
