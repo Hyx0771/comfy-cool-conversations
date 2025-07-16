@@ -43,34 +43,23 @@
     // Mobile responsiveness
     function adjustForMobile() {
       const isMobile = window.innerWidth <= 768;
-      const isTablet = window.innerWidth > 768 && window.innerWidth <= 1024;
-      
       if (isMobile) {
         iframe.style.cssText = `
-          width: calc(100vw - 1rem);
-          height: calc(100vh - 4rem);
-          max-height: 85vh;
+          width: calc(100vw - 2rem);
+          height: 80vh;
+          max-height: 600px;
           border: none;
           background: transparent;
           display: block;
           position: fixed;
-          bottom: 0.5rem;
-          right: 0.5rem;
-          pointer-events: auto;
-        `;
-      } else if (isTablet) {
-        iframe.style.cssText = `
-          width: min(28rem, calc(100vw - 2rem));
-          height: min(32rem, calc(100vh - 5rem));
-          border: none;
-          background: transparent;
-          display: block;
+          bottom: 1rem;
+          right: 1rem;
           pointer-events: auto;
         `;
       } else {
         iframe.style.cssText = `
-          width: min(24rem, calc(100vw - 2rem));
-          height: min(32rem, calc(100vh - 6rem));
+          width: 400px;
+          height: 650px;
           border: none;
           background: transparent;
           display: block;
