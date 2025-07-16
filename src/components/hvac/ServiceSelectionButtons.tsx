@@ -11,10 +11,10 @@ const ServiceSelectionButtons: React.FC<ServiceSelectionButtonsProps> = ({ onSer
   
   return (
     <div className="h-full flex flex-col overflow-hidden">
-      <h3 className="text-lg font-semibold text-gray-800 text-center mb-3 px-3 py-2 flex-shrink-0">
+      <h3 className="text-base sm:text-lg font-semibold text-gray-800 text-center mb-2 sm:mb-3 px-3 py-2 flex-shrink-0">
         Waarvoor wil je een offerte?
       </h3>
-      <div className="flex-1 overflow-y-auto overflow-x-hidden min-h-0 px-2 pb-2">
+      <div className="flex-1 overflow-y-auto overflow-x-hidden min-h-0 px-2 pb-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
         <div className="grid gap-2 sm:gap-3">
           <Button
             onClick={() => onServiceSelect('new-airco')}

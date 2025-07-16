@@ -15,12 +15,12 @@ const SupportHeader: React.FC<SupportHeaderProps> = ({
   if (!showProgress) return null;
 
   return (
-    <div className="bg-gradient-to-r from-blue-50 to-blue-100 p-3 border-b">
+    <div className="bg-gradient-to-r from-blue-50 to-blue-100 p-2 sm:p-3 border-b flex-shrink-0">
       <div className="flex items-center justify-between mb-2">
-        <span className="text-sm font-medium text-blue-700">{encouragingMessage}</span>
-        <span className="text-xs text-blue-600">{progress}%</span>
+        <span className="text-xs sm:text-sm font-medium text-blue-700 truncate mr-2">{encouragingMessage}</span>
+        <span className="text-xs text-blue-600 flex-shrink-0">{progress}%</span>
       </div>
-      <Progress value={progress} className="h-2" />
+      <Progress value={progress} className="h-1.5 sm:h-2" />
     </div>
   );
 };

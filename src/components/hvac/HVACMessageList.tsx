@@ -21,13 +21,13 @@ const TypingIndicator: React.FC<{ onComplete: () => void; message: string }> = (
   }, [onComplete]);
 
   return (
-    <div className="flex space-x-3">
-      <Avatar className="w-8 h-8 flex-shrink-0">
+    <div className="flex space-x-2 sm:space-x-3">
+      <Avatar className="w-6 h-6 sm:w-8 sm:h-8 flex-shrink-0">
         <AvatarImage src={professionalAvatar} alt="HVAC Professional" className="object-cover w-full h-full" />
         <AvatarFallback className="bg-blue-500 text-white text-xs">B</AvatarFallback>
       </Avatar>
-      <div className="bg-white rounded-2xl rounded-tl-md p-3 shadow-sm border max-w-[85%]">
-        <p className="text-sm text-gray-800 leading-relaxed whitespace-pre-line">
+      <div className="bg-white rounded-2xl rounded-tl-md p-2 sm:p-3 shadow-sm border max-w-[85%]">
+        <p className="text-xs sm:text-sm text-gray-800 leading-relaxed whitespace-pre-line">
           {message}
         </p>
       </div>
@@ -73,26 +73,26 @@ const HVACMessageList: React.FC<HVACMessageListProps> = ({
   }, [messages, showTyping, pendingBotMessage]);
 
   return (
-    <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gradient-to-br from-blue-50 to-white">
+    <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3 sm:space-y-4 bg-gradient-to-br from-blue-50 to-white scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 min-h-0">
       {messages.map((message) => (
         <div
           key={message.id}
           className={`flex ${message.isBot ? 'justify-start' : 'justify-end'}`}
         >
           {message.isBot && (
-            <Avatar className="w-8 h-8 mr-3 flex-shrink-0">
+            <Avatar className="w-6 h-6 sm:w-8 sm:h-8 mr-2 sm:mr-3 flex-shrink-0">
               <AvatarImage src={professionalAvatar} alt="HVAC Professional" className="object-cover w-full h-full" />
               <AvatarFallback className="bg-blue-500 text-white text-xs">B</AvatarFallback>
             </Avatar>
           )}
           <div
-            className={`max-w-[85%] p-3 rounded-2xl shadow-sm ${
+            className={`max-w-[85%] p-2 sm:p-3 rounded-2xl shadow-sm ${
               message.isBot
                 ? 'bg-white text-gray-800 rounded-tl-md border'
                 : 'bg-blue-500 text-white rounded-tr-md'
             }`}
           >
-            <p className="text-sm leading-relaxed whitespace-pre-line">{message.content}</p>
+            <p className="text-xs sm:text-sm leading-relaxed whitespace-pre-line">{message.content}</p>
           </div>
         </div>
       ))}

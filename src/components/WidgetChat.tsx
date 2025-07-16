@@ -40,8 +40,10 @@ const WidgetChat: React.FC = () => {
   };
 
   return (
-    <div className="h-full w-full flex flex-col bg-transparent">
-      {renderContent()}
+    <div className="h-full w-full flex flex-col bg-transparent overflow-hidden">
+      <div className="flex-1 overflow-hidden min-h-0">
+        {renderContent()}
+      </div>
     </div>
   );
 };
