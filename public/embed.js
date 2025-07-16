@@ -75,7 +75,6 @@
           right: 1rem;
           pointer-events: auto;
           border-radius: 16px;
-          box-shadow: 0 10px 40px rgba(0,0,0,0.15);
         `;
       }
       
