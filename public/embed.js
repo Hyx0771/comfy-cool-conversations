@@ -40,19 +40,17 @@
     iframe.setAttribute('frameborder', '0');
     iframe.setAttribute('scrolling', 'no');
 
-    // Mobile responsiveness
+    // Unified responsive design
     function adjustForMobile() {
       const isMobile = window.innerWidth <= 768;
-      const isTablet = window.innerWidth > 768 && window.innerWidth <= 1024;
       const viewportHeight = window.innerHeight;
-      const viewportWidth = window.innerWidth;
       
       if (isMobile) {
-        // Mobile: Full width with safe margins, dynamic height
+        // Mobile: Consistent full-width design
         iframe.style.cssText = `
           width: calc(100vw - 1rem);
-          height: clamp(400px, ${Math.min(viewportHeight * 0.8, 600)}px, 80vh);
-          max-width: 100vw;
+          height: calc(100vh - 140px);
+          max-height: 85vh;
           border: none;
           background: transparent;
           display: block;
@@ -61,14 +59,14 @@
           right: 0.5rem;
           left: 0.5rem;
           pointer-events: auto;
-          border-radius: 12px;
-          box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+          border-radius: 16px;
+          box-shadow: 0 8px 32px rgba(0,0,0,0.12);
         `;
-      } else if (isTablet) {
-        // Tablet: Larger but constrained
+      } else {
+        // Desktop: Consistent sidebar design
         iframe.style.cssText = `
-          width: clamp(380px, 50vw, 500px);
-          height: clamp(500px, 70vh, 650px);
+          width: 420px;
+          height: 680px;
           border: none;
           background: transparent;
           display: block;
@@ -77,19 +75,7 @@
           right: 1rem;
           pointer-events: auto;
           border-radius: 16px;
-          box-shadow: 0 10px 40px rgba(0,0,0,0.12);
-        `;
-      } else {
-        // Desktop: Original dimensions
-        iframe.style.cssText = `
-          width: 400px;
-          height: 650px;
-          border: none;
-          background: transparent;
-          display: block;
-          pointer-events: auto;
-          border-radius: 16px;
-          box-shadow: 0 10px 40px rgba(0,0,0,0.12);
+          box-shadow: 0 10px 40px rgba(0,0,0,0.15);
         `;
       }
       

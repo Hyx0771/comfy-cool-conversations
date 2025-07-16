@@ -40,21 +40,21 @@ const StepInput: React.FC<StepInputProps> = ({
     }
     
     return (
-      <div className="p-3 sm:p-4 space-y-3 flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 touch-manipulation">
-        <div className="grid gap-2">
+      <div className="p-4 space-y-4 flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 touch-manipulation">
+        <div className="grid gap-3">
           {optionsToShow.map((option, index) => (
             <Button
               key={index}
               onClick={() => onStepResponse(option)}
               variant="outline"
-              className="h-auto p-3 sm:p-4 justify-start text-left border-2 border-gray-200 hover:border-blue-300 hover:bg-blue-50 min-h-[48px] sm:min-h-[52px] rounded-xl transition-all duration-300 bg-white touch-manipulation text-sm sm:text-base"
+              className="h-auto p-4 justify-start text-left border-2 border-gray-200 hover:border-blue-300 hover:bg-blue-50 min-h-[52px] rounded-xl transition-all duration-300 bg-white touch-manipulation text-base"
             >
               <span className="font-medium text-gray-800 leading-relaxed">{option}</span>
             </Button>
           ))}
         </div>
         {step.explanation && (
-          <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+          <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
             <p className="text-sm text-blue-800 font-medium leading-relaxed">{step.explanation}</p>
           </div>
         )}
@@ -69,7 +69,7 @@ const StepInput: React.FC<StepInputProps> = ({
                            step.content?.toLowerCase().includes('film');
     
     return (
-      <div className="p-3 sm:p-4 space-y-3 flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+      <div className="p-4 space-y-4 flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
         {isMediaRequest ? (
           <>
             <ImageUpload
@@ -81,18 +81,18 @@ const StepInput: React.FC<StepInputProps> = ({
               allowVideos={true}
             />
 
-            <div className="flex gap-2 sticky bottom-0 bg-white p-2 border-t shadow-lg rounded-t-lg">
+            <div className="flex gap-3 sticky bottom-0 bg-white p-3 border-t shadow-lg rounded-t-lg">
               <Button
                 onClick={() => onStepResponse(`${selectedFiles.length} foto${selectedFiles.length > 1 ? "'s" : ''} geselecteerd`, selectedFiles)}
                 disabled={selectedFiles.length === 0}
-                className="flex-1 bg-blue-500 hover:bg-blue-600 min-h-[48px] touch-manipulation text-sm sm:text-base"
+                className="flex-1 bg-blue-500 hover:bg-blue-600 min-h-[52px] touch-manipulation text-base"
               >
                 Verstuur ({selectedFiles.length})
               </Button>
               <Button
                 onClick={handleSkip}
                 variant="outline"
-                className="flex-shrink-0 min-h-[48px] px-4 touch-manipulation text-sm sm:text-base"
+                className="flex-shrink-0 min-h-[52px] px-6 touch-manipulation text-base"
               >
                 Skip
               </Button>
@@ -105,20 +105,20 @@ const StepInput: React.FC<StepInputProps> = ({
               onChange={(e) => setInputValue(e.target.value)}
               placeholder={step.content?.includes('nog iets wat we moeten weten') ? 
                 "Typ hier eventuele opmerkingen..." : "Typ hier je antwoord..."}
-              className="min-h-[80px] sm:min-h-[100px] text-sm sm:text-base touch-manipulation resize-none"
+              className="min-h-[100px] text-base touch-manipulation resize-none"
             />
-            <div className="flex gap-2 pt-2">
+            <div className="flex gap-3 pt-2">
               <Button
                 onClick={() => onStepResponse(inputValue)}
                 disabled={!inputValue.trim()}
-                className="flex-1 bg-blue-500 hover:bg-blue-600 min-h-[48px] touch-manipulation text-sm sm:text-base"
+                className="flex-1 bg-blue-500 hover:bg-blue-600 min-h-[52px] touch-manipulation text-base"
               >
                 Verstuur
               </Button>
               <Button
                 onClick={handleSkip}
                 variant="outline"
-                className="flex-shrink-0 min-h-[48px] px-4 touch-manipulation text-sm sm:text-base"
+                className="flex-shrink-0 min-h-[52px] px-6 touch-manipulation text-base"
               >
                 Skip
               </Button>
