@@ -46,18 +46,18 @@
       const viewportHeight = window.innerHeight;
       
       if (isMobile) {
-        // Mobile: Consistent full-width design
+        // Mobile: Maximum screen space utilization
         iframe.style.cssText = `
-          width: calc(100vw - 1rem);
-          height: calc(100vh - 140px);
-          max-height: 85vh;
+          width: calc(100vw - 0.5rem);
+          height: calc(100vh - 60px);
+          max-height: 95vh;
           border: none;
           background: transparent;
           display: block;
           position: fixed;
-          bottom: 0.5rem;
-          right: 0.5rem;
-          left: 0.5rem;
+          bottom: 0.25rem;
+          right: 0.25rem;
+          left: 0.25rem;
           pointer-events: auto;
           border-radius: 16px;
           box-shadow: 0 8px 32px rgba(0,0,0,0.12);
