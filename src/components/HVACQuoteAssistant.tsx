@@ -51,7 +51,7 @@ const HVACQuoteAssistant = () => {
         showProgress={serviceType !== null}
       />
 
-      <div className="flex-1 flex flex-col overflow-hidden">
+      <div className="flex-1 flex flex-col overflow-hidden md:overflow-hidden overflow-y-auto touch-manipulation">
         {messages.length > 0 && (
           <HVACMessageList
             messages={messages}
