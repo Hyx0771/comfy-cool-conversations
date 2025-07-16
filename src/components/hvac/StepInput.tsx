@@ -69,7 +69,7 @@ const StepInput: React.FC<StepInputProps> = ({
                            step.content?.toLowerCase().includes('film');
     
     return (
-      <div className="p-4 space-y-3 max-h-[50vh] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+      <div className="p-4 space-y-3 flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
         {isMediaRequest ? (
           <>
             <ImageUpload

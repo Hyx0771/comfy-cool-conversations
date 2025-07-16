@@ -118,7 +118,7 @@ const ChatBotWidget = () => {
                 </Button>
                </div>
             
-            <div className="h-[70vh] sm:h-[500px] overflow-hidden">
+            <div className="h-[85vh] sm:h-[500px] overflow-hidden flex flex-col">
               {renderContent()}
             </div>
           </Card>
