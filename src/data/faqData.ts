@@ -1,110 +1,42 @@
-export interface FAQItem {
+
+export interface FAQ {
   id: number;
   question: string;
   answer: string;
+  category?: string;
 }
 
-export const faqData: FAQItem[] = [
+export const faqData: FAQ[] = [
   {
     id: 1,
-    question: "Wel of geen warmtepomp voor mijn woning?",
-    answer: "Een warmtepomp is ideaal om gas te besparen mits uw woning goed is geïsoleerd en er ruimte is voor een binnen- en buitenunit. Bij matige isolatie adviseren wij vaak een hybride oplossing. Clobol kijkt graag mee en geeft eerlijk advies op maat."
+    question: "Wat kost een nieuwe airco installatie?",
+    answer: "De kosten voor een nieuwe airco installatie variëren tussen €800-€2500, afhankelijk van het type systeem, de grootte van de ruimte en de complexiteit van de installatie. Voor een nauwkeurige prijsopgave maken we graag een vrijblijvende afspraak."
   },
   {
     id: 2,
-    question: "Wat kost een airco gemiddeld?",
-    answer: "Een single-split airco voor één kamer kost doorgaans €1.500-€3.000 inclusief installatie. Een multi-split voor meerdere ruimtes begint rond €2.500 en kan oplopen tot €5.000 of meer, afhankelijk van aantal binnenunits en vermogen."
+    question: "Hoe vaak moet ik mijn airco laten onderhouden?",
+    answer: "We adviseren jaarlijks onderhoud voor optimale prestaties en levensduur. Voor intensief gebruik (zoals kantoorpanden) adviseren we 2x per jaar onderhoud. Dit voorkomt storingen en houdt uw energierekening laag."
   },
   {
     id: 3,
-    question: "Hoe snel kan ik geholpen worden?",
-    answer: "Na uw aanvraag via het intakeformulier nemen wij binnen één werkdag contact op. Advies en installatie kunnen meestal binnen enkele weken worden ingepland; bij spoed zoeken we sneller een oplossing."
+    question: "Welke merken airco's installeren jullie?",
+    answer: "We installeren topmerken zoals Mitsubishi, Daikin, Panasonic en LG. We kiezen altijd het best passende merk voor uw situatie en budget. Alle merken komen met fabrieksgarantie."
   },
   {
     id: 4,
-    question: "Heeft Clobol keurmerken of certificeringen?",
-    answer: "Ja. We beschikken onder andere over het F-gassencertificaat en werken uitsluitend met gediplomeerde monteurs en A-merken zoals Daikin en Mitsubishi."
+    question: "Hoe lang duurt een airco installatie?",
+    answer: "Een standaard airco installatie duurt 4-6 uur. Voor complexere installaties kan dit 1-2 dagen duren. We plannen altijd realistisch en houden u op de hoogte van de voortgang."
   },
   {
     id: 5,
-    question: "Hoe zit het met geluid en vergunningen bij buitenunits?",
-    answer: "Onze buitenunits zijn stil en worden op trillingsdempers geplaatst. 's Nachts blijft het geluid op de erfgrens onder circa 40 dB(A). In de meeste gevallen is geen vergunning nodig; wij adviseren en regelen dit indien vereist."
+    question: "Wat voor garantie krijg ik?",
+    answer: "U krijgt 2 jaar volledige garantie op ons installatiewerk plus de fabrieksgarantie op het apparaat (meestal 5-7 jaar). We bieden ook uitgebreide garantiepakketten aan voor extra zekerheid."
   },
   {
     id: 6,
-    question: "Welke airco is geschikt voor mijn situatie?",
-    answer: "Dat hangt af van het aantal te koelen of verwarmen kamers, de grootte en of u ook wilt verwarmen. Via het intakeformulier bepalen we samen het optimale type en vermogen."
-  },
-  {
-    id: 7,
-    question: "Wat kost een warmtepomp ongeveer?",
-    answer: "Een hybride warmtepomp kost gemiddeld €4.000-€7.000, all-electric systemen €8.000-€15.000. ISDE-subsidie kan duizenden euro's schelen; wij berekenen dit in de offerte."
-  },
-  {
-    id: 8,
-    question: "Hoe vraag ik een offerte aan bij Clobol?",
-    answer: "Vul het online intakeformulier in (1 minuut). Wij bellen binnen één werkdag voor aanvullende vragen en sturen daarna een vrijblijvende offerte op maat."
-  },
-  {
-    id: 9,
-    question: "Kan een airco ook verwarmen?",
-    answer: "Ja. Moderne airco's zijn lucht-lucht warmtepompen die naast koelen efficiënt kunnen verwarmen (COP rond 3). Zo heeft u het hele jaar comfort."
-  },
-  {
-    id: 10,
-    question: "Hoe lang duurt de installatie van een airco of warmtepomp?",
-    answer: "Een single-split airco plaatsen we meestal in één dag. Multi-split of warmtepompinstallaties duren 1-2 dagen, afhankelijk van complexiteit."
-  },
-  {
-    id: 11,
-    question: "Is onderhoud aan een airco of warmtepomp nodig?",
-    answer: "Regelmatig onderhoud houdt het systeem efficiënt en voorkomt storingen. Bij meer dan 3 kg koudemiddel is jaarlijkse controle verplicht. Clobol biedt onderhoudscontracten met vijf jaar garantie."
-  },
-  {
-    id: 12,
-    question: "Wat als mijn airco of warmtepomp een storing heeft?",
-    answer: "Onze servicedienst lost storingen snel op. Binnen garantie gratis; daarbuiten tegen eerlijke tarieven. Contractklanten krijgen voorrang."
-  },
-  {
-    id: 13,
-    question: "In welke regio werkt Clobol?",
-    answer: "We opereren vanuit Den Haag binnen circa 60 km: onder andere Leiden, Delft, Rotterdam, Zoetermeer, Gouda en omliggende plaatsen."
-  },
-  {
-    id: 14,
-    question: "Met welke merken werken jullie?",
-    answer: "Wij installeren A-merken zoals Daikin, Mitsubishi Heavy Industries en Panasonic; op verzoek ook andere betrouwbare merken zoals Haier of Carrier."
-  },
-  {
-    id: 15,
-    question: "Maakt een airco veel geluid?",
-    answer: "Binnenunits draaien in de laagste stand rond 20-30 dB (fluisterstil). Buitenunits zijn dankzij moderne techniek eveneens stil en voldoen ruimschoots aan de geluidsnormen."
-  },
-  {
-    id: 16,
-    question: "Is mijn meterkast geschikt voor een airco of warmtepomp?",
-    answer: "De meeste systemen werken op 1-fase 230 V; vaak plaatsen we een extra groep. Grote all-electric warmtepompen vereisen soms een 3-fase aansluiting; we adviseren en helpen bij eventuele verzwaring."
-  },
-  {
-    id: 17,
-    question: "Kan ik subsidie krijgen bij de aanschaf?",
-    answer: "Voor warmtepompen is ISDE-subsidie beschikbaar (ongeveer €1.500-€4.000 afhankelijk van type en vermogen). Sommige lucht-lucht warmtepompen (airco's) komen in aanmerking voor enkele honderden euro's."
-  },
-  {
-    id: 18,
-    question: "Hoeveel energie verbruikt een airco of warmtepomp?",
-    answer: "Een 3,5 kW airco verbruikt bij vol vermogen ongeveer 1 kWh per uur maar moduleert zodra de gewenste temperatuur is bereikt. Een hybride warmtepomp gebruikt gemiddeld 2.000-3.200 kWh per jaar; all-electric 4.000-5.000 kWh, afhankelijk van isolatie."
-  },
-  {
-    id: 19,
-    question: "Leveren jullie ook monoblock airco's (zonder buitenunit)?",
-    answer: "Ja. Monoblocks zijn ideaal waar een buitenunit niet kan. Ze vragen slechts twee ventilatieroosters in de gevel en maken iets meer binnengeluid maar bieden een praktisch alternatief."
-  },
-  {
-    id: 20,
-    question: "Waarom kiezen voor Clobol?",
-    answer: "Expertise, gecertificeerde monteurs, A-merken en een 100 procent tevredenheidsgarantie. Transparante prijzen, snelle service en onderhoudscontracten met vijf jaar garantie leveren comfort zonder zorgen."
+    question: "Kunnen jullie ook warmtepompen installeren?",
+    answer: "Ja, we zijn specialist in zowel lucht-water als lucht-lucht warmtepompen. Van advies tot installatie en onderhoud - we regelen alles voor een duurzame en energiezuinige oplossing."
   }
 ];
 
-export const fallbackResponse = "Bedankt voor uw vraag! Helaas kan ik daar geen direct antwoord op geven. Onze specialisten helpen u graag verder met persoonlijk advies.";
+export const fallbackResponse = "Dank je voor je vraag! Ik kan daar niet direct antwoord op geven, maar onze specialisten helpen je graag verder. Laat je contactgegevens achter en we nemen binnen 24 uur contact op! 😊";

@@ -1,94 +1,177 @@
-export const hvacFlowConfigs = {
+
+import { ConversationFlow } from '../types/conversation-types';
+
+export const hvacFlowConfigs: Record<string, ConversationFlow> = {
   'new-airco': {
-    title: '🌬️ Nieuwe airco (koelen / verwarmen)',
+    title: 'Nieuwe airco (koelen / verwarmen)',
     steps: [
-      { id: 'airco-purpose', field: 'aircoPurpose', content: '❄️🔥 Wat wilt u precies?', type: 'choice', options: ['❄️ Alleen koelen', '🔥 Alleen verwarmen', '❄️🔥 Koelen én verwarmen'] },
-      { id: 'room-count', field: 'roomCount', content: '🏠 Hoeveel kamers?', type: 'choice', options: ['1 kamer', '2', '3', '4 of meer'] },
-      { id: 'room-size', field: 'roomSize', content: '📏 Hoe groot is de grootste kamer?', type: 'choice', options: ['Klein (< 20 m²)', 'Gemiddeld (20-35 m²)', 'Groot (35-50 m²)', 'Zeer groot (> 50 m²)'] },
-      { id: 'house-year', field: 'houseYear', content: '🏚️ Bouwjaar / isolatie huis?', type: 'choice', options: ['Voor 1990', '1990-2010', 'Na 2010', '🤷‍♂️ Weet ik niet'] },
-      { id: 'wall-material', field: 'wallMaterial', content: '🧱 Materiaal muur binnenunit?', type: 'choice', options: ['Beton / steen', 'Hout / gips', '🤷‍♂️ Weet ik niet'] },
-      { id: 'outdoor-unit-location', field: 'outdoorUnitLocation', content: '📍 Waar komt de buitenunit?', type: 'choice', options: ['Begane grond / balkon < 3 m', 'Gevel of dak hoger dan ≥ 3 m', '🤷‍♂️ Onbekend'] },
-      { id: 'electrical', field: 'electrical', content: '⚡ Wat staat er op uw zekeringkast?', type: 'choice', options: ['1 × 16 A', '1 × > 20 A', '3 × 25 A', '🤳 Weet ik niet'] },
-      { id: 'customer-type', field: 'customerType', content: '🏠 Voor wie is dit?', type: 'choice', options: ['🏠 Particulier', '🏢 Bedrijf / instelling'] },
-      { id: 'brand-preference', field: 'brandPreference', content: '🏷️ Voorkeursmerk?', type: 'choice', options: ['🔝 Daikin – topkwaliteit, stil en zuinig', '💰 Haier – voordelige basisoptie', '🤷‍♂️ Geen voorkeur'], conditionalOptions: { '🏢 Bedrijf / instelling': ['🔝 Daikin – topkwaliteit, stil en zuinig', '💰 Haier – voordelige basisoptie', '🏭 Mitsubishi Heavy – voor bedrijven', '🤷‍♂️ Geen voorkeur'] } },
-      { id: 'pipe-length', field: 'pipeLength', content: '📐 Geschatte lengte leidingen (binnen → buiten)', type: 'choice', options: ['< 3 m', '3-10 m', '> 10 m', '🤷‍♂️ Weet ik niet'] },
-      { id: 'condensation-drain', field: 'condensationDrain', content: '💧 Afvoer condenswater?', type: 'choice', options: ['🔽 Loopt vanzelf weg (natuurlijk afschot)', '💧 Geen afloop / weet ik niet'], explanation: 'Als het niet vanzelf wegloopt, plaatsen wij een klein pompje.' },
-      { id: 'photos', field: 'photos', content: '📸 Upload 2 foto\'s – binnenplek + buitenplek (optioneel)', type: 'text' },
-      { id: 'comments', field: 'comments', content: 'Is er nog iets wat we moeten weten?', type: 'text' },
-      { id: 'personal-details', field: 'personalDetails', content: 'We hebben je persoonlijke gegevens nodig voor de offerte.', type: 'contact' },
-      { id: 'contact-info', field: 'contactInfo', content: 'Bijna klaar! Laat je gegevens achter voor een snelle offerte.', type: 'contact' }
+      {
+        id: 'purpose',
+        type: 'choice',
+        content: 'Waarvoor wil je de airco gebruiken? 🌡️',
+        field: 'aircoPurpose',
+        choices: ['Alleen koelen', 'Alleen verwarmen', 'Koelen én verwarmen', 'Weet ik nog niet']
+      },
+      {
+        id: 'rooms',
+        type: 'choice',
+        content: 'Hoeveel kamers wil je koelen/verwarmen? 🏠',
+        field: 'roomCount',
+        choices: ['1 kamer', '2-3 kamers', '4-5 kamers', 'Meer dan 5 kamers']
+      },
+      {
+        id: 'room-size',
+        type: 'choice',
+        content: 'Hoe groot is de grootste kamer? 📏',
+        field: 'roomSize',
+        choices: ['Tot 25 m²', '25-40 m²', '40-60 m²', 'Meer dan 60 m²']
+      },
+      {
+        id: 'house-year',
+        type: 'choice',
+        content: 'Wanneer is je huis gebouwd? 🏗️',
+        field: 'houseYear',
+        choices: ['Voor 1980', '1980-2000', '2000-2010', 'Na 2010']
+      },
+      {
+        id: 'wall-material',
+        type: 'choice',
+        content: 'Wat voor muren heeft je huis? 🧱',
+        field: 'wallMaterial',
+        choices: ['Baksteen', 'Beton', 'Hout', 'Spouwmuur', 'Weet ik niet']
+      },
+      {
+        id: 'outdoor-location',
+        type: 'choice',
+        content: 'Waar kan de buitenunit komen? 🌿',
+        field: 'outdoorUnitLocation',
+        choices: ['Tuin/terras', 'Balkon', 'Dak', 'Tegen gevel', 'Weet ik niet']
+      },
+      {
+        id: 'electrical',
+        type: 'choice',
+        content: 'Is er een 230V stopcontact in de buurt? ⚡',
+        field: 'electrical',
+        choices: ['Ja, binnen 3 meter', 'Nee, moet aangelegd worden', 'Weet ik niet']
+      },
+      {
+        id: 'brand-preference',
+        type: 'choice',
+        content: 'Heb je een voorkeursmerk? 🏷️',
+        field: 'brandPreference',
+        choices: ['Mitsubishi', 'Daikin', 'LG', 'Panasonic', 'Geen voorkeur']
+      },
+      {
+        id: 'pipe-length',
+        type: 'choice',
+        content: 'Afstand van binnen- naar buitenunit? 📐',
+        field: 'pipeLength',
+        choices: ['Tot 5 meter', '5-10 meter', '10-15 meter', 'Meer dan 15 meter']
+      },
+      {
+        id: 'condensation',
+        type: 'choice',
+        content: 'Hoe kan condenswater weggelopen worden? 💧',
+        field: 'condensationDrain',
+        choices: ['Via raam naar buiten', 'Via bestaande afvoer', 'Nieuwe afvoer aanleggen', 'Weet ik niet']
+      },
+      {
+        id: 'comments',
+        type: 'text',
+        content: 'Heb je nog specifieke wensen of vragen? 📝',
+        field: 'comments'
+      },
+      {
+        id: 'photos',
+        type: 'file',
+        content: 'Upload foto\'s van de ruimte en gewenste locaties (optioneel) 📸',
+        field: 'photos'
+      },
+      {
+        id: 'personal-details',
+        type: 'personal-details',
+        content: 'Vul je contactgegevens in voor de offerte 👤',
+        field: 'personalDetails'
+      },
+      {
+        id: 'contact-info',
+        type: 'contact',
+        content: 'Hoe wil je de offerte ontvangen? 📞',
+        field: 'contactMethod'
+      }
     ]
   },
   'heat-pump': {
-    title: '🔥 Warmtepomp',
+    title: 'Warmtepomp',
     steps: [
-      { id: 'current-heating', field: 'currentHeating', content: '🔥 Huidige verwarming?', type: 'choice', options: ['CV-ketel < 2010', 'CV-ketel 2010-2020', 'CV-ketel > 2020', 'Volledig elektrisch'] },
-      { id: 'insulation', field: 'insulation', content: '🏚️ Isolatie / energielabel?', type: 'choice', options: ['Label A/B', 'Label C/D', 'Label E/F/G', '🤷‍♂️ Weet ik niet'] },
-      { id: 'gas-consumption', field: 'gasConsumption', content: '⛽ Jaarlijks gasverbruik (schatting)', type: 'choice', options: ['< 800 m³', '800-1400 m³', '> 1400 m³', '🤷‍♂️ Weet ik niet'] },
-      { id: 'heated-area', field: 'heatedArea', content: '📏 Verwarmd vloeroppervlak', type: 'choice', options: ['< 80 m²', '80-120 m²', '120-200 m²', '> 200 m²'] },
-      { id: 'emission-system', field: 'emissionSystem', content: '🌡️ Afgiftesysteem', type: 'choice', options: ['Vloerverwarming', 'Lage-temperatuur radiatoren', 'Mix van beide', '🤷‍♂️ Onbekend'] },
-      { id: 'pipe-diameter', field: 'pipeDiameter', content: '📐 Diameter cv-leidingen rond de ketel', type: 'choice', options: ['15 mm (½″)', '22 mm (¾″)', '28 mm (1″)', 'Gemengd / anders', '🤳 Weet ik niet – ik upload een foto'] },
-      { id: 'solution-type', field: 'solutionType', content: '⚙️ Gewenste oplossing', type: 'choice', options: ['💧 Hybride (ketel + warmtepomp)', '🔌 Volledig elektrisch'] },
-      { id: 'photos', field: 'photos', content: '📸 Upload foto van meterkast + cv-ketel / technische ruimte', type: 'text' },
-      { id: 'comments', field: 'comments', content: 'Is er nog iets wat we moeten weten?', type: 'text' },
-      { id: 'personal-details', field: 'personalDetails', content: 'We hebben je persoonlijke gegevens nodig voor de offerte.', type: 'contact' },
-      { id: 'contact-info', field: 'contactInfo', content: 'Perfect! Laat je gegevens achter en we sturen je een uitgebreide offerte.', type: 'contact' }
-    ]
-  },
-  'maintenance': {
-    title: '🛠️ Onderhoud / service',
-    steps: [
-      { id: 'outdoor-brand', field: 'outdoorBrand', content: '🏷️ Merk buitendeel', type: 'choice', options: ['Daikin', 'Mitsubishi', 'Panasonic', 'Anders', '🤷‍♂️ Weet ik niet'] },
-      { id: 'system-year', field: 'systemYear', content: '📅 Bouwjaar systeem', type: 'choice', options: ['< 2015', '2015-2020', '> 2020', 'Onbekend'] },
-      { id: 'last-maintenance', field: 'lastMaintenance', content: '🔧 Laatste onderhoud', type: 'choice', options: ['< 12 mnd', '1-2 jaar', '> 2 jaar', 'Nooit'] },
-      { id: 'error-code', field: 'errorCode', content: '⚠️ Foutcode op display?', type: 'choice', options: ['Ja', 'Nee', 'Geen display'] },
-      { id: 'urgency', field: 'urgency', content: '⏱️ Hoe snel nodig?', type: 'choice', options: ['🚨 Spoed (≤ 24 u)', 'Binnen 1 week', 'Preventief / controle'] },
-      { id: 'photos', field: 'photos', content: '📸 Optioneel: upload foto van typeplaatje of foutcode', type: 'text' },
-      { id: 'comments', field: 'comments', content: 'Is er nog iets wat we moeten weten?', type: 'text' },
-      { id: 'personal-details', field: 'personalDetails', content: 'We hebben je persoonlijke gegevens nodig voor de offerte.', type: 'contact' },
-      { id: 'contact-info', field: 'contactInfo', content: 'We nemen zo snel mogelijk contact met je op voor het onderhoud!', type: 'contact' }
-    ]
-  },
-  'repair': {
-    title: '🚑 Reparatie / storing',
-    steps: [
-      { id: 'device-type', field: 'deviceType', content: '📟 Welk apparaat doet het niet?', type: 'choice', options: ['Airco', 'Warmtepomp', '🤷‍♂️ Weet ik niet'] },
-      { id: 'problem', field: 'problem', content: '❗ Wat is het probleem?', type: 'choice', options: ['❄️/🔥 Koelt of verwarmt niet', '💧 Lekt water', '🔊 Maakt lawaai', '⚠️ Foutcode op display', 'Anders'] },
-      { id: 'problem-start', field: 'problemStart', content: '📆 Wanneer begon het?', type: 'choice', options: ['Vandaag', 'Afgelopen week', '> 7 dagen', '🤷‍♂️ Weet ik niet'] },
-      { id: 'urgency', field: 'urgency', content: '⏱️ Hoe snel wilt u hulp?', type: 'choice', options: ['🚨 Spoed (≤ 24 u)', '48 u', '3-5 dagen', 'Niet dringend'] },
-      { id: 'media', field: 'media', content: '📸/🎥 Upload foto of korte video', type: 'text' },
-      { id: 'comments', field: 'comments', content: 'Is er nog iets wat we moeten weten?', type: 'text' },
-      { id: 'personal-details', field: 'personalDetails', content: 'We hebben je persoonlijke gegevens nodig voor de offerte.', type: 'contact' },
-      { id: 'contact-info', field: 'contactInfo', content: 'We gaan meteen aan de slag om je probleem op te lossen!', type: 'contact' }
-    ]
-  },
-  'commissioning': {
-    title: '✅ Inbedrijfstelling gekocht systeem',
-    steps: [
-      { id: 'system-brand', field: 'systemBrand', content: '🏷️ Merk van het systeem', type: 'choice', options: ['Daikin', 'Mitsubishi', 'Panasonic', 'Anders'] },
-      { id: 'certificate', field: 'certificate', content: '📜 F-gassen certificaat installateur?', type: 'choice', options: ['Ja', 'Nee', '🤷‍♂️ Weet ik niet'] },
-      { id: 'pipe-length', field: 'pipeLength', content: '📐 Lengte koelleidingen', type: 'choice', options: ['< 15 m', '15-30 m', '> 30 m', '🤷‍♂️ Weet ik niet'] },
-      { id: 'vacuum-test', field: 'vacuumTest', content: '🔧 Vacuüm- & druktest al gedaan?', type: 'choice', options: ['Ja', 'Nee', '🤷‍♂️ Weet ik niet'] },
-      { id: 'pipe-diameter', field: 'pipeDiameter', content: '⚙️ Diameter leidingen (optioneel)', type: 'choice', options: ['¼-⅜″', '⅜-⅝″', 'Onbekend'] },
-      { id: 'invoice', field: 'invoice', content: '📄 Upload aankoopfactuur', type: 'text' },
-      { id: 'date', field: 'date', content: '📅 Gewenste datum inbedrijfstelling', type: 'text' },
-      { id: 'comments', field: 'comments', content: 'Is er nog iets wat we moeten weten?', type: 'text' },
-      { id: 'personal-details', field: 'personalDetails', content: 'We hebben je persoonlijke gegevens nodig voor de offerte.', type: 'contact' },
-      { id: 'contact-info', field: 'contactInfo', content: 'We plannen de inbedrijfstelling zo snel mogelijk in!', type: 'contact' }
-    ]
-  },
-  'project-advice': {
-    title: '🏢 Advies groot project / VvE',
-    steps: [
-      { id: 'property-type', field: 'propertyType', content: '🏢 Type pand / project', type: 'choice', options: ['Woningblok', 'Kantoorpand', 'VvE', 'Industrie', 'Anders'] },
-      { id: 'project-size', field: 'projectSize', content: '📏 Omvang project', type: 'choice', options: ['< 10 won. / < 500 m²', '10-25 won. / 500-1 000 m²', '25 won. / > 1 000 m²', '🤷‍♂️ Weet ik niet'] },
-      { id: 'project-phase', field: 'projectPhase', content: '📂 Projectfase', type: 'choice', options: ['✏️ Ontwerp', '📑 Aanbesteding', '🔧 Installatie', '🛠️ Renovatie'] },
-      { id: 'budget', field: 'budget', content: '💶 Indicatief budget', type: 'choice', options: ['< €25k', '€25-75k', '€75-150k', '> €150k', 'Nog geen budget'] },
-      { id: 'energy-goal', field: 'energyGoal', content: '🌱 Energie- / CO₂-doel (EPC/BENG)', type: 'choice', options: ['< 0,4', '0,4-0,6', '> 0,6', '🤷‍♂️ Weet ik niet'] },
-      { id: 'delivery-date', field: 'deliveryDate', content: '📅 Gewenste opleverdatum', type: 'choice', options: ['< 3 mnd', '3-6 mnd', '> 6 mnd', 'Flexibel'] },
-      { id: 'comments', field: 'comments', content: 'Is er nog iets wat we moeten weten?', type: 'text' },
-      { id: 'personal-details', field: 'personalDetails', content: 'We hebben je persoonlijke gegevens nodig voor de offerte.', type: 'contact' },
-      { id: 'contact-info', field: 'contactInfo', content: 'We nemen contact op voor een uitgebreid adviesgesprek!', type: 'contact' }
+      {
+        id: 'current-heating',
+        type: 'choice',
+        content: 'Wat is je huidige verwarming? 🔥',
+        field: 'currentHeating',
+        choices: ['CV-ketel op gas', 'Elektrische verwarming', 'Warmtepomp', 'Andere']
+      },
+      {
+        id: 'insulation',
+        type: 'choice',
+        content: 'Hoe is de isolatie van je huis? 🏠',
+        field: 'insulation',
+        choices: ['Goed geïsoleerd (label A/B)', 'Redelijk geïsoleerd (label C/D)', 'Slecht geïsoleerd (label E/F/G)', 'Weet ik niet']
+      },
+      {
+        id: 'gas-consumption',
+        type: 'choice',
+        content: 'Hoeveel m³ gas verbruik je per jaar? ⛽',
+        field: 'gasConsumption',
+        choices: ['Minder dan 1000 m³', '1000-1500 m³', '1500-2500 m³', 'Meer dan 2500 m³']
+      },
+      {
+        id: 'heated-area',
+        type: 'choice',
+        content: 'Hoeveel m² wordt er verwarmd? 📏',
+        field: 'heatedArea',
+        choices: ['Tot 100 m²', '100-150 m²', '150-200 m²', 'Meer dan 200 m²']
+      },
+      {
+        id: 'emission-system',
+        type: 'choice',
+        content: 'Wat voor afgiftesysteem heb je? 🌡️',
+        field: 'emissionSystem',
+        choices: ['Radiatoren', 'Vloerverwarming', 'Combinatie', 'Weet ik niet']
+      },
+      {
+        id: 'pipe-diameter',
+        type: 'choice',
+        content: 'Diameter van je CV-leidingen? 🔧',
+        field: 'pipeDiameter',
+        choices: ['22mm', '28mm', 'Weet ik niet']
+      },
+      {
+        id: 'solution-type',
+        type: 'choice',
+        content: 'Welke oplossing zoek je? 💡',
+        field: 'solutionType',
+        choices: ['Hybride warmtepomp', 'Volledige warmtepomp', 'Advies op maat']
+      },
+      {
+        id: 'comments',
+        type: 'text',
+        content: 'Aanvullende informatie of wensen? 📝',
+        field: 'comments'
+      },
+      {
+        id: 'personal-details',
+        type: 'personal-details',
+        content: 'Contactgegevens voor offerte 👤',
+        field: 'personalDetails'
+      },
+      {
+        id: 'contact-info',
+        type: 'contact',
+        content: 'Hoe wil je contact? 📞',
+        field: 'contactMethod'
+      }
     ]
   }
+  // Add more service configurations as needed
 };

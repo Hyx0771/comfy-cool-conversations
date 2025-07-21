@@ -1,9 +1,6 @@
+
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { Resend } from "npm:resend@2.0.0";
-import { QuoteEmailRequest, FAQEmailRequest } from './types.ts';
-import { generateMessage } from './messageGenerator.ts';
-import { generateHtmlTemplate } from './htmlTemplate.ts';
-import { generateFAQEmailTemplate } from './faqTemplate.ts';
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 
@@ -12,87 +9,94 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
+interface QuoteEmailRequest {
+  customerData: any;
+  galleryId?: string;
+  requestType: 'call' | 'email';
+}
+
 const handler = async (req: Request): Promise<Response> => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    const body = await req.json();
+    const { customerData, galleryId, requestType }: QuoteEmailRequest = await req.json();
     
-    // Check if this is a FAQ email request or quote email request
-    if ('contactInfo' in body) {
-      // FAQ email request
-      const { contactInfo, customQuestion, conversationHistory, contactMethod }: FAQEmailRequest = body;
-      console.log('📧 FAQ email request:', { contactInfo, customQuestion, contactMethod });
+    console.log('📧 Quote email request:', { customerData, galleryId, requestType });
 
-      const htmlContent = generateFAQEmailTemplate(conversationHistory, customQuestion, contactInfo, contactMethod);
-      const textContent = `Nieuwe FAQ vraag van ${contactInfo.name}\n\nVraag: ${customQuestion}\n\nContact: ${contactInfo.email}${contactInfo.phone ? ` / ${contactInfo.phone}` : ''}`;
+    // Generate email content
+    const subject = `🏠 Nieuwe Offerte Aanvraag - ${customerData.serviceType || 'Service'} (${requestType === 'call' ? 'Bel verzoek' : 'E-mail verzoek'})`;
+    
+    let emailContent = `
+      <h2>Nieuwe offerte aanvraag ontvangen</h2>
+      <h3>Klantgegevens:</h3>
+      <ul>
+        <li><strong>Naam:</strong> ${customerData.name || 'Niet opgegeven'}</li>
+        <li><strong>Telefoon:</strong> ${customerData.phone || 'Niet opgegeven'}</li>
+        <li><strong>E-mail:</strong> ${customerData.email || 'Niet opgegeven'}</li>
+        <li><strong>Adres:</strong> ${customerData.postcode || ''} ${customerData.huisnummer || ''}</li>
+        <li><strong>Service:</strong> ${customerData.serviceType}</li>
+        <li><strong>Contact voorkeur:</strong> ${requestType === 'call' ? 'Telefonisch' : 'E-mail'}</li>
+      </ul>
+    `;
 
-      const emailResponse = await resend.emails.send({
-        from: "Aigento.ai FAQ Chatbot <faq@app.aigento.ai>",
-        to: ["yves@aigento.ai", "info@clobol.nl"],
-        subject: `💬 Nieuwe FAQ Vraag - ${contactMethod === 'call' ? 'Bel verzoek' : 'E-mail verzoek'} van ${contactInfo.name}`,
-        html: htmlContent,
-        text: textContent,
-      });
-
-      if (emailResponse.error) {
-        console.error('❌ Resend API Error:', emailResponse.error);
-        throw new Error(`Email delivery failed: ${emailResponse.error.message || 'Unknown error'}`);
-      }
-
-      console.log("✅ FAQ email sent successfully:", emailResponse);
-
-      return new Response(JSON.stringify({ 
-        success: true, 
-        emailId: emailResponse.data?.id,
-        requestType: contactMethod 
-      }), {
-        status: 200,
-        headers: {
-          "Content-Type": "application/json",
-          ...corsHeaders,
-        },
-      });
-    } else {
-      // Quote email request
-      const { customerData, galleryId, requestType }: QuoteEmailRequest = body;
-      console.log('📧 Quote email request:', { customerData, galleryId, requestType });
-
-      const message = generateMessage(customerData, galleryId);
-      const conversationHistory = customerData.conversationHistory || [];
-      const htmlContent = generateHtmlTemplate(message, customerData, galleryId, requestType, conversationHistory);
-
-      console.log('📧 Attempting to send email with domain: app.aigento.ai');
-      
-      const emailResponse = await resend.emails.send({
-        from: "Aigento.ai Quote System <quotes@app.aigento.ai>",
-        to: ["yves@aigento.ai", "info@clobol.nl"],
-        subject: `🏠 Nieuwe Offerte Aanvraag - ${customerData.serviceType || 'Service'} (${requestType === 'call' ? 'Bel verzoek' : 'E-mail verzoek'})`,
-        html: htmlContent,
-        text: message,
-      });
-
-      if (emailResponse.error) {
-        console.error('❌ Resend API Error:', emailResponse.error);
-        throw new Error(`Email delivery failed: ${emailResponse.error.message || 'Unknown error'}`);
-      }
-
-      console.log("✅ Quote email sent successfully:", emailResponse);
-
-      return new Response(JSON.stringify({ 
-        success: true, 
-        emailId: emailResponse.data?.id,
-        requestType 
-      }), {
-        status: 200,
-        headers: {
-          "Content-Type": "application/json",
-          ...corsHeaders,
-        },
-      });
+    if (galleryId) {
+      emailContent += `
+        <h3>Foto's en video's:</h3>
+        <p><a href="https://${req.headers.get('host')}/gallery/${galleryId}" target="_blank">Bekijk alle geüploade media hier</a></p>
+      `;
     }
+
+    // Add service-specific details
+    emailContent += `<h3>Service details:</h3><ul>`;
+    Object.entries(customerData).forEach(([key, value]) => {
+      if (!['name', 'phone', 'email', 'postcode', 'huisnummer', 'serviceType', 'photos'].includes(key) && value) {
+        emailContent += `<li><strong>${key}:</strong> ${value}</li>`;
+      }
+    });
+    emailContent += `</ul>`;
+
+    const textContent = `
+Nieuwe offerte aanvraag
+
+Klantgegevens:
+- Naam: ${customerData.name || 'Niet opgegeven'}
+- Telefoon: ${customerData.phone || 'Niet opgegeven'}  
+- E-mail: ${customerData.email || 'Niet opgegeven'}
+- Service: ${customerData.serviceType}
+- Contact voorkeur: ${requestType === 'call' ? 'Telefonisch' : 'E-mail'}
+
+${galleryId ? `Foto's beschikbaar op: https://${req.headers.get('host')}/gallery/${galleryId}` : ''}
+    `;
+
+    const emailResponse = await resend.emails.send({
+      from: "HVAC Chatbot <noreply@yourdomain.com>",
+      to: ["info@yourcompany.com"], // Replace with your email
+      subject: subject,
+      html: emailContent,
+      text: textContent,
+    });
+
+    if (emailResponse.error) {
+      console.error('❌ Resend API Error:', emailResponse.error);
+      throw new Error(`Email delivery failed: ${emailResponse.error.message || 'Unknown error'}`);
+    }
+
+    console.log("✅ Quote email sent successfully:", emailResponse);
+
+    return new Response(JSON.stringify({ 
+      success: true, 
+      emailId: emailResponse.data?.id,
+      requestType 
+    }), {
+      status: 200,
+      headers: {
+        "Content-Type": "application/json",
+        ...corsHeaders,
+      },
+    });
+
   } catch (error: any) {
     console.error("❌ Error in send-quote-email function:", error);
     return new Response(

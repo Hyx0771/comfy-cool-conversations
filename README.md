@@ -1,107 +1,159 @@
-# Clobol Chat Widget Project
 
-## Project Overview
+# HVAC Chatbot Widget
 
-This project contains both a full web application and an embeddable chat widget that can be deployed to any website.
+A modern, responsive chatbot widget for HVAC companies that provides FAQ assistance, quote generation, and customer support. Built with React, TypeScript, and Tailwind CSS.
 
-**Main App URL**: https://lovable.dev/projects/86f9b26b-89a7-43b1-8459-fdcf309dff5d
+## 🚀 Features
 
-## Components
+- **FAQ Chatbot**: Intelligent responses to common questions
+- **Quote Flow**: Multi-step quote generation for HVAC services
+- **Photo Upload**: Image gallery support for service requests
+- **Contact Methods**: WhatsApp, email, and phone integration
+- **Responsive Design**: Works on desktop and mobile
+- **Embeddable Widget**: Easy integration into any website
 
-- **Main Application**: Full-featured chat application with FAQ, HVAC quotes, and support
-- **Embeddable Widget**: Standalone widget for embedding on external websites
+## 🛠️ Tech Stack
 
-## How can I edit this code?
+- **Frontend**: React 18, TypeScript, Vite
+- **Styling**: Tailwind CSS, shadcn/ui components
+- **Backend**: Supabase (Database, Storage, Edge Functions)
+- **Email**: Resend API
+- **Icons**: Lucide React
 
-There are several ways of editing your application.
+## 📋 Prerequisites
 
-**Use Lovable**
+- Node.js 18+ and npm
+- Supabase account
+- Resend account for email functionality
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/86f9b26b-89a7-43b1-8459-fdcf309dff5d) and start prompting.
+## 🔧 Installation
 
-Changes made via Lovable will be committed automatically to this repo.
+1. Clone the repository:
+```bash
+git clone https://github.com/your-username/hvac-chatbot-widget.git
+cd hvac-chatbot-widget
+```
 
-**Use your preferred IDE**
+2. Install dependencies:
+```bash
+npm install
+```
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+3. Set up environment variables:
+```bash
+cp .env.example .env.local
+```
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+4. Configure your environment variables in `.env.local`
 
-Follow these steps:
+5. Set up Supabase:
+```bash
+npx supabase init
+npx supabase start
+npx supabase db reset
+```
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+6. Start the development server:
+```bash
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+## 🌐 Embedding the Widget
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+Add this script to any website to embed the chatbot:
 
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## Deployment Options
-
-### Main Application
-Simply open [Lovable](https://lovable.dev/projects/86f9b26b-89a7-43b1-8459-fdcf309dff5d) and click on Share -> Publish.
-
-### Embeddable Widget
-The widget can be deployed separately for embedding on external websites:
-
-```bash
-# Build the widget
-node build-widget.js
-
-# Deploy to Netlify or any static hosting service
-# Upload contents of 'dist-widget' folder
+```html
+<script src="https://your-domain.com/embed.js"></script>
 ```
 
-**Widget Deployment Guide**: See [WIDGET-DEPLOYMENT.md](./WIDGET-DEPLOYMENT.md) for detailed instructions.
+## 📁 Project Structure
 
-### Custom Domain
-
-**For Main App**: Navigate to Project > Settings > Domains and click Connect Domain in Lovable.
-
-**For Widget**: Configure custom domain in your hosting provider (e.g., Netlify).
-
-Read more: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
-
-## Build Scripts
-
-```bash
-# Development
-npm run dev
-
-# Build main application
-npm run build
-
-# Build embeddable widget
-node build-widget.js
 ```
+src/
+├── components/           # React components
+│   ├── ui/              # shadcn/ui components
+│   ├── chatbot/         # Chatbot specific components
+│   └── hvac/            # HVAC service components
+├── hooks/               # Custom React hooks
+├── utils/               # Utility functions
+├── data/                # Static data and configurations
+├── types/               # TypeScript type definitions
+└── integrations/        # External service integrations
+
+supabase/
+├── functions/           # Edge functions
+└── migrations/          # Database migrations
+```
+
+## 🔐 Environment Variables
+
+```env
+VITE_SUPABASE_URL=your-supabase-url
+VITE_SUPABASE_ANON_KEY=your-supabase-anon-key
+RESEND_API_KEY=your-resend-api-key
+```
+
+## 📧 Email Configuration
+
+1. Sign up for Resend at https://resend.com
+2. Verify your domain at https://resend.com/domains
+3. Create API key at https://resend.com/api-keys
+4. Add the API key to your Supabase edge function secrets
+
+## 🚀 Deployment
+
+### Frontend Deployment (Vercel/Netlify)
+1. Connect your repository to Vercel or Netlify
+2. Set environment variables
+3. Deploy
+
+### Supabase Functions
+```bash
+npx supabase functions deploy
+```
+
+## 📱 Usage
+
+### Basic Integration
+The widget automatically initializes when the embed script is loaded.
+
+### Custom Configuration
+```javascript
+window.BoltChatWidget.config.baseUrl = 'https://your-domain.com';
+```
+
+## 🎨 Customization
+
+### Branding
+Edit the configuration in `src/utils/config/messageConfig.ts`:
+
+```typescript
+export const DEFAULT_COMPANY_CONFIG = {
+  name: "Your Company",
+  emoji: "🏠",
+  whatsappNumber: "+1234567890",
+  emailAddress: "info@yourcompany.com"
+};
+```
+
+### Services
+Configure available services in `src/data/hvacFlowConfigs.ts`.
+
+### Styling
+The widget uses Tailwind CSS. Customize colors in `src/index.css`.
+
+## 📄 License
+
+MIT License - see LICENSE file for details.
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Push to the branch
+5. Open a Pull Request
+
+## 📞 Support
+
+For support, email support@yourcompany.com or create an issue on GitHub.
