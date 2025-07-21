@@ -1,0 +1,168 @@
+
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clobol AI Chatbot</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: transparent;
+            overflow: hidden;
+        }
+        
+        #root {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #666;
+        }
+        
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #e3e3e3;
+            border-top: 4px solid #007BFF;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 15px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div id="root">
+        <div class="loading">
+            <div class="loading-spinner"></div>
+            <span>Loading Bolt...</span>
+        </div>
+    </div>
+
+    <script type="module">
+        // Configuration from parent window
+        let config = {
+            theme: {
+                primaryColor: '#007BFF',
+                backgroundColor: '#ffffff',
+                textColor: '#333333'
+            },
+            startMode: 'welcome',
+            companyName: 'Clobol',
+            welcomeMessage: 'Hoi! Bolt hier – jouw klusmaat van Clobol ❄️ Offerte of vraag? Even klikken, dan fix ik het.'
+        };
+
+        // Parse config from URL hash
+        try {
+            const hash = window.location.hash.substring(1);
+            const params = new URLSearchParams(hash);
+            const configParam = params.get('config');
+            if (configParam) {
+                config = { ...config, ...JSON.parse(decodeURIComponent(configParam)) };
+            }
+        } catch (e) {
+            console.warn('Failed to parse config from URL:', e);
+        }
+
+        // Apply theme colors as CSS variables
+        const root = document.documentElement;
+        if (config.theme) {
+            root.style.setProperty('--primary-color', config.theme.primaryColor);
+            root.style.setProperty('--bg-color', config.theme.backgroundColor);
+            root.style.setProperty('--text-color', config.theme.textColor);
+        }
+
+        // Message handling for parent window
+        function sendMessageToParent(type, data = null) {
+            if (window.parent && window.parent !== window) {
+                window.parent.postMessage({ type, data }, '*');
+            }
+        }
+
+        // Listen for messages from parent
+        window.addEventListener('message', (event) => {
+            const { type, mode } = event.data;
+            
+            switch (type) {
+                case 'OPEN_CHAT':
+                    // Handle chat opening
+                    sendMessageToParent('CHAT_OPENED');
+                    break;
+                    
+                case 'CLOSE_CHAT':
+                    // Handle chat closing
+                    sendMessageToParent('CHAT_CLOSED');
+                    break;
+                    
+                case 'SET_MODE':
+                    // Handle mode change
+                    if (window.boltChatApp && window.boltChatApp.setMode) {
+                        window.boltChatApp.setMode(mode);
+                    }
+                    break;
+            }
+        });
+
+        // Load the main chatbot application
+        async function loadChatbot() {
+            try {
+                // Load main application bundle
+                const { default: BoltChatApp } = await import('./assets/chatbot.js');
+                
+                // Initialize the chatbot
+                const app = new BoltChatApp(document.getElementById('root'), config);
+                window.boltChatApp = app;
+                
+                // Set up event handlers
+                app.on('quote-submitted', (data) => {
+                    sendMessageToParent('QUOTE_SUBMITTED', data);
+                });
+                
+                app.on('chat-opened', () => {
+                    sendMessageToParent('CHAT_OPENED');
+                });
+                
+                app.on('chat-closed', () => {
+                    sendMessageToParent('CHAT_CLOSED');
+                });
+                
+                console.log('Clobol AI Chatbot loaded successfully');
+                
+            } catch (error) {
+                console.error('Failed to load chatbot:', error);
+                document.getElementById('root').innerHTML = `
+                    <div class="loading">
+                        <span style="color: #dc3545;">Error loading chatbot. Please refresh the page.</span>
+                    </div>
+                `;
+            }
+        }
+
+        // Start loading when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', loadChatbot);
+        } else {
+            loadChatbot();
+        }
+    </script>
+</body>
+</html>

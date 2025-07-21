@@ -1,0 +1,44 @@
+
+{
+  "name": "clobol-ai-chatbot-standalone",
+  "version": "1.0.0",
+  "description": "Standalone chatbot widget for easy integration into any website",
+  "main": "embed.js",
+  "scripts": {
+    "dev": "npx http-server -c-1 -p 3000",
+    "build": "echo 'No build step required - ready to use!'",
+    "test": "echo 'Opening test page...' && npx http-server -c-1 -p 3000 -o",
+    "zip": "zip -r clobol-chatbot-standalone.zip . -x '*.git*' 'node_modules/*' '*.DS_Store*'"
+  },
+  "keywords": [
+    "chatbot",
+    "ai",
+    "customer-support",
+    "hvac",
+    "quote-system",
+    "widget",
+    "embed"
+  ],
+  "author": "Clobol",
+  "license": "MIT",
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/clobol-chatbot-standalone"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/clobol-chatbot-standalone/issues"
+  },
+  "homepage": "https://github.com/yourusername/clobol-chatbot-standalone#readme",
+  "files": [
+    "embed.js",
+    "index.html",
+    "assets/",
+    "src/",
+    "config/",
+    "docs/",
+    "README.md"
+  ]
+}
