@@ -38,14 +38,7 @@ const getCookie = (name: string) => {
 
 // Context detection
 const getContextualGreeting = () => {
-  const url = window.location.href.toLowerCase();
-  if (url.includes('/airco')) {
-    return '👋 "Bolt hier! Airco plannen? Vraag meteen je offerte."';
-  }
-  if (url.includes('/warmtepomp')) {
-    return '👋 "Bolt hier! Warmtepompvragen? Ik help je in 1 minuut."';
-  }
-  return '👋 "Hey, Bolt hier! Vraag of offerte? Klik maar."';
+  return '👋 Hey, Bolt hier! Vraag of offerte? Klik hier maar!';
 };
 
 const ChatBotWidget = () => {
