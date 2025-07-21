@@ -14,6 +14,7 @@ import DashboardHome from "./pages/dashboard/DashboardHome";
 import DashboardAnalytics from "./pages/dashboard/DashboardAnalytics";
 import DashboardSettings from "./pages/dashboard/DashboardSettings";
 import DashboardChatbots from "./pages/dashboard/DashboardChatbots";
+import DashboardChatbotConfig from "./pages/dashboard/DashboardChatbotConfig";
 import DashboardTeam from "./pages/dashboard/DashboardTeam";
 import DashboardBilling from "./pages/dashboard/DashboardBilling";
 
@@ -38,6 +39,7 @@ const App = () => {
               <Route index element={<DashboardHome />} />
               <Route path="analytics" element={<DashboardAnalytics />} />
               <Route path="chatbots" element={<DashboardChatbots />} />
+              <Route path="chatbots/:id/configure" element={<DashboardChatbotConfig />} />
               <Route path="team" element={<DashboardTeam />} />
               <Route path="billing" element={<DashboardBilling />} />
               <Route path="settings" element={<DashboardSettings />} />

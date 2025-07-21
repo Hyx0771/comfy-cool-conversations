@@ -1,10 +1,13 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Bot, Settings, BarChart3, ExternalLink } from 'lucide-react';
 
 const DashboardChatbots: React.FC = () => {
+  const navigate = useNavigate();
+  
   const chatbots = [
     {
       id: '1',
@@ -50,7 +53,11 @@ const DashboardChatbots: React.FC = () => {
                   <CardDescription>{chatbot.description}</CardDescription>
                 </div>
                 <div className="flex gap-2">
-                  <Button variant="outline" size="sm">
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => navigate(`/dashboard/chatbots/${chatbot.id}/configure`)}
+                  >
                     <Settings className="mr-2 h-4 w-4" />
                     Configure
                   </Button>
@@ -58,7 +65,11 @@ const DashboardChatbots: React.FC = () => {
                     <BarChart3 className="mr-2 h-4 w-4" />
                     Analytics
                   </Button>
-                  <Button variant="outline" size="sm">
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => window.open(`/widget?chatbot=${chatbot.id}`, '_blank')}
+                  >
                     <ExternalLink className="mr-2 h-4 w-4" />
                     Visit
                   </Button>
