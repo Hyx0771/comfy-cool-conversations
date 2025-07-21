@@ -14,6 +14,185 @@ export type Database = {
   }
   public: {
     Tables: {
+      bot_analytics: {
+        Row: {
+          chatbot_id: string
+          created_at: string
+          event_data: Json | null
+          event_type: string
+          id: string
+          session_id: string | null
+        }
+        Insert: {
+          chatbot_id: string
+          created_at?: string
+          event_data?: Json | null
+          event_type: string
+          id?: string
+          session_id?: string | null
+        }
+        Update: {
+          chatbot_id?: string
+          created_at?: string
+          event_data?: Json | null
+          event_type?: string
+          id?: string
+          session_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bot_analytics_chatbot_id_fkey"
+            columns: ["chatbot_id"]
+            isOneToOne: false
+            referencedRelation: "chatbots"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      bot_deployments: {
+        Row: {
+          chatbot_id: string
+          config: Json
+          deployed_at: string
+          deployed_by: string
+          id: string
+          version: number
+        }
+        Insert: {
+          chatbot_id: string
+          config: Json
+          deployed_at?: string
+          deployed_by: string
+          id?: string
+          version?: number
+        }
+        Update: {
+          chatbot_id?: string
+          config?: Json
+          deployed_at?: string
+          deployed_by?: string
+          id?: string
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bot_deployments_chatbot_id_fkey"
+            columns: ["chatbot_id"]
+            isOneToOne: false
+            referencedRelation: "chatbots"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      chatbots: {
+        Row: {
+          config: Json
+          created_at: string
+          created_by: string
+          description: string | null
+          domain: string | null
+          id: string
+          name: string
+          organization_id: string
+          status: Database["public"]["Enums"]["bot_status"]
+          updated_at: string
+        }
+        Insert: {
+          config?: Json
+          created_at?: string
+          created_by: string
+          description?: string | null
+          domain?: string | null
+          id?: string
+          name: string
+          organization_id: string
+          status?: Database["public"]["Enums"]["bot_status"]
+          updated_at?: string
+        }
+        Update: {
+          config?: Json
+          created_at?: string
+          created_by?: string
+          description?: string | null
+          domain?: string | null
+          id?: string
+          name?: string
+          organization_id?: string
+          status?: Database["public"]["Enums"]["bot_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chatbots_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      organizations: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          slug?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string
+          full_name: string | null
+          id: string
+          organization_id: string | null
+          role: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          full_name?: string | null
+          id: string
+          organization_id?: string | null
+          role?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          full_name?: string | null
+          id?: string
+          organization_id?: string | null
+          role?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profiles_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       quote_galleries: {
         Row: {
           created_at: string
@@ -87,7 +266,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      bot_status: "active" | "inactive" | "draft"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -214,6 +393,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      bot_status: ["active", "inactive", "draft"],
+    },
   },
 } as const
