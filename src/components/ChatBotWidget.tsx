@@ -81,22 +81,7 @@ const ChatBotWidget = () => {
     };
     
     setGreetingBubbles([bubble]);
-    
-    // Schedule second bubble
-    const secondBubbleTimeout = setTimeout(() => {
-      if (!hasInteracted && !isOpen) {
-        const secondBubble: GreetingBubble = {
-          id: 'followup',
-          message: '🛠️ "Klaar met heen-en-weer? Ik help je aanvraag in 60 sec afronden."',
-          visible: true,
-          dismissed: false
-        };
-        setGreetingBubbles(prev => [...prev, secondBubble]);
-      }
-    }, 8000);
-    
-    timeoutRefs.current.push(secondBubbleTimeout);
-  }, [wasBubbleDismissedToday, isOpen, hasInteracted]);
+  }, [wasBubbleDismissedToday, isOpen]);
 
   // Scroll detection
   const handleScroll = useCallback(() => {
@@ -240,7 +225,7 @@ const ChatBotWidget = () => {
                   <div className="text-sm font-medium text-gray-900 mb-1">Bolt</div>
                   <div className="text-sm text-gray-700 leading-relaxed">{bubble.message}</div>
                   <div className="text-xs text-gray-500 mt-2 border-t pt-2">
-                    425 installaties geregeld via Bolt deze maand.
+                    100+ installaties geregeld via Bolt deze maand.
                   </div>
                 </div>
               </div>
