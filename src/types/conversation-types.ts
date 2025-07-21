@@ -5,6 +5,9 @@ export interface ConversationStep {
   content: string;
   field?: string;
   choices?: string[];
+  options?: string[];
+  conditionalOptions?: Record<string, string[]>;
+  explanation?: string;
   validation?: {
     required?: boolean;
     minLength?: number;
