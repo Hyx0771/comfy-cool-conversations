@@ -1,9 +1,21 @@
+import { Link } from 'react-router-dom';
 import ChatBotWidget from '../components/ChatBotWidget';
 
 const Index = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-white">
-      <div className="text-center max-w-4xl mx-auto p-8">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white">
+      {/* Navigation Header */}
+      <nav className="absolute top-0 right-0 p-6">
+        <Link 
+          to="/dashboard" 
+          className="bg-white px-4 py-2 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 text-blue-600 font-medium"
+        >
+          Dashboard
+        </Link>
+      </nav>
+
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center max-w-4xl mx-auto p-8">
         <div className="mb-8">
           <h1 className="text-5xl font-bold mb-6 text-gray-800">
             Clobol <span className="text-blue-600">❄️</span>
@@ -46,8 +58,9 @@ const Index = () => {
             </span>
           </div>
         </div>
+        </div>
       </div>
-
+      
       <ChatBotWidget />
     </div>
   );

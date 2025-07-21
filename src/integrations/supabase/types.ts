@@ -84,6 +84,50 @@ export type Database = {
           },
         ]
       }
+      chatbot_configurations: {
+        Row: {
+          brand_colors: Json | null
+          chatbot_id: string
+          created_at: string
+          custom_css: string | null
+          features: Json | null
+          id: string
+          logo_url: string | null
+          updated_at: string
+          welcome_message: string | null
+        }
+        Insert: {
+          brand_colors?: Json | null
+          chatbot_id: string
+          created_at?: string
+          custom_css?: string | null
+          features?: Json | null
+          id?: string
+          logo_url?: string | null
+          updated_at?: string
+          welcome_message?: string | null
+        }
+        Update: {
+          brand_colors?: Json | null
+          chatbot_id?: string
+          created_at?: string
+          custom_css?: string | null
+          features?: Json | null
+          id?: string
+          logo_url?: string | null
+          updated_at?: string
+          welcome_message?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chatbot_configurations_chatbot_id_fkey"
+            columns: ["chatbot_id"]
+            isOneToOne: false
+            referencedRelation: "chatbots"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       chatbots: {
         Row: {
           config: Json
@@ -130,6 +174,36 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      dashboard_pages: {
+        Row: {
+          content: string | null
+          created_at: string
+          id: string
+          is_public: boolean
+          slug: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          content?: string | null
+          created_at?: string
+          id?: string
+          is_public?: boolean
+          slug: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          content?: string | null
+          created_at?: string
+          id?: string
+          is_public?: boolean
+          slug?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       organizations: {
         Row: {
