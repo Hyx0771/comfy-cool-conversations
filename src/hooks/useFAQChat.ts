@@ -3,6 +3,7 @@ import { faqData, fallbackResponse } from '@/data/faqData';
 import { ContactMethod } from '@/types/chatbot-types';
 import { generateEmailTemplate } from '@/components/chatbot/EmailTemplate';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 
 interface UseFAQChatProps {
   context: any;
@@ -87,25 +88,21 @@ export const useFAQChat = ({ context, setContext, addBotMessage, addUserMessage 
     }));
 
     try {
-      // Call the email edge function
-      const response = await fetch('https://yiidyfidkhwtlyucacnd.supabase.co/functions/v1/send-quote-email', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
+      // Call the email edge function using Supabase client
+      const { data, error } = await supabase.functions.invoke('send-quote-email', {
+        body: {
           contactInfo: formData,
           customQuestion: context.customQuestion || '',
           conversationHistory: context.conversationHistory || [],
           contactMethod: context.contactMethod || 'email'
-        }),
+        }
       });
 
-      if (!response.ok) {
+      if (error) {
         throw new Error('Failed to send email');
       }
 
-      const result = await response.json();
+      const result = data;
       console.log('Email sent successfully:', result);
 
       addBotMessage(
